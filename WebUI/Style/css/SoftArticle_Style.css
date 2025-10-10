@@ -1,0 +1,487 @@
+﻿  @charset "utf-8";
+/* CSS Document */
+html,body,div,span,h1,h2,h3,h4,h5,h6,p,pre,a,code,em,img,small,strong,sub,sup,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent; font-family:"Microsoft Yahei"}
+ol,ul{list-style:none}
+table{border-collapse:collapse;border-spacing:0}
+body{height:100%; font:14px/18px "Microsoft Yahei"; color:#231815;}
+img,input{border:none}
+a,a:hover,a:active,a:visited,a:link,a:focus{
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    outline:none;
+    background: none;
+    text-decoration: none;
+}
+html,body{ width:100%;}
+.container {
+  height: 100%;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #fff;
+}
+.container {
+  min-height: 100vh;
+  background-color: #fff;
+  overflow: hidden;
+  padding-bottom:33vw;
+    }
+
+    .title {
+      font-size: 5vw;
+      color: #333;
+      padding: 0 3.2vw;
+      line-height: 8vw;
+      margin-top: 3.7vw;
+    }
+
+    .date-wrap {
+      display: flex;
+      align-items: center;
+      margin: 2.7vw 0 4vw;
+      margin-left: 3.2vw;
+    }
+
+    .date-wrap .original {
+      width: 8.5vw;
+      height: 4.3vw;
+      background-color: #f3f6f9;
+      color: #ccc;
+      text-align: center;
+      line-height: 4.3vw;
+      margin-right: 1.3vw;
+      font-size: 3.2vw;
+    }
+
+    .date-wrap .name {
+      color: #ccc;
+      font-size: 3.2vw;
+      margin-right: 1.3vw;
+    }
+
+    .date-wrap .name2 {
+      color: #0066b3;
+    }
+
+    .date-wrap .edit {
+      width: 4.3vw;
+      height: 4.3vw;
+      margin-left: 3.2vw;
+    }
+
+    .details {
+      padding: 0 3.2vw;
+      margin-bottom: 3.2vw;
+    }
+    .details img{ width:100%;margin: 1vw 0;}
+.details video{ width:100%;margin: 1vw 0;}
+    .details div {
+      font-size: 4.3vw;
+      line-height: 7vw;
+      color: #333;
+    }
+
+    .Party-wrap {
+      margin: 0 3.2vw;
+    }
+
+    .Party-wrap .party-text {
+      font-size: 3.7vw;
+      color: #ccc;
+      text-align: center;
+      line-height: 3.7vw;
+      margin-top: 2.7vw;
+        margin-bottom: 4.3vw;
+    }
+
+    .Party-wrap .party-text .span{
+      font-size: 3.2vw;
+      color: #ccc;
+      text-align: center;
+      margin-top: 1.3vw;
+    }
+
+    .Party-wrap .party-card {
+      width: 100%;
+      height: 42.7vw;
+      position: relative;
+    }
+
+    .Party-wrap .party-card .main-img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .Party-wrap .party-card .tip-mask {
+      width: 26.7vw;
+      height: 5.9vw;
+      background-color: #ee4848;
+      color: #fff;
+      font-size: 3.7vw;
+      text-align: center;
+      line-height: 5.9vw;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .Party-wrap .party-card .mask-wrap {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 -15vw 10vw rgba(0, 0, 0, 0.4);
+    }
+
+    .Party-wrap .party-card .mask-wrap .icon-wrap {
+      overflow: hidden;
+    }
+
+    .Party-wrap .party-card .mask-wrap .icon-wrap .iconfont {
+      font-size: 3.7vw;
+      height: 5.9vw;
+      background-color: #fbfaf8;
+      box-shadow: 1px 1px 2px #c83a34;
+      width: 5.9vw;
+      color: #7383de;
+      float: right;
+      margin-right: 2.7vw;
+      margin-top: 2.7vw;
+      text-align: center;
+      line-height: 5.9vw;
+      border-radius: 50%;
+    }
+    .Party-wrap .party-card .mask-wrap .icon-wrap .iconfont img{width:80%; margin-top:0.5vw;}
+
+    .Party-wrap .party-card .mask-wrap .party-data {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      margin-left: 5.9vw;
+    }
+
+    .Party-wrap .party-card .mask-wrap .party-data .date-text {
+      font-size: 2.9vw;
+      color: #f2f2f2;
+      line-height: 4vw;
+    }
+
+    .Party-wrap .party-card .mask-wrap .party-title {
+      font-size: 4.3vw;
+      line-height: 6.45vw;
+      width: 82.7vw;
+      margin-bottom: 1.3vw;
+      color: #f2f2f2;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      margin-left: 5.9vw;
+    }
+
+    .read-wrap {
+      display: flex;
+      align-items: center;
+      padding-left: 3.2vw;
+    }
+
+    .read-wrap .read-text {
+      font-size: 3.5vw;
+      color: #ccc;
+      margin-right: 3.2vw;
+      margin-bottom: 4.3vw;
+    }
+
+    .read-wrap .read-text.good {
+      flex: 1;
+    }
+
+    .read-wrap .read-text.true {
+      color: #0066b3;
+    }
+
+    .read-wrap .read-text .iconfont {
+      display: inline-block;
+      font-size: 3.7vw;
+      color: inherit;
+    }
+    .read-wrap .read-text .text{
+        font-size: 3.2vw;
+        color: #ccc;
+        background:none;
+        padding:0;
+        border: none;
+    }
+
+    .card-wrap {
+      width: 100%;
+      height: 33.3vw;
+          position: fixed;
+    bottom: 0;
+    left:0;
+    }
+
+    .card-wrap .card {
+      background-color: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 1.9vw rgba(153, 153, 153, 0.22);
+      display: flex;
+     transition: all 0.5s;
+    height: 33.3vw;
+
+    }
+
+    .card-wrap .card.false {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .card-wrap .card .left {
+      margin: 4.9vw 3.2vw 0;
+    }
+
+    .card-wrap .card .left .head {
+      width: 8.5vw;
+      height: 8.5vw;
+      border-radius: 50%;
+      margin-bottom: 2.9vw;
+      display: block;
+    }
+
+    .card-wrap .card .left .card-original {
+      font-size: 3.2vw;
+      color: #ccc;
+      text-align: center;
+      line-height: 4.3vw;
+      background-color: #555;
+      width: 8.5vw;
+      border-radius: 1.3vw;
+      margin-bottom: 1.3vw;
+    }
+
+    .card-wrap .card .center {
+      flex: 1;
+      margin-top: 3.9vw;
+
+    }
+
+    .card-wrap .card .center .li-wrap {
+        line-height: 5vw;
+    }
+
+    .card-wrap .card .center .li-wrap .li {
+      margin-bottom: 1.3vw;
+      display: flex;
+      align-items: baseline;
+    }
+
+    .card-wrap .card .center .li-wrap .li.name .name {
+      font-size: 3.7vw;
+      margin-right: 1.3vw;
+    }
+
+    .card-wrap .card .center .li-wrap .li.name div {
+      max-width: 30vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-wrap .card .center .li-wrap .li div {
+      font-size: 3.2vw;
+      color: #f2f2f2;
+      margin-right: 1.3vw;
+    }
+
+    .card-wrap .card .center .li-wrap .li div img{width:3.2vw; height:3.2vw;}
+
+    .card-wrap .card .center .li-wrap .li .text {
+      width: 52.7vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .card-wrap .card .right {
+      margin-right: 3.2vw;
+    }
+
+    .card-wrap .card .right .exposure {
+        font-size: 3.2vw;
+        color: #fff;
+        margin-bottom: 3.7vw;
+        margin-top: 4.9vw;
+        display: flex;
+        align-items: flex-end;
+        line-height: 4.3vw;
+    }
+
+    .card-wrap .card .right .exposure img{
+        width: 4.3vw;
+      height: 4.3vw;
+      margin-left: 1.3vw;
+    }
+
+    .card-wrap .card .right .btn-wrap {
+      margin-bottom: 3.2vw;
+    }
+
+    .card-wrap .card .right .btn-wrap .btn {
+      width: 22.5vw;
+      height: 5.9vw;
+      font-size: 3.2vw;
+      color: #fff;
+      text-align: center;
+      line-height: 5.9vw;
+      border-radius: 5.9vw;
+      background: linear-gradient(145deg, #56ccf2, #2f80ed);
+      margin-bottom: 1.9vw;
+      display:block;
+    }
+
+    .card-wrap .card .right .btn-wrap .btn:last-of-type {
+      /* margin-bottom: 0; */
+    }
+
+    .card-wrap .card .right .btn-wrap .btn:active {
+      background: #2f80ed;
+    }
+
+    /* 分享 */
+
+    .canvas-card {
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 99;
+    }
+
+    .save-btn {
+      width: 52vw;
+      height: 9.3vw;
+      text-align: center;
+      line-height: 9.3vw;
+      background: linear-gradient(145deg, #56ccf2, #2f80ed);
+      border-radius: 0 5.3vw 5.3vw 5.3vw;
+      color: #fff;
+      margin: 16vw auto 3.2vw;
+      font-size: 4.3vw;
+      z-index: 2;
+    }
+
+    .save-btn:active {
+      background: #2f80ed;
+    }
+
+    .indexPrompt {
+      color: #333;
+      font-size: 3.4vw;
+      border-radius: 10vw;
+      padding: 1vw 4vw;
+      position: absolute;
+      top: -72vw;
+      left: 12vw;
+      border: 0.5vw solid #2f80ed;
+      z-index: 100;
+      margin-bottom: 2vw;
+      background-color: #fff;
+    }
+
+    .indexPrompt .iconfont {
+      position: absolute;
+      right: 10vw;
+      bottom: -2vw;
+      width: 5vw;
+      height: 2vw;
+      clip-path: polygon(0 0, 100% 0%, 50% 100%);
+      background-color: #2f80ed;
+    }
+
+    .share-wrap {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .share-wrap .mask {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .share-wrap .wrap {
+      width: 70vw;
+      background-color: #fff;
+      border-radius: 1.3vw;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .share-wrap .wrap .iconfont {
+      font-size: 3.7vw;
+      color: #333;
+      font-weight: bold;
+      position: absolute;
+      right: 2.2vw;
+      top: 2.2vw;
+      padding: 1vw;
+    }
+
+    .share-wrap .wrap .title {
+      font-size: 3.7vw;
+      color: #333;
+      padding-left: 3.2vw;
+      height: 10vw;
+      line-height: 10vw;
+    }
+
+    .share-wrap .wrap .title .span {
+      display: inline-block;
+      margin-left: 1.3vw;
+      font-size: 3.2vw;
+      color: #666;
+    }
+
+    .share-wrap .wrap textarea {
+      width: 64.4vw;
+      height: 25vw;
+      font-size: 3.7vw;
+      color: #333;
+      margin: 0 auto;
+      background-color: #f2f2f2;
+      padding: 1.3vw;
+    }
+
+    .share-wrap .wrap .menu-li {
+      width: 30vw;
+      height: 8vw;
+      background: linear-gradient(145deg, #56ccf2, #2f80ed);
+      margin: 3.2vw auto;
+      color: #fff;
+      text-align: center;
+      line-height: 8vw;
+      font-size: 3.7vw;
+      border-radius: 8vw;
+    }

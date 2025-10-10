@@ -1,0 +1,121 @@
+﻿using System;
+using System.Text;
+using SPLibrary.CoreFramework.BO;
+using SPLibrary.UserManagement.BO;
+using SPLibrary.UserManagement.VO;
+using System.Collections.Generic;
+using CoreFramework.VO;
+using System.Web.UI.WebControls;
+using SPLibrary.CustomerManagement.VO;
+using WebUI.Common;
+using SPLibrary.RequireManagement.BO;
+using SPLibrary.RequireManagement.VO;
+using SPLibrary.ProjectManagement.BO;
+using SPLibrary.ProjectManagement.VO;
+using SPLibrary.WebConfigInfo;
+using SPLibrary.BussinessManagement.BO;
+
+namespace WebUI.ProjectManagement
+{
+    public partial class GenerateContractIMG : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            int contractId = Convert.ToInt32(string.IsNullOrEmpty(Request.QueryString["ContractId"]) ? "0" : Request.QueryString["ContractId"]);
+
+
+            RequireBO rBO = new RequireBO(new CustomerProfile());
+            ProjectBO pBO = new ProjectBO(new CustomerProfile());
+            BusinessBO bBO = new BusinessBO(new CustomerProfile());
+            AgencyBO aBO = new AgencyBO(new CustomerProfile());
+
+            StringBuilder sb = new StringBuilder();
+            if (contractId > 0)
+            {
+                ContractViewVO cVO = pBO.FindContractById(contractId);
+
+                txtProjectName.Text = cVO.ProjectName;
+                txtCost.Text = cVO.Cost.ToString();
+                txtCommission.Text = cVO.Commission.ToString();
+                txtStartDate.Text = cVO.StartDate.ToString("yyyy-MM-dd") == "1900-01-01" ? "" : cVO.StartDate.ToString("yyyy-MM-dd");
+                txtEndDate.Text = cVO.EndDate.ToString("yyyy-MM-dd") == "1900-01-01" ? "" : cVO.EndDate.ToString("yyyy-MM-dd");
+
+                if (cVO.BusinessStatus == 1)
+                { huzhutonghi.Style.Remove("display"); }
+                else
+                { huzhutonghi.Style.Add("display", "none"); }
+                if (cVO.AgencyStatus == 1)
+                { xiaoshoutonghi.Style.Remove("display"); }
+                else
+                { xiaoshoutonghi.Style.Add("display", "none"); }
+
+                //绑定附件
+                List<ContractFileVO> fileList = pBO.FindContractFileList(contractId);
+                string oTR = "";
+                for (int i = 0; i < fileList.Count; i++)
+                {
+                    ContractFileVO tcVO = fileList[i];
+
+                    oTR += "   <div class=\"jqgrow\"  onclick=\"DeleteFile(this)\"> \r\n";
+                    var fileName = tcVO.FileName;
+                    var suffixIndex = fileName.LastIndexOf(".");
+                    var suffix = fileName.Substring(suffixIndex + 1).ToUpper();
+                    oTR += "<a href=\"" + tcVO.FilePath + "\" title=\"" + tcVO.FileName + "\">";
+                    if (suffix != "BMP" && suffix != "JPG" && suffix != "JPEG" && suffix != "PNG" && suffix != "GIF")
+                    {
+                        oTR += "  <div class=\"File\"></div>\r\n";
+                    }
+                    else
+                    {
+                        oTR += "  <div class=\"img\" style=\"background-image:url(" + tcVO.FilePath + ")\"></div>\r\n";
+                    }
+                    oTR += "</a>";
+                    oTR += "      <p class=\"center\" title=\"" + tcVO.FileName + "\">" + tcVO.FileName + "</p> \r\n";
+                    oTR += "      <p class=\"JqgrowDel\" title=\"删除\">删除</p> \r\n";
+                    oTR += "      <input type=\"hidden\" name=\"File_FileName\" value=\"" + tcVO.FileName + "\" /> \r\n";
+                    oTR += "      <input type=\"hidden\" name=\"File_FilePath\" value=\"" + tcVO.FilePath + "\" /> \r\n";
+                    oTR += "      <input type=\"hidden\" name=\"File_CreatedAt\" value=\"" + tcVO.CreatedAt + "\" /> \r\n";
+                    oTR += "      <input type=\"hidden\" name=\"File_ContractId\" value=\"" + tcVO.ContractId + "\" /> \r\n";
+                    oTR += "   </div> \r\n";
+                }
+                divFileList.InnerHtml = oTR;
+                //绑定步骤
+                oTR = "";
+                List<ContractStepsVO> stepsList = pBO.FindContractStepsList(contractId);
+                for (int i = 0; i < stepsList.Count; i++)
+                {
+                    oTR += "<div id=\"diy" + i + "\" class=\"G_JieDuan_div diy\" onclick=\"ContractSteps_alert(" + i + ")\">";
+                    oTR += "  " + stepsList[i].Title + "：" + stepsList[i].Cost + "元酬金";
+                    if (stepsList[i].Comment != "")
+                    {
+                        oTR += "   <div class=\"G_JieDuan_div_diy_set\">(说明：";
+                        oTR += stepsList[i].Comment;
+                        oTR += "  ) </div>";
+                    }
+                    oTR += "</div>";
+                    oTR += "<div class=\"G_JieDuan_line\"></div>";
+                }
+                G_JieDuan_list.InnerHtml= oTR;
+
+                BusinessViewVO bVO = bBO.FindBusinessById(cVO.BusinessId);
+                AgencyViewVO aVO = aBO.FindAgencyById(cVO.AgencyId);
+                RequirementViewVO rVO = rBO.FindRequireById(cVO.RequirementId);
+
+                lblCompanyName.InnerHtml = bVO.CompanyName;
+                lblAgencyName.InnerHtml = aVO.AgencyName;
+                lblCompanyName2.InnerHtml = bVO.CompanyName;
+                lblAgencyName2.InnerHtml = aVO.AgencyName;
+                lblBusinessLicense.InnerHtml = bVO.BusinessLicense;
+                lblBusinessTel.InnerHtml = rVO.Phone;
+                lblCode.InnerHtml = rVO.RequirementCode;
+                lblrequirement.InnerHtml = rVO.Title;
+                lblAgencyTel.InnerHtml = aVO.Phone;
+                lblIDCard.InnerHtml = aVO.IDCard;
+                if (cVO.BusinessSignDate.Year != 1900)
+                    lblBusinessTime.InnerHtml = cVO.BusinessSignDate.ToString();
+                if (cVO.AgencySignDate.Year != 1900)
+                    lblAgencyTime.InnerHtml = cVO.AgencySignDate.ToString();
+            }
+        }
+    }
+}
