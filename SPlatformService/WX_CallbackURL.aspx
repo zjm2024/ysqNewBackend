@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WX_CallbackURL.aspx.cs" Inherits="SPlatformService.WX_CallbackURL" %>
