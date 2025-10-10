@@ -1,0 +1,112 @@
+﻿html,body{ padding:0; margin:0; font-family:'思源黑体'; background:#000}
+.Personal{width:640px; height:640px; background-size:100% 100%; background-color:#fff;position:relative;}
+.Personal .headimg{width: 285px;height: 285px;background-size: cover;background-position: center center;background-color: #fff;position: absolute;top: 177px;left: 177px;border-radius: 400px;}
+
+.PersonalIMG{ width:500px; height:400px; background:#fff; padding-top:5px; background-size:cover; background-position:center center;}
+.PosterIMG{ width:800px; height:800px; background-size:100% 100%; background-position:center center; position:relative;}
+.PosterIMG .QRimg{ position:absolute; bottom:20px;right: 20px;width: 150px;height: 150px; border-radius:450px; overflow:hidden; text-align:center; background:#fff;}
+.PosterIMG .QRimg img{ width:92%; height:92%; margin-top:4%;}
+
+.PosterIMG .NameInfo{ background:rgba(255,255,255,0.7); position:absolute; top:12px; left:0px; width:344px; border-top-right-radius:100px;border-bottom-right-radius:100px; padding:10px 20px; height:77px;}
+.PosterIMG .NameInfo .headimg{ width:77px; height:77px; float:left;background-size:cover; background-position:center center; background-repeat:no-repeat; background-color:#fff; border-radius:5px;}
+.PosterIMG .NameInfo .right{ float:right; width:253px; padding-top:5px;}
+.PosterIMG .NameInfo .right .Name{ font-size:28px;line-height: 36px;color: #943901;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+.PosterIMG .NameInfo .right .Position{font-size:22px;color: #333;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+
+.PosterIMG .InfoList{ position:absolute; bottom:20px; left:0px; padding:0; margin:0;}
+.PosterIMG .InfoList li{ list-style:none; margin-top:12px;background:rgba(255,255,255,0.7); max-width:530px; height:50px; border-top-right-radius:60px;border-bottom-right-radius:60px; padding-left:68px; position:relative; padding-right:30px; line-height:50px;font-size: 20px;display: table;}
+.PosterIMG .InfoList li img{ width:36px; height:36px; position:absolute; left:20px; top:7px; background:#0dab58; border-radius:40px;}
+.PosterIMG .InfoList li .text{text-overflow:ellipsis;white-space:nowrap;overflow:hidden; max-width:450px;color: #333;}
+.PosterIMG .InfoList li .text.on{white-space:normal;line-height: 30px; padding: 10px 0;padding-right: 10px; max-height:178px;}
+
+.PersonalInfo{ width:640px; background:#fff; display:table; padding-top:20px; padding-bottom:20px;}
+.PersonalInfo .headimg{width:110px; height:110px; float:left;background-size:cover; background-position:center center; background-repeat:no-repeat; background-color:#fff; border-radius:5px;margin-left: 20px;}
+.PersonalInfo .info{ float:right; width:476px; margin-right:20px;}    
+.PersonalInfo .info .name{ line-height: 66px;font-size: 40px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+.PersonalInfo .info .BusinessName{line-height: 31px;font-size: 24px;color: #676767;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+.QRtext{width: 640px;background: #fff; height: 90px;}
+.QRtext .text{width: 322px;background: #2ba246;color: #fff;text-align: center;line-height: 52px;margin: 0 auto;font-size: 24px;border-radius: 7px;}
+.QRtext .text font{ color:#fff700}
+.ColorPage{ background-size:90% 90%; background-position:center center; background-repeat:no-repeat;}
+.ColorPage .headimg{width: 240px;height: 240px;top: 202px;left: 202px;}
+
+.ProductIMG{ width:900px; height:1100px; background:#fff; position:relative; font-family:"隶书"}
+.ProductIMG .back{ position:absolute; left:0; top:0; width:900px; height:1100px; background:url(../images/productback.png); z-index:2}
+.ProductIMG .images{ width:900px; height:540px;position:absolute; top:0; left:0;background-size:cover; background-position:center center; background-repeat:no-repeat; background-color:#fff; z-index:1}
+.ProductIMG .codeQR{ width:200px; height:200px;position:absolute; bottom:30px; left:50px; z-index:3;border-radius: 10px;}
+
+.ProductIMG .title{ position: absolute;
+    top: 620px;
+    left: 50px;
+    color: #2a2b2f;
+    line-height: 90px;
+    font-size: 80px;
+    max-width: 800px;
+    z-index: 3;
+    text-align: center;
+	width:800px;}
+.ProductIMG .NameInfo{position:absolute; bottom: 15px; left:307px; color:#2a2b2f; max-width:560px; z-index:3}
+.ProductIMG .NameInfo .Name{ font-size:40px; line-height:70px;margin-bottom: 6px;}
+
+.ProductIMG .NameInfo .InfoList{ padding:0; margin:0;}
+.ProductIMG .NameInfo .InfoList li{ list-style:none; font-size:25px; line-height:30px; margin-bottom:10px; width:570px; float:left}
+.ProductIMG .NameInfo .InfoList li .left{ float:left; width:140px;}
+.ProductIMG .NameInfo .InfoList li .right{ float:right; width:430px;}
+
+.AddressImg{ width:500px; height:500px; position:relative;}
+.AddressImg .headimg{position: absolute;top: 41px;left: 98px;border-radius: 50%;background-position: center center;background-size: cover;width: 302px;height: 302px;}
+
+.CompanyIMG{width: 500px;
+    height: 500px;
+    position: relative;
+    background-size: 100%;}
+.CompanyIMG .headimg{position: absolute;
+    top: 41px;left: 98px;
+    border-radius: 50%;
+    background-position: center center;
+    background-size: cover;
+    width: 302px;
+    height: 302px;}
+.CodeQR {
+    width: 640px;
+    height: 640px;
+    background-color: rgb(41,171,226);
+    position:relative;
+}
+.CodeQR .CodeQRback{     width: 500px;
+    height: 560px;
+    background: #fff;
+    border: solid 1px #000;
+    border-radius: 15px;
+    position: absolute;
+    top: 34px;
+    left: 60px;
+    z-index: 1;}
+.CodeQR:before{    width: 500px;
+    height: 560px;
+content:'';background:#293a54;position:absolute; 
+                 top: 48px;
+    left: 76px;z-index:0;border-radius:15px;}
+.CodeQR .CodeQRimg{     width: 400px;
+    height: 400px;
+    background-position: center center;
+    background-size: contain;
+    position: absolute;
+    top: 40px;
+    left: 50px;}
+.CodeQR .CodeQRtext{width: 410px;
+    text-align: center;
+    line-height: 45px;
+    color: #fff;
+    position: absolute;
+    top: 472px;
+    left: 25px;
+    font-size: 20px;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    background: #293a54;
+    border-radius: 45px;
+    padding: 0 20px;
+}

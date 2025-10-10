@@ -1,0 +1,1468 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AB71C95B-AE24-4C11-B1FC-57677038F1E1}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BusinessCard</RootNamespace>
+    <AssemblyName>BusinessCard</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AlibabaCloud.EndpointUtil, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlibabaCloud.EndpointUtil.0.1.1\lib\net45\AlibabaCloud.EndpointUtil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AlibabaCloud.GatewaySpi, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlibabaCloud.GatewaySpi.0.0.1\lib\net45\AlibabaCloud.GatewaySpi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AlibabaCloud.OpenApiClient, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlibabaCloud.OpenApiClient.0.1.1\lib\net45\AlibabaCloud.OpenApiClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AlibabaCloud.OpenApiUtil, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlibabaCloud.OpenApiUtil.1.0.13\lib\net45\AlibabaCloud.OpenApiUtil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AlibabaCloud.SDK.CCC20200701, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlibabaCloud.SDK.CCC20200701.2.3.0\lib\net45\AlibabaCloud.SDK.CCC20200701.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AlibabaCloud.TeaUtil, Version=0.1.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlibabaCloud.TeaUtil.0.1.12\lib\net45\AlibabaCloud.TeaUtil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Aliyun.Credentials, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Aliyun.Credentials.1.3.1\lib\net45\Aliyun.Credentials.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.14.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.14.0\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Intelligencia.UrlRewriter, Version=2.0.0.9, Culture=neutral, PublicKeyToken=0573f3650687980d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Intelligencia.UrlRewriter.2.0.0.9\lib\net40\Intelligencia.UrlRewriter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4, Version=1.1.11.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.1.1.11\lib\net46\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.1.11.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.1.11\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.4.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.9.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.9.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web, Version=2.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.9.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.9.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.17.0.146, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.17.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="MySql.Data, Version=8.0.26.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.26\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OOXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenAI_API, Version=1.5.0.0, Culture=neutral, PublicKeyToken=1b0a4c0430762146, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenAI.1.5.0\lib\netstandard2.0\OpenAI_API.dll</HintPath>
+    </Reference>
+    <Reference Include="Pathoschild.Http.Client, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pathoschild.Http.FluentClient.3.2.0\lib\net45\Pathoschild.Http.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=108.0.3.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.108.0.3\lib\netstandard2.0\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.5.0.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.5.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.5.0.1\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Tea, Version=1.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tea.1.0.11\lib\net45\Tea.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ubiety.Dns.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.26\lib\net452\Ubiety.Dns.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Zstandard.Net, Version=1.1.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.26\lib\net452\Zstandard.Net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="css\card.css" />
+    <Content Include="css\css.css" />
+    <Content Include="GenerateIMG\CardIMG5.aspx" />
+    <Content Include="GenerateIMG\ColorPageIMG.aspx" />
+    <Content Include="GenerateIMG\CardIMG.aspx" />
+    <Content Include="GenerateIMG\PersonalIMG.aspx" />
+    <Content Include="GenerateIMG\PosterIMG.aspx" />
+    <Content Include="GenerateIMG\ProductIMG.aspx" />
+    <Content Include="GenerateIMG\Address.aspx" />
+    <Content Include="GenerateIMG\CompanyIMG.aspx" />
+    <Content Include="GenerateIMG\AllQRIMG.aspx" />
+    <Content Include="GenerateIMG\QRIMG.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="images\0.jpg" />
+    <Content Include="images\14d4fd377f7f1d8ce5d9af4f3d74a56.jpg" />
+    <Content Include="images\20211107160838.jpg" />
+    <Content Include="images\20211107160839.jpg" />
+    <Content Include="images\20211107160840.jpg" />
+    <Content Include="images\20211107160841.jpg" />
+    <Content Include="images\20211107161542.jpg" />
+    <Content Include="images\20211109150911.jpg" />
+    <Content Include="images\2fefbd8f2e61d8724686c54b92f5ad6.jpg" />
+    <Content Include="images\360\1658289013000.jpg" />
+    <Content Include="images\360\1658289013001.jpg" />
+    <Content Include="images\360\1658291762000.jpg" />
+    <Content Include="images\360\1658296748000.jpg" />
+    <Content Include="images\360\6000x3000.jpg" />
+    <Content Include="images\360\m4rruTGel09b.jpg" />
+    <Content Include="images\9799af9409d9b6c71dc47a15dfffe5f.jpg" />
+    <Content Include="images\9a47daaf86e09f8e95ec03f82a46d1b.jpg" />
+    <Content Include="images\AD20210621000.jpg" />
+    <Content Include="images\AD20211021165604.jpg" />
+    <Content Include="images\ad_1.jpg" />
+    <Content Include="images\AD_175f3aee1bae10feed44cfd49f97bb6.jpg" />
+    <Content Include="images\AD_20210414173044.jpg" />
+    <Content Include="images\AD_20210414173057.jpg" />
+    <Content Include="images\AD_20210414173106.jpg" />
+    <Content Include="images\AD_20210422153442.png" />
+    <Content Include="images\AD_20210422170505.jpg" />
+    <Content Include="images\AD_20210722154510.jpg" />
+    <Content Include="images\AD_20210810110600.jpg" />
+    <Content Include="images\AD_20210909155345.jpg" />
+    <Content Include="images\AD_20230422.jpg" />
+    <Content Include="images\AD_2dd03433076930883c392567a33894f.jpg" />
+    <Content Include="images\AD_39e8bc57df1761f33d49e99bf1b5615.jpg" />
+    <Content Include="images\AD_43020f69a21db82035c54c4c066da7c.jpg" />
+    <Content Include="images\AD_9a47daaf86e09f8e95ec03f82a46d1b.jpg" />
+    <Content Include="images\AD_b98db05ffc5528668ea127600b65690.jpg" />
+    <Content Include="images\AD_c258b8604928e7696d75d23bfcf227e.jpg" />
+    <Content Include="images\AD_cdc81920e0475565d725ed9f8a69720.jpg" />
+    <Content Include="images\AD_dcad19ceaf50ac1da0ff31ff50f9882.jpg" />
+    <Content Include="images\AD_de278740fd0fb611531ff932149930f.jpg" />
+    <Content Include="images\AD_f9315035c1bc144ecb46fa521841d02.jpg" />
+    <Content Include="images\AD_fe9b9e7ea032021ee96eeedb71fe9cb.jpg" />
+    <Content Include="images\app\Company.png" />
+    <Content Include="images\app\CompanyGoOut.png" />
+    <Content Include="images\app\CompanyPunchIn.png" />
+    <Content Include="images\app\CompanyPunchOut.png" />
+    <Content Include="images\app\Posterback.png" />
+    <Content Include="images\app\public\css\iconfont.css" />
+    <Content Include="images\app\public\css\style.css" />
+    <Content Include="images\app\public\images\5.png" />
+    <Content Include="images\app\public\images\login-bg.jpg" />
+    <Content Include="images\app\public\images\logo.png" />
+    <Content Include="images\app\public\images\logo2.png" />
+    <Content Include="images\app\public\images\public\js\index.js" />
+    <Content Include="images\app\public\images\public\js\jquery-1.10.1.min.js" />
+    <Content Include="images\app\public\images\qr.jpg" />
+    <Content Include="images\app\ShareBack.jpg" />
+    <Content Include="images\app\ShareBack2.jpg" />
+    <Content Include="images\ArticleUrl\adress.jpg" />
+    <Content Include="images\ArticleUrl\CardBack.jpg" />
+    <Content Include="images\ArticleUrl\email.jpg" />
+    <Content Include="images\ArticleUrl\Phone.jpg" />
+    <Content Include="images\b59fa015f76e804d0f79995f8a7f577.jpg" />
+    <Content Include="images\back.jpg" />
+    <Content Include="images\back2.jpg" />
+    <Content Include="images\BG.png" />
+    <Content Include="images\c1.png" />
+    <Content Include="images\c2.png" />
+    <Content Include="images\coloading.gif" />
+    <Content Include="images\d1821e2720d3e1f88ea219cff304044.jpg" />
+    <Content Include="images\delet.png" />
+    <Content Include="images\down.png" />
+    <Content Include="images\downbottom.png" />
+    <Content Include="images\edit.png" />
+    <Content Include="images\FarmGame.jpg" />
+    <Content Include="images\game\Apple.png" />
+    <Content Include="images\game\Apple_ripening.png" />
+    <Content Include="images\game\Apple_seed.png" />
+    <Content Include="images\game\back.jpg" />
+    <Content Include="images\game\btn.png" />
+    <Content Include="images\game\Bubble.png" />
+    <Content Include="images\game\Carrot.png" />
+    <Content Include="images\game\Carrot_ripening.png" />
+    <Content Include="images\game\Carrot_seed.png" />
+    <Content Include="images\game\cloud1.png" />
+    <Content Include="images\game\cloud2.png" />
+    <Content Include="images\game\Diamond.png" />
+    <Content Include="images\game\Eggplant.png" />
+    <Content Include="images\game\Eggplant_ripening.png" />
+    <Content Include="images\game\Eggplant_seed.png" />
+    <Content Include="images\game\Fertilizer.png" />
+    <Content Include="images\game\fields.png" />
+    <Content Include="images\game\hand.png" />
+    <Content Include="images\game\kettle.png" />
+    <Content Include="images\game\lock.png" />
+    <Content Include="images\game\money.png" />
+    <Content Include="images\game\Prize.png" />
+    <Content Include="images\game\Red.png" />
+    <Content Include="images\game\seed.png" />
+    <Content Include="images\game\shadow.png" />
+    <Content Include="images\game\StartGame.png" />
+    <Content Include="images\game\title.png" />
+    <Content Include="images\game\Tomato.png" />
+    <Content Include="images\game\Tomato_ripening.png" />
+    <Content Include="images\game\Tomato_seed.png" />
+    <Content Include="images\game\Water.png" />
+    <Content Include="images\game\windmill.png" />
+    <Content Include="images\huodong.jpg" />
+    <Content Include="images\huodong10.jpg" />
+    <Content Include="images\huodong11.png" />
+    <Content Include="images\huodong12.jpg" />
+    <Content Include="images\huodong13.png" />
+    <Content Include="images\huodong14.jpg" />
+    <Content Include="images\huodong15.jpg" />
+    <Content Include="images\huodong15_1.png" />
+    <Content Include="images\huodong15_2.png" />
+    <Content Include="images\huodong16.png" />
+    <Content Include="images\huodong16_1.png" />
+    <Content Include="images\huodong16_2.png" />
+    <Content Include="images\huodong17.png" />
+    <Content Include="images\huodong17_1.png" />
+    <Content Include="images\huodong18.jpg" />
+    <Content Include="images\huodong19.jpg" />
+    <Content Include="images\huodong2.png" />
+    <Content Include="images\huodong20.jpg" />
+    <Content Include="images\huodong21.jpg" />
+    <Content Include="images\huodong22.jpg" />
+    <Content Include="images\huodong23.jpg" />
+    <Content Include="images\huodong24.jpg" />
+    <Content Include="images\huodong25.jpg" />
+    <Content Include="images\huodong26.jpg" />
+    <Content Include="images\huodong27.jpg" />
+    <Content Include="images\huodong28.jpg" />
+    <Content Include="images\huodong29.jpg" />
+    <Content Include="images\huodong3.png" />
+    <Content Include="images\huodong30.jpg" />
+    <Content Include="images\huodong31.jpg" />
+    <Content Include="images\huodong32.png" />
+    <Content Include="images\huodong33.jpg" />
+    <Content Include="images\huodong34.jpg" />
+    <Content Include="images\huodong35.jpg" />
+    <Content Include="images\huodong36.jpg" />
+    <Content Include="images\huodong37.jpg" />
+    <Content Include="images\huodong38.jpg" />
+    <Content Include="images\huodong39.jpg" />
+    <Content Include="images\huodong4.png" />
+    <Content Include="images\huodong40.jpg" />
+    <Content Include="images\huodong41.jpg" />
+    <Content Include="images\huodong42.jpg" />
+    <Content Include="images\huodong43.jpg" />
+    <Content Include="images\huodong44.jpg" />
+    <Content Include="images\huodong45.jpg" />
+    <Content Include="images\huodong46.jpg" />
+    <Content Include="images\huodong47.jpg" />
+    <Content Include="images\huodong48.jpg" />
+    <Content Include="images\huodong49.jpg" />
+    <Content Include="images\huodong5.jpg" />
+    <Content Include="images\huodong5.png" />
+    <Content Include="images\huodong50.jpg" />
+    <Content Include="images\huodong51.jpg" />
+    <Content Include="images\huodong52.jpg" />
+    <Content Include="images\huodong53.jpg" />
+    <Content Include="images\huodong6.png" />
+    <Content Include="images\huodong7.png" />
+    <Content Include="images\huodong8.jpg" />
+    <Content Include="images\huodong9.jpg" />
+    <Content Include="images\icon10Address.png" />
+    <Content Include="images\icon10Email.png" />
+    <Content Include="images\icon10WebSite.png" />
+    <Content Include="images\icon11Address.png" />
+    <Content Include="images\icon11Email.png" />
+    <Content Include="images\icon11phone.png" />
+    <Content Include="images\icon11WebSite.png" />
+    <Content Include="images\icon12Address.png" />
+    <Content Include="images\icon12Email.png" />
+    <Content Include="images\icon12phone.png" />
+    <Content Include="images\icon12WebSite.png" />
+    <Content Include="images\icon13Address.png" />
+    <Content Include="images\icon13Email.png" />
+    <Content Include="images\icon13phone.png" />
+    <Content Include="images\icon13WebSite.png" />
+    <Content Include="images\icon14Address.png" />
+    <Content Include="images\icon14phone.png" />
+    <Content Include="images\icon15Address.png" />
+    <Content Include="images\icon15Corporate.png" />
+    <Content Include="images\icon15Email.png" />
+    <Content Include="images\icon15phone.png" />
+    <Content Include="images\icon15WebSite.png" />
+    <Content Include="images\icon16Address.png" />
+    <Content Include="images\icon16Email.png" />
+    <Content Include="images\icon16phone.png" />
+    <Content Include="images\icon16WebSite.png" />
+    <Content Include="images\icon17Corporate.png" />
+    <Content Include="images\icon17phone.png" />
+    <Content Include="images\icon18Corporate.png" />
+    <Content Include="images\icon18phone.png" />
+    <Content Include="images\icon19Corporate.png" />
+    <Content Include="images\icon19phone.png" />
+    <Content Include="images\icon20Address.png" />
+    <Content Include="images\icon20Corporate.png" />
+    <Content Include="images\icon20Email.png" />
+    <Content Include="images\icon20phone.png" />
+    <Content Include="images\icon20WebSite.png" />
+    <Content Include="images\icon21Address.png" />
+    <Content Include="images\icon21Corporate.png" />
+    <Content Include="images\icon21Email.png" />
+    <Content Include="images\icon21phone.png" />
+    <Content Include="images\icon21WebSite.png" />
+    <Content Include="images\icon22Address.png" />
+    <Content Include="images\icon22Corporate.png" />
+    <Content Include="images\icon22Email.png" />
+    <Content Include="images\icon22phone.png" />
+    <Content Include="images\icon22WebSite.png" />
+    <Content Include="images\icon23Address.png" />
+    <Content Include="images\icon23Corporate.png" />
+    <Content Include="images\icon23Email.png" />
+    <Content Include="images\icon23phone.png" />
+    <Content Include="images\icon23WebSite.png" />
+    <Content Include="images\icon24Address.png" />
+    <Content Include="images\icon24Corporate.png" />
+    <Content Include="images\icon24Email.png" />
+    <Content Include="images\icon24phone.png" />
+    <Content Include="images\icon24WebSite.png" />
+    <Content Include="images\icon25Address.png" />
+    <Content Include="images\icon25Corporate.png" />
+    <Content Include="images\icon25phone.png" />
+    <Content Include="images\icon26Address.png" />
+    <Content Include="images\icon26Corporate.png" />
+    <Content Include="images\icon26Email.png" />
+    <Content Include="images\icon26phone.png" />
+    <Content Include="images\icon26WebSite.png" />
+    <Content Include="images\icon27Address.png" />
+    <Content Include="images\icon27Corporate.png" />
+    <Content Include="images\icon27Email.png" />
+    <Content Include="images\icon27phone.png" />
+    <Content Include="images\icon27WebSite.png" />
+    <Content Include="images\icon2Email.png" />
+    <Content Include="images\icon2phone.png" />
+    <Content Include="images\icon2WebSite.png" />
+    <Content Include="images\icon36Address.png" />
+    <Content Include="images\icon36Corporate.png" />
+    <Content Include="images\icon36phone.png" />
+    <Content Include="images\icon37Address.png" />
+    <Content Include="images\icon37Corporate.png" />
+    <Content Include="images\icon37Email.png" />
+    <Content Include="images\icon37phone.png" />
+    <Content Include="images\icon37WebSite.png" />
+    <Content Include="images\icon38Address.png" />
+    <Content Include="images\icon38Corporate.png" />
+    <Content Include="images\icon38Email.png" />
+    <Content Include="images\icon38phone.png" />
+    <Content Include="images\icon38WebSite.png" />
+    <Content Include="images\icon39Address.png" />
+    <Content Include="images\icon39Business.png" />
+    <Content Include="images\icon39CorporateName.png" />
+    <Content Include="images\icon39Email.png" />
+    <Content Include="images\icon39phone.png" />
+    <Content Include="images\icon39Tel.png" />
+    <Content Include="images\icon39WebSite.png" />
+    <Content Include="images\icon39WeChat.png" />
+    <Content Include="images\icon3Address.png" />
+    <Content Include="images\icon3Email.png" />
+    <Content Include="images\icon3phone.png" />
+    <Content Include="images\icon3WebSite.png" />
+    <Content Include="images\icon41Address.png" />
+    <Content Include="images\icon41phone.png" />
+    <Content Include="images\icon4Address.png" />
+    <Content Include="images\icon4phone.png" />
+    <Content Include="images\icon5Email.png" />
+    <Content Include="images\icon5phone.png" />
+    <Content Include="images\icon5WebSite.png" />
+    <Content Include="images\icon6Email.png" />
+    <Content Include="images\icon6phone.png" />
+    <Content Include="images\icon6WebSite.png" />
+    <Content Include="images\icon7Email.png" />
+    <Content Include="images\icon7phone.png" />
+    <Content Include="images\icon7WebSite.png" />
+    <Content Include="images\icon8Address.png" />
+    <Content Include="images\icon8phone.png" />
+    <Content Include="images\icon9Address.png" />
+    <Content Include="images\icon9phone.png" />
+    <Content Include="images\iconAddress.png" />
+    <Content Include="images\iconBusiness.png" />
+    <Content Include="images\iconCorporateName.png" />
+    <Content Include="images\iconCorporateName2.png" />
+    <Content Include="images\iconEmail.png" />
+    <Content Include="images\iconinfo.png" />
+    <Content Include="images\iconinfo_wyzt.png" />
+    <Content Include="images\iconTel.png" />
+    <Content Include="images\iconWebSite.png" />
+    <Content Include="images\iconWeChat.png" />
+    <Content Include="images\images\app\public\images\5.png" />
+    <Content Include="images\images\app\public\images\login-bg.jpg" />
+    <Content Include="images\images\app\public\images\logo.png" />
+    <Content Include="images\images\app\public\images\logo2.png" />
+    <Content Include="images\images\app\public\images\qr.jpg" />
+    <Content Include="images\images\app\public\js\index.js" />
+    <Content Include="images\loading.gif" />
+    <Content Include="images\login.png" />
+    <Content Include="images\logo-zheng.jpg" />
+    <Content Include="images\logo-zheng.png" />
+    <Content Include="images\logo.jpg" />
+    <Content Include="images\logo.png" />
+    <Content Include="images\logoICON.ico" />
+    <Content Include="images\LuckyDraw\1.jpg" />
+    <Content Include="images\LuckyDraw\Customerback.jpg" />
+    <Content Include="images\LuckyDraw\indexback.jpg" />
+    <Content Include="images\LuckyDraw\kefu.jpg" />
+    <Content Include="images\LuckyDraw\nomainimg.jpg" />
+    <Content Include="images\LuckyDraw\noPrizeimg.jpg" />
+    <Content Include="images\meituan.jpg" />
+    <Content Include="images\mingpian.jpg" />
+    <Content Include="images\mingpian10.jpg" />
+    <Content Include="images\mingpian11.jpg" />
+    <Content Include="images\mingpian12.jpg" />
+    <Content Include="images\mingpian13.jpg" />
+    <Content Include="images\mingpian13_wy.jpg" />
+    <Content Include="images\mingpian14.jpg" />
+    <Content Include="images\mingpian15.jpg" />
+    <Content Include="images\mingpian16.jpg" />
+    <Content Include="images\mingpian16_wy.jpg" />
+    <Content Include="images\mingpian17.jpg" />
+    <Content Include="images\mingpian18.jpg" />
+    <Content Include="images\mingpian19.jpg" />
+    <Content Include="images\mingpian2.jpg" />
+    <Content Include="images\mingpian20.jpg" />
+    <Content Include="images\mingpian21.jpg" />
+    <Content Include="images\mingpian22.jpg" />
+    <Content Include="images\mingpian23.jpg" />
+    <Content Include="images\mingpian24.jpg" />
+    <Content Include="images\mingpian25.jpg" />
+    <Content Include="images\mingpian26.jpg" />
+    <Content Include="images\mingpian27.jpg" />
+    <Content Include="images\mingpian28.jpg" />
+    <Content Include="images\mingpian29.jpg" />
+    <Content Include="images\mingpian3.jpg" />
+    <Content Include="images\mingpian30.jpg" />
+    <Content Include="images\mingpian31.jpg" />
+    <Content Include="images\mingpian32.jpg" />
+    <Content Include="images\mingpian33.jpg" />
+    <Content Include="images\mingpian34.jpg" />
+    <Content Include="images\mingpian35.jpg" />
+    <Content Include="images\mingpian36.jpg" />
+    <Content Include="images\mingpian37.jpg" />
+    <Content Include="images\mingpian38.jpg" />
+    <Content Include="images\mingpian39.jpg" />
+    <Content Include="images\mingpian4.jpg" />
+    <Content Include="images\mingpian40.jpg" />
+    <Content Include="images\mingpian41.jpg" />
+    <Content Include="images\mingpian42.jpg" />
+    <Content Include="images\mingpian43.jpg" />
+    <Content Include="images\mingpian44.jpg" />
+    <Content Include="images\mingpian45.jpg" />
+    <Content Include="images\mingpian46.jpg" />
+    <Content Include="images\mingpian47.jpg" />
+    <Content Include="images\mingpian48.jpg" />
+    <Content Include="images\mingpian49.jpg" />
+    <Content Include="images\mingpian5.jpg" />
+    <Content Include="images\mingpian50.jpg" />
+    <Content Include="images\mingpian51.jpg" />
+    <Content Include="images\mingpian52.jpg" />
+    <Content Include="images\mingpian53.jpg" />
+    <Content Include="images\mingpian54.jpg" />
+    <Content Include="images\mingpian55.jpg" />
+    <Content Include="images\mingpian56.jpg" />
+    <Content Include="images\mingpian57.jpg" />
+    <Content Include="images\mingpian58.jpg" />
+    <Content Include="images\mingpian59.jpg" />
+    <Content Include="images\mingpian6.jpg" />
+    <Content Include="images\mingpian60.jpg" />
+    <Content Include="images\mingpian61.jpg" />
+    <Content Include="images\mingpian62.jpg" />
+    <Content Include="images\mingpian63.jpg" />
+    <Content Include="images\mingpian64.jpg" />
+    <Content Include="images\mingpian65.jpg" />
+    <Content Include="images\mingpian66.jpg" />
+    <Content Include="images\mingpian67.jpg" />
+    <Content Include="images\mingpian68.jpg" />
+    <Content Include="images\mingpian69.jpg" />
+    <Content Include="images\mingpian6_wy.jpg" />
+    <Content Include="images\mingpian7.jpg" />
+    <Content Include="images\mingpian70.jpg" />
+    <Content Include="images\mingpian71.jpg" />
+    <Content Include="images\mingpian72.jpg" />
+    <Content Include="images\mingpian73.jpg" />
+    <Content Include="images\mingpian74.jpg" />
+    <Content Include="images\mingpian75.jpg" />
+    <Content Include="images\mingpian76.jpg" />
+    <Content Include="images\mingpian7_wy.jpg" />
+    <Content Include="images\mingpian8.jpg" />
+    <Content Include="images\mingpian9.jpg" />
+    <Content Include="images\Poster\1.jpg" />
+    <Content Include="images\Poster\16pic_043c3d7e489c.jpg" />
+    <Content Include="images\Poster\16pic_04ecb1fa2850.jpg" />
+    <Content Include="images\Poster\16pic_060ad9248994.jpg" />
+    <Content Include="images\Poster\16pic_07a96b1f6109.jpg" />
+    <Content Include="images\Poster\16pic_07e1cd7dca89.jpg" />
+    <Content Include="images\Poster\16pic_1068c6e4c805.jpg" />
+    <Content Include="images\Poster\16pic_13f3cf8c5319.jpg" />
+    <Content Include="images\Poster\16pic_16a5cdae362b.jpg" />
+    <Content Include="images\Poster\16pic_217eedd1ba8c.jpg" />
+    <Content Include="images\Poster\16pic_274ad4786c3a.jpg" />
+    <Content Include="images\Poster\16pic_303ed4c69846.jpg" />
+    <Content Include="images\Poster\16pic_352407221afb.jpg" />
+    <Content Include="images\Poster\16pic_3871bd640121.jpg" />
+    <Content Include="images\Poster\16pic_38af86134b65.jpg" />
+    <Content Include="images\Poster\16pic_38db3aed920c.jpg" />
+    <Content Include="images\Poster\16pic_3d8e28caf901.jpg" />
+    <Content Include="images\Poster\16pic_47d1e990583c.jpg" />
+    <Content Include="images\Poster\16pic_5ec91aac30ea.jpg" />
+    <Content Include="images\Poster\16pic_692f93be8c7a.jpg" />
+    <Content Include="images\Poster\16pic_69421f032498.jpg" />
+    <Content Include="images\Poster\16pic_6c9882bbac1c.jpg" />
+    <Content Include="images\Poster\16pic_6ecbdd6ec859.jpg" />
+    <Content Include="images\Poster\16pic_72da7fd6d130.jpg" />
+    <Content Include="images\Poster\16pic_839ab46820b5.jpg" />
+    <Content Include="images\Poster\16pic_877a9ba7a98f.jpg" />
+    <Content Include="images\Poster\16pic_8df707a948fa.jpg" />
+    <Content Include="images\Poster\16pic_8eefcfdf5990.jpg" />
+    <Content Include="images\Poster\16pic_96ea64f3a1aa.jpg" />
+    <Content Include="images\Poster\16pic_996a7fa078cc.jpg" />
+    <Content Include="images\Poster\16pic_9ab0d8843173.jpg" />
+    <Content Include="images\Poster\16pic_a9a1d5317a33.jpg" />
+    <Content Include="images\Poster\16pic_b73ce398c39f.jpg" />
+    <Content Include="images\Poster\16pic_bd4c9ab730f5.jpg" />
+    <Content Include="images\Poster\16pic_c52f1bd66cc1.jpg" />
+    <Content Include="images\Poster\16pic_c52f1bd66cc2.jpg" />
+    <Content Include="images\Poster\16pic_c8fbbc86abe8.jpg" />
+    <Content Include="images\Poster\16pic_e165421110ba.jpg" />
+    <Content Include="images\Poster\16pic_e4a6222cdb5b.jpg" />
+    <Content Include="images\Poster\16pic_e94550c93cd7.jpg" />
+    <Content Include="images\Poster\16pic_eba0dc302bcd.jpg" />
+    <Content Include="images\Poster\16pic_f4f6dce2f3a0.jpg" />
+    <Content Include="images\Poster\16pic_fc2213097460.jpg" />
+    <Content Include="images\Poster\274_dongwu.jpg" />
+    <Content Include="images\Poster\275_dongwu.jpg" />
+    <Content Include="images\Poster\276_zhiwu.jpg" />
+    <Content Include="images\Poster\277_zhiwu.jpg" />
+    <Content Include="images\Poster\278_zhiwu.jpg" />
+    <Content Include="images\Poster\279_jieqi.jpg" />
+    <Content Include="images\Poster\280_lizhi.jpg" />
+    <Content Include="images\Poster\281_lizhi.jpg" />
+    <Content Include="images\Poster\282_lizhi.jpg" />
+    <Content Include="images\Poster\283_lizhi.jpg" />
+    <Content Include="images\Poster\284_lizhi.jpg" />
+    <Content Include="images\Poster\285_lizhi.jpg" />
+    <Content Include="images\Poster\286_zhufu.jpg" />
+    <Content Include="images\Poster\287_zhufu.jpg" />
+    <Content Include="images\Poster\288_jieqi.jpg" />
+    <Content Include="images\Poster\289_zhufu.jpg" />
+    <Content Include="images\Poster\290_zhiwu.jpg" />
+    <Content Include="images\Poster\291_zhiwu.jpg" />
+    <Content Include="images\Poster\292_zhiwu.jpg" />
+    <Content Include="images\Poster\293_zhiwu.jpg" />
+    <Content Include="images\Poster\294_zhiwu.jpg" />
+    <Content Include="images\Poster\295_zhiwu.jpg" />
+    <Content Include="images\Poster\296_zhiwu.jpg" />
+    <Content Include="images\Poster\297_zhiwu.jpg" />
+    <Content Include="images\Poster\298_zhiwu.jpg" />
+    <Content Include="images\Poster\299_zhiwu.jpg" />
+    <Content Include="images\Poster\300_zhiwu.jpg" />
+    <Content Include="images\Poster\301_zhiwu.jpg" />
+    <Content Include="images\Poster\302_zhiwu.jpg" />
+    <Content Include="images\Poster\303_zhiwu.jpg" />
+    <Content Include="images\Poster\304_zhiwu.jpg" />
+    <Content Include="images\Poster\305_zhiwu.jpg" />
+    <Content Include="images\Poster\306_zhiwu.jpg" />
+    <Content Include="images\Poster\307_dongwu.jpg" />
+    <Content Include="images\Poster\308_dongwu.jpg" />
+    <Content Include="images\Poster\309_dongwu.jpg" />
+    <Content Include="images\Poster\310_dongwu.jpg" />
+    <Content Include="images\Poster\311_dongwu.jpg" />
+    <Content Include="images\Poster\312_dongwu.jpg" />
+    <Content Include="images\Poster\313_dongwu.jpg" />
+    <Content Include="images\Poster\314_dongwu.jpg" />
+    <Content Include="images\Poster\315_dongwu.jpg" />
+    <Content Include="images\Poster\316_dongwu.jpg" />
+    <Content Include="images\Poster\317_dongwu.jpg" />
+    <Content Include="images\Poster\318_dongwu.jpg" />
+    <Content Include="images\Poster\319_dongwu.jpg" />
+    <Content Include="images\Poster\320_dongwu.jpg" />
+    <Content Include="images\Poster\321_dongwu.jpg" />
+    <Content Include="images\Poster\322_lizhi.jpg" />
+    <Content Include="images\Poster\323_lizhi.jpg" />
+    <Content Include="images\Poster\324_lizhi.jpg" />
+    <Content Include="images\Poster\325_meishi.jpg" />
+    <Content Include="images\Poster\326_meishi.jpg" />
+    <Content Include="images\Poster\327_meishi.jpg" />
+    <Content Include="images\Poster\328_meishi.jpg" />
+    <Content Include="images\Poster\329_meishi.jpg" />
+    <Content Include="images\Poster\330_meishi.jpg" />
+    <Content Include="images\Poster\331_meishi.jpg" />
+    <Content Include="images\Poster\332_meishi.jpg" />
+    <Content Include="images\Poster\333_meishi.jpg" />
+    <Content Include="images\Poster\334_meishi.jpg" />
+    <Content Include="images\Poster\335_meishi.jpg" />
+    <Content Include="images\Poster\336_meishi.jpg" />
+    <Content Include="images\Poster\337_jieqi.jpg" />
+    <Content Include="images\Poster\338_jieqi.jpg" />
+    <Content Include="images\Poster\339_jieqi.jpg" />
+    <Content Include="images\Poster\340_jieqi.jpg" />
+    <Content Include="images\Poster\341_shanshui.jpg" />
+    <Content Include="images\Poster\342_shanshui.jpg" />
+    <Content Include="images\Poster\343_shanshui.jpg" />
+    <Content Include="images\Poster\344_shanshui.jpg" />
+    <Content Include="images\Poster\345_tuandui.jpg" />
+    <Content Include="images\Poster\346_tuandui.jpg" />
+    <Content Include="images\Poster\347_tuandui.jpg" />
+    <Content Include="images\Poster\348_tuandui.jpg" />
+    <Content Include="images\Poster\349_tuandui.jpg" />
+    <Content Include="images\Poster\350_tuandui.jpg" />
+    <Content Include="images\Poster\351_tuandui.jpg" />
+    <Content Include="images\Poster\352_tuandui.jpg" />
+    <Content Include="images\Poster\353_wenhou.jpg" />
+    <Content Include="images\Poster\354_wenhou.jpg" />
+    <Content Include="images\Poster\355_wenhou.jpg" />
+    <Content Include="images\Poster\356_dongwu.jpg" />
+    <Content Include="images\Poster\357_dongwu.jpg" />
+    <Content Include="images\Poster\358_dongwu.jpg" />
+    <Content Include="images\Poster\359_dongwu.jpg" />
+    <Content Include="images\Poster\360_dongwu.jpg" />
+    <Content Include="images\Poster\361_dongwu.jpg" />
+    <Content Include="images\Poster\362_dongwu.jpg" />
+    <Content Include="images\Poster\363_dongwu.jpg" />
+    <Content Include="images\Poster\364_dongwu.jpg" />
+    <Content Include="images\Poster\365_dongwu.jpg" />
+    <Content Include="images\Poster\366_dongwu.jpg" />
+    <Content Include="images\Poster\367_dongwu.jpg" />
+    <Content Include="images\Poster\368_dongwu.jpg" />
+    <Content Include="images\Poster\369_dongwu.jpg" />
+    <Content Include="images\Poster\370_dongwu.jpg" />
+    <Content Include="images\Poster\371_dongwu.jpg" />
+    <Content Include="images\Poster\372_dongwu.jpg" />
+    <Content Include="images\Poster\373_dongwu.jpg" />
+    <Content Include="images\Poster\374_dongwu.jpg" />
+    <Content Include="images\Poster\375_dongwu.jpg" />
+    <Content Include="images\Poster\376_dongwu.jpg" />
+    <Content Include="images\Poster\377_dongwu.jpg" />
+    <Content Include="images\Poster\378_dongwu.jpg" />
+    <Content Include="images\Poster\379_dongwu.jpg" />
+    <Content Include="images\Poster\380_dongwu.jpg" />
+    <Content Include="images\Poster\381_dongwu.jpg" />
+    <Content Include="images\Poster\382_dongwu.jpg" />
+    <Content Include="images\Poster\383_jianzhu.jpg" />
+    <Content Include="images\Poster\384_jianzhu.jpg" />
+    <Content Include="images\Poster\385_jianzhu.jpg" />
+    <Content Include="images\Poster\386_jianzhu.jpg" />
+    <Content Include="images\Poster\387_jianzhu.jpg" />
+    <Content Include="images\Poster\388_jianzhu.jpg" />
+    <Content Include="images\Poster\389_jianzhu.jpg" />
+    <Content Include="images\Poster\390_jianzhu.jpg" />
+    <Content Include="images\Poster\391_jianzhu.jpg" />
+    <Content Include="images\Poster\392_jianzhu.jpg" />
+    <Content Include="images\Poster\393_jianzhu.jpg" />
+    <Content Include="images\Poster\394_jianzhu.jpg" />
+    <Content Include="images\Poster\395_jianzhu.jpg" />
+    <Content Include="images\Poster\396_jianzhu.jpg" />
+    <Content Include="images\Poster\397_jianzhu.jpg" />
+    <Content Include="images\Poster\398_jianzhu.jpg" />
+    <Content Include="images\Poster\399_jianzhu.jpg" />
+    <Content Include="images\Poster\400_jianzhu.jpg" />
+    <Content Include="images\Poster\401_jianzhu.jpg" />
+    <Content Include="images\Poster\402_jianzhu.jpg" />
+    <Content Include="images\Poster\403_jianzhu.jpg" />
+    <Content Include="images\Poster\404_jianzhu.jpg" />
+    <Content Include="images\Poster\405_jieqi.jpg" />
+    <Content Include="images\Poster\406_jieqi.jpg" />
+    <Content Include="images\Poster\407_jieqi.jpg" />
+    <Content Include="images\Poster\408_meishi.jpg" />
+    <Content Include="images\Poster\409_meishi.jpg" />
+    <Content Include="images\Poster\410_meishi.jpg" />
+    <Content Include="images\Poster\411_meishi.jpg" />
+    <Content Include="images\Poster\412_meishi.jpg" />
+    <Content Include="images\Poster\413_meishi.jpg" />
+    <Content Include="images\Poster\414_meishi.jpg" />
+    <Content Include="images\Poster\415_meishi.jpg" />
+    <Content Include="images\Poster\416_meishi.jpg" />
+    <Content Include="images\Poster\417_meishi.jpg" />
+    <Content Include="images\Poster\418_meishi.jpg" />
+    <Content Include="images\Poster\419_meishi.jpg" />
+    <Content Include="images\Poster\420_meishi.jpg" />
+    <Content Include="images\Poster\421_meishi.jpg" />
+    <Content Include="images\Poster\422_meishi.jpg" />
+    <Content Include="images\Poster\423_meishi.jpg" />
+    <Content Include="images\Poster\424_meishi.jpg" />
+    <Content Include="images\Poster\425_meishi.jpg" />
+    <Content Include="images\Poster\426_meishi.jpg" />
+    <Content Include="images\Poster\427_meishi.jpg" />
+    <Content Include="images\Poster\428_meishi.jpg" />
+    <Content Include="images\Poster\429_meishi.jpg" />
+    <Content Include="images\Poster\430_meishi.jpg" />
+    <Content Include="images\Poster\431_meishi.jpg" />
+    <Content Include="images\Poster\432_meishi.jpg" />
+    <Content Include="images\Poster\433_meishi.jpg" />
+    <Content Include="images\Poster\434_meishi.jpg" />
+    <Content Include="images\Poster\435_meishi.jpg" />
+    <Content Include="images\Poster\436_meishi.jpg" />
+    <Content Include="images\Poster\437_meishi.jpg" />
+    <Content Include="images\Poster\438_meishi.jpg" />
+    <Content Include="images\Poster\439_meishi.jpg" />
+    <Content Include="images\Poster\440_meishi.jpg" />
+    <Content Include="images\Poster\441_meishi.jpg" />
+    <Content Include="images\Poster\442_meishi.jpg" />
+    <Content Include="images\Poster\443_renwu.jpg" />
+    <Content Include="images\Poster\444_renwu.jpg" />
+    <Content Include="images\Poster\445_renwu.jpg" />
+    <Content Include="images\Poster\446_renwu.jpg" />
+    <Content Include="images\Poster\447_renwu.jpg" />
+    <Content Include="images\Poster\448_renwu.jpg" />
+    <Content Include="images\Poster\449_renwu.jpg" />
+    <Content Include="images\Poster\450_renwu.jpg" />
+    <Content Include="images\Poster\451_renwu.jpg" />
+    <Content Include="images\Poster\452_renwu.jpg" />
+    <Content Include="images\Poster\453_renwu.jpg" />
+    <Content Include="images\Poster\454_renwu.jpg" />
+    <Content Include="images\Poster\455_renwu.jpg" />
+    <Content Include="images\Poster\456_renwu.jpg" />
+    <Content Include="images\Poster\457_renwu.jpg" />
+    <Content Include="images\Poster\458_shanshui.jpg" />
+    <Content Include="images\Poster\459_shanshui.jpg" />
+    <Content Include="images\Poster\460_shanshui.jpg" />
+    <Content Include="images\Poster\461_shanshui.jpg" />
+    <Content Include="images\Poster\462_shanshui.jpg" />
+    <Content Include="images\Poster\463_shanshui.jpg" />
+    <Content Include="images\Poster\464_shanshui.jpg" />
+    <Content Include="images\Poster\465_shanshui.jpg" />
+    <Content Include="images\Poster\466_shanshui.jpg" />
+    <Content Include="images\Poster\467_zhiwu.jpg" />
+    <Content Include="images\Poster\468_zhiwu.jpg" />
+    <Content Include="images\Poster\469_zhiwu.jpg" />
+    <Content Include="images\Poster\470_zhiwu.jpg" />
+    <Content Include="images\Poster\471_zhiwu.jpg" />
+    <Content Include="images\Poster\472_zhiwu.jpg" />
+    <Content Include="images\Poster\473_zhiwu.jpg" />
+    <Content Include="images\Poster\474_zhiwu.jpg" />
+    <Content Include="images\Poster\475_zhiwu.jpg" />
+    <Content Include="images\Poster\476_zhiwu.jpg" />
+    <Content Include="images\Poster\477_zhiwu.jpg" />
+    <Content Include="images\Poster\478_zhiwu.jpg" />
+    <Content Include="images\Poster\479_zhiwu.jpg" />
+    <Content Include="images\Poster\480_zhiwu.jpg" />
+    <Content Include="images\Poster\481_zhiwu.jpg" />
+    <Content Include="images\Poster\482_zhiwu.jpg" />
+    <Content Include="images\Poster\483_zhiwu.jpg" />
+    <Content Include="images\Poster\484_zhiwu.jpg" />
+    <Content Include="images\Poster\485_zhiwu.jpg" />
+    <Content Include="images\Poster\486_zhufu.png" />
+    <Content Include="images\Poster\487_zhufu.png" />
+    <Content Include="images\Poster\488_zhufu.png" />
+    <Content Include="images\Poster\489_zhufu.png" />
+    <Content Include="images\Poster\490_zhufu.png" />
+    <Content Include="images\Poster\491_zhufu.jpg" />
+    <Content Include="images\Poster\492_zhufu.jpg" />
+    <Content Include="images\Poster\493_zhufu.jpg" />
+    <Content Include="images\Poster\494_zhufu.jpg" />
+    <Content Include="images\Poster\495_zhufu.jpg" />
+    <Content Include="images\Poster\496_zhufu.jpg" />
+    <Content Include="images\Poster\497_zhufu.jpg" />
+    <Content Include="images\Poster\498_zhufu.jpg" />
+    <Content Include="images\Poster\499_zhufu.jpg" />
+    <Content Include="images\Poster\500_zhufu.jpg" />
+    <Content Include="images\Poster\501_zhufu.jpg" />
+    <Content Include="images\Poster\502_zhufu.jpg" />
+    <Content Include="images\Poster\503_zhufu.jpg" />
+    <Content Include="images\Poster\504_zhufu.jpg" />
+    <Content Include="images\Poster\505_zhufu.jpg" />
+    <Content Include="images\Poster\506_zhufu.jpg" />
+    <Content Include="images\Poster\507_zhufu.jpg" />
+    <Content Include="images\Poster\508_zhufu.jpg" />
+    <Content Include="images\Poster\509_zhufu.jpg" />
+    <Content Include="images\Poster\510_zhufu.jpg" />
+    <Content Include="images\Poster\511_zhufu.jpg" />
+    <Content Include="images\Poster\512_zhufu.jpg" />
+    <Content Include="images\Poster\513_zhufu.jpg" />
+    <Content Include="images\Poster\514_zhufu.jpg" />
+    <Content Include="images\Poster\515_zhufu.jpg" />
+    <Content Include="images\Poster\516_zhufu.jpg" />
+    <Content Include="images\Poster\517_zhufu.jpg" />
+    <Content Include="images\Poster\518_zhufu.jpg" />
+    <Content Include="images\Poster\519_zhufu.jpg" />
+    <Content Include="images\Poster\520_zhufu.jpg" />
+    <Content Include="images\Poster\521_zhufu.jpg" />
+    <Content Include="images\Poster\523_zhufu.jpg" />
+    <Content Include="images\Poster\526_zhufu.jpg" />
+    <Content Include="images\Poster\527_zhufu.jpg" />
+    <Content Include="images\Poster\529_zhufu.jpg" />
+    <Content Include="images\Poster\530_zhufu.jpg" />
+    <Content Include="images\Poster\531_zhufu.jpg" />
+    <Content Include="images\Poster\532_zhufu.jpg" />
+    <Content Include="images\Poster\533_jieqi.jpg" />
+    <Content Include="images\Poster\534_jieqi.jpg" />
+    <Content Include="images\Poster\535_jieqi.jpg" />
+    <Content Include="images\Poster\536_jieqi.jpg" />
+    <Content Include="images\Poster\537_jieqi.jpg" />
+    <Content Include="images\Poster\538_jieqi.jpg" />
+    <Content Include="images\Poster\539_jieqi.jpg" />
+    <Content Include="images\Poster\540_jieqi.jpg" />
+    <Content Include="images\Poster\541_jieqi.jpg" />
+    <Content Include="images\Poster\542_zhufu.jpg" />
+    <Content Include="images\Poster\543_zhufu.jpg" />
+    <Content Include="images\Poster\544_zhufu.jpg" />
+    <Content Include="images\Poster\545_zhufu.jpg" />
+    <Content Include="images\Poster\546_zhufu.jpg" />
+    <Content Include="images\Poster\547_zhufu.jpg" />
+    <Content Include="images\Poster\548_zhufu.jpg" />
+    <Content Include="images\Poster\549_zhufu.jpg" />
+    <Content Include="images\Poster\550_zhufu.jpg" />
+    <Content Include="images\Poster\551_zhufu.jpg" />
+    <Content Include="images\Poster\552_zhufu.jpg" />
+    <Content Include="images\Poster\553_zhufu.jpg" />
+    <Content Include="images\Poster\554_zhufu.jpg" />
+    <Content Include="images\Poster\555_zhufu.jpg" />
+    <Content Include="images\Poster\556_zhufu.jpg" />
+    <Content Include="images\Poster\557_zhufu.jpg" />
+    <Content Include="images\Poster\558_zhufu.jpg" />
+    <Content Include="images\Poster\559_zhufu.jpg" />
+    <Content Include="images\Poster\560_zhufu.jpg" />
+    <Content Include="images\Poster\561_zhufu.jpg" />
+    <Content Include="images\Poster\562_zhufu.jpg" />
+    <Content Include="images\Poster\563_zhufu.jpg" />
+    <Content Include="images\Poster\564_zhufu.jpg" />
+    <Content Include="images\Poster\565_zhufu.jpg" />
+    <Content Include="images\Poster\566_zhufu.jpg" />
+    <Content Include="images\Poster\567_zhufu.jpg" />
+    <Content Include="images\Poster\568_zhufu.jpg" />
+    <Content Include="images\Poster\569_zhufu.jpg" />
+    <Content Include="images\Poster\570_zhufu.jpg" />
+    <Content Include="images\Poster\571_zhufu.jpg" />
+    <Content Include="images\Poster\572_zhufu.jpg" />
+    <Content Include="images\Poster\573_zhufu.jpg" />
+    <Content Include="images\Poster\574_zhufu.jpg" />
+    <Content Include="images\Poster\575_zhufu.jpg" />
+    <Content Include="images\Poster\576_zhufu.jpg" />
+    <Content Include="images\Poster\577_zhufu.jpg" />
+    <Content Include="images\Poster\578_zhufu.jpg" />
+    <Content Include="images\Poster\579_zhufu.jpg" />
+    <Content Include="images\Poster\580_zhufu.jpg" />
+    <Content Include="images\Poster\581_zhufu.jpg" />
+    <Content Include="images\Poster\582_zhufu.jpg" />
+    <Content Include="images\Poster\583_zhufu.jpg" />
+    <Content Include="images\Poster\584_zhufu.jpg" />
+    <Content Include="images\Poster\585_zhufu.jpg" />
+    <Content Include="images\Poster\586_zhufu.jpg" />
+    <Content Include="images\Poster\587_zhufu.jpg" />
+    <Content Include="images\Poster\588_jieqi.jpg" />
+    <Content Include="images\Poster\589_jieqi.jpg" />
+    <Content Include="images\Poster\590_jieqi.jpg" />
+    <Content Include="images\Poster\591_jieqi.jpg" />
+    <Content Include="images\Poster\592_jieqi.jpg" />
+    <Content Include="images\Poster\593_jieqi.jpg" />
+    <Content Include="images\Poster\594_jieqi.jpg" />
+    <Content Include="images\Poster\595_jieqi.jpg" />
+    <Content Include="images\Poster\596_jieqi.jpg" />
+    <Content Include="images\Poster\597_jieqi.jpg" />
+    <Content Include="images\Poster\598_jieqi.jpg" />
+    <Content Include="images\Poster\599_jieqi.jpg" />
+    <Content Include="images\productback.png" />
+    <Content Include="images\qr.png" />
+    <Content Include="images\shareimg.jpg" />
+    <Content Include="images\Style\images\delet.png" />
+    <Content Include="images\Style\images\logoICON.ico" />
+    <Content Include="images\Style\images\up.png" />
+    <Content Include="images\Style\images\uptop.png" />
+    <Content Include="images\Style\images\wxapp\newCardImg\vip_state_1.png" />
+    <Content Include="images\svg\Akeytransition.svg" />
+    <Content Include="images\svg\Akeytransition_2.svg" />
+    <Content Include="images\svg\arrows_you.svg" />
+    <Content Include="images\svg\article.svg" />
+    <Content Include="images\svg\article_1.svg" />
+    <Content Include="images\svg\business.svg" />
+    <Content Include="images\svg\CardIcon\Address.png" />
+    <Content Include="images\svg\CardIcon\Business.png" />
+    <Content Include="images\svg\CardIcon\CorporateName.png" />
+    <Content Include="images\svg\CardIcon\Email.png" />
+    <Content Include="images\svg\CardIcon\icon_ad.png" />
+    <Content Include="images\svg\CardIcon\icon_ad_0.svg" />
+    <Content Include="images\svg\CardIcon\icon_analyze.svg" />
+    <Content Include="images\svg\CardIcon\icon_business.svg" />
+    <Content Include="images\svg\CardIcon\icon_email.png" />
+    <Content Include="images\svg\CardIcon\icon_email_0.svg" />
+    <Content Include="images\svg\CardIcon\icon_Employer.png" />
+    <Content Include="images\svg\CardIcon\icon_phone.png" />
+    <Content Include="images\svg\CardIcon\icon_phone_0.svg" />
+    <Content Include="images\svg\CardIcon\icon_tel_0.svg" />
+    <Content Include="images\svg\CardIcon\Phone.png" />
+    <Content Include="images\svg\CardIcon\Shared.svg" />
+    <Content Include="images\svg\CardIcon\Tel.png" />
+    <Content Include="images\svg\CardIcon\WebSite.png" />
+    <Content Include="images\svg\CardIcon\we_chat.png" />
+    <Content Include="images\svg\CardIcon\we_chat.svg" />
+    <Content Include="images\svg\commissionAgent.svg" />
+    <Content Include="images\svg\exchange.svg" />
+    <Content Include="images\svg\exchange_1.svg" />
+    <Content Include="images\svg\FaceMask.svg" />
+    <Content Include="images\svg\FaceMask2.png" />
+    <Content Include="images\svg\freeze.svg" />
+    <Content Include="images\svg\freeze_1.svg" />
+    <Content Include="images\svg\icon_activity_a.png" />
+    <Content Include="images\svg\icon_activity_b.png" />
+    <Content Include="images\svg\icon_ad_1.svg" />
+    <Content Include="images\svg\icon_analyze.svg" />
+    <Content Include="images\svg\icon_calendar.svg" />
+    <Content Include="images\svg\icon_camera.svg" />
+    <Content Include="images\svg\icon_cardcase_a.png" />
+    <Content Include="images\svg\icon_cardcase_b.png" />
+    <Content Include="images\svg\icon_chat.svg" />
+    <Content Include="images\svg\icon_code.svg" />
+    <Content Include="images\svg\icon_collect.svg" />
+    <Content Include="images\svg\icon_collect_3.svg" />
+    <Content Include="images\svg\icon_crowd.svg" />
+    <Content Include="images\svg\icon_delete.svg" />
+    <Content Include="images\svg\icon_edit.svg" />
+    <Content Include="images\svg\icon_export.svg" />
+    <Content Include="images\svg\icon_feedback.svg" />
+    <Content Include="images\svg\icon_give.svg" />
+    <Content Include="images\svg\icon_help_2.svg" />
+    <Content Include="images\svg\icon_help_3.svg" />
+    <Content Include="images\svg\icon_look.svg" />
+    <Content Include="images\svg\icon_me_a.png" />
+    <Content Include="images\svg\icon_me_b.png" />
+    <Content Include="images\svg\icon_my_a.png" />
+    <Content Include="images\svg\icon_my_b.png" />
+    <Content Include="images\svg\icon_my_b.svg" />
+    <Content Include="images\svg\icon_out.svg" />
+    <Content Include="images\svg\icon_posters.svg" />
+    <Content Include="images\svg\icon_privacy.svg" />
+    <Content Include="images\svg\icon_record.svg" />
+    <Content Include="images\svg\icon_release.svg" />
+    <Content Include="images\svg\icon_release_2.svg" />
+    <Content Include="images\svg\icon_service.svg" />
+    <Content Include="images\svg\icon_service_1.svg" />
+    <Content Include="images\svg\icon_share.svg" />
+    <Content Include="images\svg\icon_statistical.svg" />
+    <Content Include="images\svg\icon_store_1.svg" />
+    <Content Include="images\svg\icon_style.svg" />
+    <Content Include="images\svg\icon_time.svg" />
+    <Content Include="images\svg\icon_time_1.svg" />
+    <Content Include="images\svg\icon_view.svg" />
+    <Content Include="images\svg\icon_view_1.svg" />
+    <Content Include="images\svg\invite.svg" />
+    <Content Include="images\svg\invite_1.svg" />
+    <Content Include="images\svg\music.svg" />
+    <Content Include="images\svg\update.svg" />
+    <Content Include="images\svg\update_1.svg" />
+    <Content Include="images\svg\VOA.svg" />
+    <Content Include="images\svg\VOA_2.svg" />
+    <Content Include="images\svg\wechat_wallet.svg" />
+    <Content Include="images\svg\we_chat.svg" />
+    <Content Include="images\svg\zhiwei.svg" />
+    <Content Include="images\title_left.png" />
+    <Content Include="images\title_middle.png" />
+    <Content Include="images\title_right.png" />
+    <Content Include="images\up.png" />
+    <Content Include="images\uptop.png" />
+    <Content Include="images\Weather\daxue.png" />
+    <Content Include="images\Weather\dayu.png" />
+    <Content Include="images\Weather\duoyun.png" />
+    <Content Include="images\Weather\duoyun_ye.png" />
+    <Content Include="images\Weather\fuchen.png" />
+    <Content Include="images\Weather\mai.png" />
+    <Content Include="images\Weather\qing.png" />
+    <Content Include="images\Weather\qing_ye.png" />
+    <Content Include="images\Weather\wu.png" />
+    <Content Include="images\Weather\xiaoxue.png" />
+    <Content Include="images\Weather\xiaoyu.png" />
+    <Content Include="images\Weather\yangsha.png" />
+    <Content Include="images\Weather\yin.png" />
+    <Content Include="images\Weather\yujiaxue.png" />
+    <Content Include="images\wxapp\aboutus_footImg.png" />
+    <Content Include="images\wxapp\aboutus_gzh.png" />
+    <Content Include="images\wxapp\aboutus_img.png" />
+    <Content Include="images\wxapp\Banner1.jpg" />
+    <Content Include="images\wxapp\banner2_img.png" />
+    <Content Include="images\wxapp\banner3.png" />
+    <Content Include="images\wxapp\banner4.png" />
+    <Content Include="images\wxapp\banner5.png" />
+    <Content Include="images\wxapp\banner_img.png" />
+    <Content Include="images\wxapp\bbt_img.png" />
+    <Content Include="images\wxapp\boy_icon.png" />
+    <Content Include="images\wxapp\btn_bg.png" />
+    <Content Include="images\wxapp\circle_bg.png" />
+    <Content Include="images\wxapp\ClosedEyes.png" />
+    <Content Include="images\wxapp\close_icon.png" />
+    <Content Include="images\wxapp\college_01.png" />
+    <Content Include="images\wxapp\college_02.png" />
+    <Content Include="images\wxapp\college_03.png" />
+    <Content Include="images\wxapp\college_04.png" />
+    <Content Include="images\wxapp\college_05.png" />
+    <Content Include="images\wxapp\college_banner.png" />
+    <Content Include="images\wxapp\cooperationbanner.png" />
+    <Content Include="images\wxapp\down_icon.png.png" />
+    <Content Include="images\wxapp\fangdajing_02.png" />
+    <Content Include="images\wxapp\file.png" />
+    <Content Include="images\wxapp\girl_icon.png" />
+    <Content Include="images\wxapp\logo.png" />
+    <Content Include="images\wxapp\noimg.png" />
+    <Content Include="images\wxapp\none_icon.png.png" />
+    <Content Include="images\wxapp\online_bg.png" />
+    <Content Include="images\wxapp\OpenEyes.png" />
+    <Content Include="images\wxapp\saleCollegeshare.jpg" />
+    <Content Include="images\wxapp\saleCulb_banner.png" />
+    <Content Include="images\wxapp\Share.png" />
+    <Content Include="images\wxapp\Share_Agency.png" />
+    <Content Include="images\wxapp\share_banner.jpg" />
+    <Content Include="images\wxapp\share_bg.png" />
+    <Content Include="images\wxapp\share_business.jpg" />
+    <Content Include="images\wxapp\Share_Business.png" />
+    <Content Include="images\wxapp\share_icon.png" />
+    <Content Include="images\wxapp\share_need.jpg" />
+    <Content Include="images\wxapp\share_require.jpg" />
+    <Content Include="images\wxapp\Share_Require.png" />
+    <Content Include="images\wxapp\share_sale.jpg" />
+    <Content Include="images\wxapp\share_write_icon.png" />
+    <Content Include="images\wxapp\upimg.jpg" />
+    <Content Include="images\wxapp\uploadimg_bg.png" />
+    <Content Include="images\wxapp\uploadperson_img.png" />
+    <Content Include="images\wxapp\upload_img.png" />
+    <Content Include="images\wxapp\up_icon.png.png" />
+    <Content Include="images\wxapp\zixun_icon.png" />
+    <Content Include="images\wxBusinessCard\5.jpg" />
+    <Content Include="images\wxBusinessCard\5.png" />
+    <Content Include="images\wxBusinessCard\6.png" />
+    <Content Include="images\wxBusinessCard\7.png" />
+    <Content Include="images\wxBusinessCard\776.png" />
+    <Content Include="images\wxBusinessCard\access.png" />
+    <Content Include="images\wxBusinessCard\access2.png" />
+    <Content Include="images\wxBusinessCard\access3.png" />
+    <Content Include="images\wxBusinessCard\access4.png" />
+    <Content Include="images\wxBusinessCard\access5.jpg" />
+    <Content Include="images\wxBusinessCard\access5.png" />
+    <Content Include="images\wxBusinessCard\access6.png" />
+    <Content Include="images\wxBusinessCard\access7.png" />
+    <Content Include="images\wxBusinessCard\agent.jpg" />
+    <Content Include="images\wxBusinessCard\agent2.jpg" />
+    <Content Include="images\wxBusinessCard\balanceback.png" />
+    <Content Include="images\wxBusinessCard\balanceback2.png" />
+    <Content Include="images\wxBusinessCard\business.png" />
+    <Content Include="images\wxBusinessCard\businessback.png" />
+    <Content Include="images\wxBusinessCard\cardback.jpg" />
+    <Content Include="images\wxBusinessCard\cardback2.jpg" />
+    <Content Include="images\wxBusinessCard\cardback3.jpg" />
+    <Content Include="images\wxBusinessCard\company.png" />
+    <Content Include="images\wxBusinessCard\CustomerBack.jpg" />
+    <Content Include="images\wxBusinessCard\dianhua.png" />
+    <Content Include="images\wxBusinessCard\dianhua2.png" />
+    <Content Include="images\wxBusinessCard\dianhua4.png" />
+    <Content Include="images\wxBusinessCard\dianhua5.png" />
+    <Content Include="images\wxBusinessCard\EditCardBack.jpg" />
+    <Content Include="images\wxBusinessCard\EditCardBack2.jpg" />
+    <Content Include="images\wxBusinessCard\email.png" />
+    <Content Include="images\wxBusinessCard\erweima3.png" />
+    <Content Include="images\wxBusinessCard\erweima4.png" />
+    <Content Include="images\wxBusinessCard\file.png" />
+    <Content Include="images\wxBusinessCard\gongsixinxi.png" />
+    <Content Include="images\wxBusinessCard\gongsixinxi2.png" />
+    <Content Include="images\yes.png" />
+    <Content Include="images\youhui.jpg" />
+    <Content Include="images\YSLogo.jpg" />
+    <Content Include="images\zhongmingzhi.png" />
+    <Content Include="Login.aspx" />
+    <Content Include="OpenAIDemo.aspx" />
+    <Content Include="Pay\BusinessCardParty_Notify_Url.aspx" />
+    <Content Include="public\css\iconfont.css" />
+    <Content Include="public\css\style.css" />
+    <Content Include="public\images\5.png" />
+    <Content Include="public\images\login-bg.jpg" />
+    <Content Include="public\images\logo.png" />
+    <Content Include="public\images\logo2.png" />
+    <Content Include="public\images\qr.jpg" />
+    <Content Include="public\js\index.js" />
+    <Content Include="public\js\jquery-1.10.1.min.js" />
+    <Content Include="qywxUrl2.aspx" />
+    <Content Include="qywxUrl.aspx" />
+    <Content Include="scripts\ai.0.22.9-build00167.js" />
+    <Content Include="scripts\ai.0.22.9-build00167.min.js" />
+    <Content Include="ThirdLogin\WXLoginPage.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="index.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\BusinessCardController.cs" />
+    <Compile Include="Controllers\LuckyDrawController.cs" />
+    <Compile Include="Controllers\bcOpenAIController.cs" />
+    <Compile Include="Controllers\ProfitsharingToOrder.cs" />
+    <Compile Include="GenerateIMG\CardIMG5.aspx.cs">
+      <DependentUpon>CardIMG5.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\CardIMG5.aspx.designer.cs">
+      <DependentUpon>CardIMG5.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\ColorPageIMG.aspx.cs">
+      <DependentUpon>ColorPageIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\ColorPageIMG.aspx.designer.cs">
+      <DependentUpon>ColorPageIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\CardIMG.aspx.cs">
+      <DependentUpon>CardIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\CardIMG.aspx.designer.cs">
+      <DependentUpon>CardIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\PersonalIMG.aspx.cs">
+      <DependentUpon>PersonalIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\PersonalIMG.aspx.designer.cs">
+      <DependentUpon>PersonalIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\PosterIMG.aspx.cs">
+      <DependentUpon>PosterIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\PosterIMG.aspx.designer.cs">
+      <DependentUpon>PosterIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\ProductIMG.aspx.cs">
+      <DependentUpon>ProductIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\ProductIMG.aspx.designer.cs">
+      <DependentUpon>ProductIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\Address.aspx.cs">
+      <DependentUpon>Address.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\Address.aspx.designer.cs">
+      <DependentUpon>Address.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\CompanyIMG.aspx.cs">
+      <DependentUpon>CompanyIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\CompanyIMG.aspx.designer.cs">
+      <DependentUpon>CompanyIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\AllQRIMG.aspx.cs">
+      <DependentUpon>AllQRIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\AllQRIMG.aspx.designer.cs">
+      <DependentUpon>AllQRIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateIMG\QRIMG.aspx.cs">
+      <DependentUpon>QRIMG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\QRIMG.aspx.designer.cs">
+      <DependentUpon>QRIMG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BCPartyModel.cs" />
+    <Compile Include="Models\SurveyResponse.cs" />
+    <Compile Include="OpenAIDemo.aspx.cs">
+      <DependentUpon>OpenAIDemo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="OpenAIDemo.aspx.designer.cs">
+      <DependentUpon>OpenAIDemo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pay\BusinessCardParty_Notify_Url.aspx.cs">
+      <DependentUpon>BusinessCardParty_Notify_Url.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pay\BusinessCardParty_Notify_Url.aspx.designer.cs">
+      <DependentUpon>BusinessCardParty_Notify_Url.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="qywxUrl2.aspx.cs">
+      <DependentUpon>qywxUrl2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="qywxUrl2.aspx.designer.cs">
+      <DependentUpon>qywxUrl2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="qywxUrl.aspx.cs">
+      <DependentUpon>qywxUrl.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="qywxUrl.aspx.designer.cs">
+      <DependentUpon>qywxUrl.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\MasterPage.Master.cs">
+      <DependentUpon>MasterPage.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Shared\MasterPage.Master.designer.cs">
+      <DependentUpon>MasterPage.Master</DependentUpon>
+    </Compile>
+    <Compile Include="ThirdLogin\WXLoginPage.aspx.cs">
+      <DependentUpon>WXLoginPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ThirdLogin\WXLoginPage.aspx.designer.cs">
+      <DependentUpon>WXLoginPage.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shared\MasterPage.Master" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoreFramework\CoreFramework.csproj">
+      <Project>{b8581b67-43cb-4cfa-bca6-2022219a7bbe}</Project>
+      <Name>CoreFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SPlatformService\SPlatformService.csproj">
+      <Project>{71e099a4-5af0-4018-af46-c09071dba788}</Project>
+      <Name>SPlatformService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SPLibrary\SPLibrary.csproj">
+      <Project>{4bc662b8-8ddd-451a-a480-b88abc076b54}</Project>
+      <Name>SPLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>61131</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:60844/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.9.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.9.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.WindowsServer.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.Web.2.9.0\build\Microsoft.ApplicationInsights.Web.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ApplicationInsights.Web.2.9.0\build\Microsoft.ApplicationInsights.Web.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.9.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.9.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets')" />
+  <Import Project="..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets')" />
+  <Import Project="..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.targets')" />
+  <Import Project="..\packages\Microsoft.ApplicationInsights.WindowsServer.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.WindowsServer.2.9.0\build\Microsoft.ApplicationInsights.WindowsServer.targets')" />
+  <Import Project="..\packages\Microsoft.ApplicationInsights.Web.2.9.0\build\Microsoft.ApplicationInsights.Web.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.Web.2.9.0\build\Microsoft.ApplicationInsights.Web.targets')" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,83 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="BusinessCard.Shared.MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>乐聊名片企业版</title>
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/public/css/style.css")%>"/>
+    <script type="text/javascript" src="<%= ResolveUrl("~/public/js/jquery-1.10.1.min.js")%>"></script>
+    <script type="text/javascript" src="<%= ResolveUrl("~/public/js/index.js")%>"></script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div class="Mainleft">
+  <div class="Logo"> <img class="logo1" src="<%= ResolveUrl("~/public/images/logo.png")%>"/> <img class="logo2" src="<%= ResolveUrl("~/public/images/logo2.png")%>"/> </div>
+  <div class="contact_div">
+    <ul>
+      <li class="on"><a class="open"><i class="iconfont icon-shouye"></i><span>首页</span></a></li>
+      <li><a class="open"><i class="iconfont icon-guanliyuanguanli"></i><span>人员管理</span><font></font></a>
+        <div class="list">
+          <div class="line">公司部门</div>
+          <div class="line">公司成员</div>
+        </div>
+      </li>
+      <li><a class="open"><i class="iconfont icon-kehuguanli-copy-copy-copy"></i><span>CRM</span><font></font></a>
+        <div class="list">
+          <div class="line">销售线索</div>
+          <div class="line">销售机会</div>
+          <div class="line">客户</div>
+          <div class="line">合同</div>
+          <div class="line">日报</div>
+          <div class="line">周报</div>
+          <div class="line">月报</div>
+          <div class="line">销售资源库</div>
+        </div>
+      </li>
+      <li><a class="open"><i class="iconfont icon-jianjie"></i><span>官网设置</span><font></font></a>
+        <div class="list">
+          <div class="line">编辑官网</div>
+          <div class="line">新闻管理</div>
+          <div class="line">产品管理</div>
+        </div>
+      </li>
+      <li><a class="open"><i class="iconfont icon-fangke1"></i><span>访问记录</span><font></font></a>
+        <div class="list">
+          <div class="line">名片访问</div>
+          <div class="line">新闻访问</div>
+          <div class="line">产品访问</div>
+          <div class="line">总计</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="Mainright">
+  <div class="Maintop">
+    <div class="menu"><i class="iconfont icon-caidan"></i></div>
+    <div class="headimg">
+      <%if (PersonalVO.Headimg != "")
+      { %>
+      <div class="img" style=" background-image:url(<%=PersonalVO.Headimg%>)"></div>
+      <%}
+    else
+    { %>
+      <div class="img" style=" background-image:url(https://www.zhongxiaole.net/SPManager/Style/images/wxcard/noheadimg.jpg)"></div>
+        <%} %>
+      <div class="name"><%=PersonalVO.Name %></div>
+      <i class="iconfont icon-xiala3"></i> </div>
+  </div>
+  <div class="Mainbottom">
+    <div class="Content">
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder_Content" runat="server">
+            
+        </asp:ContentPlaceHolder>
+    </div>
+  </div>
+</div>
+    </form>
+</body>
+</html>

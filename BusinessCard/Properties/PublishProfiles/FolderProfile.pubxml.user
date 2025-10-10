@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\Administrator\Desktop\乐聊\文件上传服务\BusinessCard</_PublishTargetUrl>
+    <History>True|2025-05-23T10:16:58.6395711Z;True|2025-05-23T17:58:19.6501158+08:00;True|2025-05-23T17:35:46.8355069+08:00;True|2025-05-23T11:15:46.4958854+08:00;True|2025-05-23T10:15:33.3714755+08:00;True|2025-05-19T09:39:01.4923285+08:00;True|2025-05-19T09:25:39.4761598+08:00;True|2025-05-17T15:26:30.6287953+08:00;False|2025-05-17T15:24:51.3211949+08:00;True|2024-10-30T10:56:58.1396027+08:00;True|2024-10-29T16:41:53.8455693+08:00;True|2024-10-29T16:32:52.6300485+08:00;True|2024-10-29T16:31:19.4242731+08:00;True|2024-10-29T15:29:13.3841104+08:00;True|2024-10-29T11:47:15.0565100+08:00;True|2024-10-28T17:36:55.3962398+08:00;True|2024-10-25T17:47:34.8360012+08:00;True|2024-10-25T16:47:06.4664319+08:00;False|2024-10-25T16:46:26.9969902+08:00;True|2024-10-25T16:42:40.8168993+08:00;True|2024-10-25T14:46:18.4136141+08:00;True|2024-10-18T14:41:31.5974432+08:00;True|2024-10-18T14:25:43.7466295+08:00;True|2024-10-18T14:10:32.7408084+08:00;True|2024-10-18T11:27:54.6070908+08:00;True|2024-10-17T09:14:07.0005864+08:00;True|2024-10-16T16:26:25.7259467+08:00;True|2024-10-15T15:52:50.0339993+08:00;True|2024-10-14T17:18:50.7776020+08:00;True|2024-10-14T17:08:23.5454032+08:00;True|2024-10-12T15:58:29.4598432+08:00;True|2024-10-12T14:25:32.4493557+08:00;True|2024-10-12T14:22:35.8103848+08:00;True|2024-10-12T14:20:29.7091689+08:00;True|2024-10-12T14:17:18.8755962+08:00;True|2024-10-12T14:15:02.1893193+08:00;True|2024-10-12T11:59:50.2173165+08:00;True|2024-10-12T11:57:10.2999602+08:00;True|2024-10-12T11:45:32.9507557+08:00;False|2024-10-12T11:44:25.8002485+08:00;True|2024-10-12T11:25:09.6821687+08:00;True|2024-10-12T11:03:43.3740624+08:00;True|2024-10-12T10:53:28.1866850+08:00;True|2024-10-11T17:47:32.0182358+08:00;True|2024-10-11T17:44:20.3322090+08:00;False|2024-10-11T17:42:33.9975974+08:00;True|2024-10-11T16:59:59.7365620+08:00;True|2024-10-11T14:42:54.1345065+08:00;True|2024-10-09T16:25:23.0698548+08:00;True|2024-09-23T16:15:11.9568389+08:00;True|2024-09-23T15:49:58.2715201+08:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="ApplicationInsights.config">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="bin/AipSdk.dll">
+      <publishTime>11/10/2018 01:47:34</publishTime>
+    </File>
+    <File Include="bin/AlibabaCloud.EndpointUtil.dll">
+      <publishTime>04/07/2020 16:33:48</publishTime>
+    </File>
+    <File Include="bin/AlibabaCloud.GatewaySpi.dll">
+      <publishTime>12/07/2021 13:26:52</publishTime>
+    </File>
+    <File Include="bin/AlibabaCloud.OpenApiClient.dll">
+      <publishTime>12/22/2021 15:49:42</publishTime>
+    </File>
+    <File Include="bin/AlibabaCloud.OpenApiUtil.dll">
+      <publishTime>12/14/2021 17:40:22</publishTime>
+    </File>
+    <File Include="bin/AlibabaCloud.SDK.CCC20200701.dll">
+      <publishTime>01/28/2022 15:38:22</publishTime>
+    </File>
+    <File Include="bin/AlibabaCloud.TeaUtil.dll">
+      <publishTime>12/07/2021 20:07:30</publishTime>
+    </File>
+    <File Include="bin/aliyun-net-sdk-core.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/Aliyun.Credentials.dll">
+      <publishTime>08/14/2020 17:20:22</publishTime>
+    </File>
+    <File Include="bin/ApplicationInsights.config">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="bin/BouncyCastle.Crypto.dll">
+      <publishTime>12/09/2020 02:05:32</publishTime>
+    </File>
+    <File Include="bin/BusinessCard.dll">
+      <publishTime>05/23/2025 18:16:57</publishTime>
+    </File>
+    <File Include="bin/BusinessCard.pdb">
+      <publishTime>05/23/2025 18:16:57</publishTime>
+    </File>
+    <File Include="bin/CoreFramework.dll">
+      <publishTime>08/13/2024 15:27:39</publishTime>
+    </File>
+    <File Include="bin/CoreFramework.dll.config">
+      <publishTime>08/12/2024 16:52:00</publishTime>
+    </File>
+    <File Include="bin/CoreFramework.pdb">
+      <publishTime>08/13/2024 15:27:39</publishTime>
+    </File>
+    <File Include="bin/EPPlus.dll">
+      <publishTime>07/24/2024 22:13:24</publishTime>
+    </File>
+    <File Include="bin/EPPlus.Interfaces.dll">
+      <publishTime>11/21/2022 20:51:04</publishTime>
+    </File>
+    <File Include="bin/EPPlus.System.Drawing.dll">
+      <publishTime>11/21/2022 20:51:06</publishTime>
+    </File>
+    <File Include="bin/GetuiServerApiSDK.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/Google.Protobuf.dll">
+      <publishTime>11/13/2020 23:09:34</publishTime>
+    </File>
+    <File Include="bin/Google.Protobuf.pdb">
+      <publishTime>11/14/2020 04:57:28</publishTime>
+    </File>
+    <File Include="bin/Google.ProtocolBuffers.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/ICSharpCode.SharpZipLib.dll">
+      <publishTime>08/16/2018 01:16:34</publishTime>
+    </File>
+    <File Include="bin/Intelligencia.UrlRewriter.dll">
+      <publishTime>03/13/2013 23:47:14</publishTime>
+    </File>
+    <File Include="bin/K4os.Compression.LZ4.dll">
+      <publishTime>07/04/2019 06:59:30</publishTime>
+    </File>
+    <File Include="bin/K4os.Compression.LZ4.Streams.dll">
+      <publishTime>07/04/2019 06:59:32</publishTime>
+    </File>
+    <File Include="bin/K4os.Hash.xxHash.dll">
+      <publishTime>07/04/2019 04:39:02</publishTime>
+    </File>
+    <File Include="bin/LitJson.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/log4net.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
+      <publishTime>06/27/2017 20:59:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.DependencyCollector.dll">
+      <publishTime>01/29/2019 15:43:46</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.PerfCounterCollector.dll">
+      <publishTime>01/29/2019 15:44:38</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.ServerTelemetryChannel.dll">
+      <publishTime>01/29/2019 07:51:12</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.Web.dll">
+      <publishTime>01/29/2019 17:22:42</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.WindowsServer.dll">
+      <publishTime>01/29/2019 17:20:04</publishTime>
+    </File>
+    <File Include="bin/Microsoft.ApplicationInsights.dll">
+      <publishTime>02/13/2021 02:35:32</publishTime>
+    </File>
+    <File Include="bin/Microsoft.ApplicationInsights.pdb">
+      <publishTime>02/13/2021 02:35:02</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Bcl.AsyncInterfaces.dll">
+      <publishTime>10/20/2020 02:40:36</publishTime>
+    </File>
+    <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
+      <publishTime>06/15/2015 10:06:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IO.RecyclableMemoryStream.dll">
+      <publishTime>12/12/2023 05:53:28</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.EnterpriseLibrary.Common.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.EnterpriseLibrary.Data.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.ObjectBuilder.dll">
+      <publishTime>08/12/2024 16:20:51</publishTime>
+    </File>
+    <File Include="bin/MySql.Data.dll">
+      <publishTime>05/31/2021 23:26:30</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>11/24/2022 10:10:26</publishTime>
+    </File>
+    <File Include="bin/NPOI.dll">
+      <publishTime>12/18/2018 03:15:12</publishTime>
+    </File>
+    <File Include="bin/NPOI.OOXML.dll">
+      <publishTime>12/18/2018 03:15:12</publishTime>
+    </File>
+    <File Include="bin/NPOI.OpenXml4Net.dll">
+      <publishTime>12/18/2018 03:15:12</publishTime>
+    </File>
+    <File Include="bin/NPOI.OpenXmlFormats.dll">
+      <publishTime>12/18/2018 03:15:12</publishTime>
+    </File>
+    <File Include="bin/OpenAI_API.dll">
+      <publishTime>02/17/2023 04:30:48</publishTime>
+    </File>
+    <File Include="bin/Pathoschild.Http.Client.dll">
+      <publishTime>04/18/2018 23:54:34</publishTime>
+    </File>
+    <File Include="bin/RestSharp.dll">
+      <publishTime>11/20/2022 00:12:34</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.exe">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Build.Tasks.CodeAnalysis.dll">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.dll">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.dll">
+      <publishTime>06/19/2015 04:19:44</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.VisualBasic.dll">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CSharp.Core.targets">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.VisualBasic.Core.targets">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Collections.Immutable.dll">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Reflection.Metadata.dll">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.exe">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe.config">
+      <publishTime>06/19/2015 04:19:46</publishTime>
+    </File>
+    <File Include="bin/SPlatformService.dll">
+      <publishTime>05/23/2025 17:35:37</publishTime>
+    </File>
+    <File Include="bin/SPlatformService.dll.config">
+      <publishTime>04/30/2025 11:06:06</publishTime>
+    </File>
+    <File Include="bin/SPlatformService.pdb">
+      <publishTime>05/23/2025 17:35:37</publishTime>
+    </File>
+    <File Include="bin/SPLibrary.dll">
+      <publishTime>05/23/2025 17:35:29</publishTime>
+    </File>
+    <File Include="bin/SPLibrary.dll.config">
+      <publishTime>05/17/2025 15:24:28</publishTime>
+    </File>
+    <File Include="bin/SPLibrary.pdb">
+      <publishTime>05/23/2025 17:35:29</publishTime>
+    </File>
+    <File Include="bin/Swashbuckle.Core.dll">
+      <publishTime>07/08/2017 09:30:56</publishTime>
+    </File>
+    <File Include="bin/System.Buffers.dll">
+      <publishTime>02/19/2020 18:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Diagnostics.DiagnosticSource.dll">
+      <publishTime>10/20/2020 02:38:30</publishTime>
+    </File>
+    <File Include="bin/System.Memory.dll">
+      <publishTime>05/08/2022 11:31:02</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>11/28/2018 21:00:36</publishTime>
+    </File>
+    <File Include="bin/System.Numerics.Vectors.dll">
+      <publishTime>05/15/2018 21:29:44</publishTime>
+    </File>
+    <File Include="bin/System.Runtime.CompilerServices.Unsafe.dll">
+      <publishTime>10/23/2021 07:40:18</publishTime>
+    </File>
+    <File Include="bin/System.Text.Encodings.Web.dll">
+      <publishTime>10/20/2020 02:40:34</publishTime>
+    </File>
+    <File Include="bin/System.Text.Json.dll">
+      <publishTime>12/12/2020 10:42:36</publishTime>
+    </File>
+    <File Include="bin/System.Threading.Tasks.Extensions.dll">
+      <publishTime>02/19/2020 18:05:18</publishTime>
+    </File>
+    <File Include="bin/System.ValueTuple.dll">
+      <publishTime>05/15/2018 21:29:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/28/2015 12:02:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/28/2015 12:03:46</publishTime>
+    </File>
+    <File Include="bin/Tea.dll">
+      <publishTime>03/12/2021 14:27:34</publishTime>
+    </File>
+    <File Include="bin/TencentCloud.dll">
+      <publishTime>02/13/2020 22:26:48</publishTime>
+    </File>
+    <File Include="bin/Ubiety.Dns.Core.dll">
+      <publishTime>05/31/2021 23:25:08</publishTime>
+    </File>
+    <File Include="bin/zh-Hans/System.Net.Http.Formatting.resources.dll">
+      <publishTime>11/29/2018 21:26:02</publishTime>
+    </File>
+    <File Include="bin/zh-Hans/System.Web.Http.resources.dll">
+      <publishTime>01/28/2015 12:02:56</publishTime>
+    </File>
+    <File Include="bin/zh-Hans/System.Web.Http.WebHost.resources.dll">
+      <publishTime>01/28/2015 12:03:48</publishTime>
+    </File>
+    <File Include="bin/Zstandard.Net.dll">
+      <publishTime>05/31/2021 23:25:08</publishTime>
+    </File>
+    <File Include="css/card.css">
+      <publishTime>03/20/2025 17:56:23</publishTime>
+    </File>
+    <File Include="css/css.css">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/Address.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/AllQRIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/CardIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/CardIMG5.aspx">
+      <publishTime>03/20/2025 18:49:05</publishTime>
+    </File>
+    <File Include="GenerateIMG/ColorPageIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/CompanyIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/PersonalIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/PosterIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/ProductIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="GenerateIMG/QRIMG.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="images/app/Company.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="images/app/CompanyGoOut.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="images/app/CompanyPunchIn.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="images/app/CompanyPunchOut.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="images/app/Posterback.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="images/app/ShareBack.jpg">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="images/app/ShareBack2.jpg">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="images/Poster/1.jpg">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="index.aspx">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="Login.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="OpenAIDemo.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>08/12/2024 16:45:08</publishTime>
+    </File>
+    <File Include="public/css/iconfont.css">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/css/style.css">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/images/5.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/images/login-bg.jpg">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/images/logo.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/images/logo2.png">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/images/qr.jpg">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/js/index.js">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="public/js/jquery-1.10.1.min.js">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="qywxUrl.aspx">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="qywxUrl2.aspx">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="scripts/ai.0.22.9-build00167.js">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="scripts/ai.0.22.9-build00167.min.js">
+      <publishTime>08/12/2024 16:20:35</publishTime>
+    </File>
+    <File Include="Shared/MasterPage.Master">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="ThirdLogin/WXLoginPage.aspx">
+      <publishTime>08/12/2024 16:20:34</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>05/17/2025 15:26:29</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
