@@ -9026,6 +9026,8 @@ namespace SPLibrary.CustomerManagement.BO
         }
 
 
+
+        #region 签到
         /// <summary>
         /// 添加签到表
         /// </summary>
@@ -9289,6 +9291,8 @@ namespace SPLibrary.CustomerManagement.BO
             ICardQuestionnaireSignupDAO rDAO = CustomerManagementDAOFactory.CardQuestionnaireSignupDAO(this.CurrentCustomerProfile);
             return rDAO.FindAllByPageIndex(conditionStr + " and AppType=" + AppType, start, end, sortcolname, asc, parameters);
         }
+
+        #endregion
 
         /// <summary>
         /// 添加软文

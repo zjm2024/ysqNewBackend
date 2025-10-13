@@ -16177,13 +16177,13 @@ namespace BusinessCard.Controllers
         /// <summary>
         /// 添加或更新签到表
         /// </summary>
-        /// <param name="CardQuestionnaireVO"></param>
+        /// <param name="CardRegistertableVO"></param>
         /// <param name="token">口令</param>
         /// <returns></returns>
         [Route("UpdateQuestionnaire"), HttpPost]
-        public ResultObject UpdateQuestionnaire([FromBody] CardQuestionnaireVO CardQuestionnaireVO, string token)
+        public ResultObject UpdateQuestionnaire([FromBody] CardRegistertableVO CardRegistertableVO, string token)
         {
-            if (CardQuestionnaireVO == null)
+            if (CardRegistertableVO == null)
             {
                 return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
             }
@@ -16194,36 +16194,36 @@ namespace BusinessCard.Controllers
 
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
 
             /*审核文本是否合法*/
-            if (!cBO.msg_sec_check(CardQuestionnaireVO))
+            if (!cBO.msg_sec_check(CardRegistertableVO))
             {
                 return new ResultObject() { Flag = 0, Message = "有政治敏感或违法关键词，请重新填写!", Result = null };
             }
             /*审核文本是否合法*/
 
-            if (CardQuestionnaireVO.QuestionnaireID > 0)
+            if (CardRegistertableVO.QuestionnaireID > 0)
             {
 
-                if (CardQuestionnaireVO.CustomerId != customerId && !cBO.isQuestionnaireAdmin(CardQuestionnaireVO.QuestionnaireID, customerId))
+                if (CardRegistertableVO.CustomerId != customerId && !cBO.isQuestionnaireAdmin(CardRegistertableVO.QuestionnaireID, customerId))
                 {
                     return new ResultObject() { Flag = 0, Message = "更新失败,你没有权限!", Result = null };
                 }
 
-                if (cBO.UpdateCardQuestionnaire(CardQuestionnaireVO))
+                if (cBO.UpdateCardRegistertable(CardRegistertableVO))
                 {
-                    return new ResultObject() { Flag = 1, Message = "更新成功!", Result = CardQuestionnaireVO.QuestionnaireID };
+                    return new ResultObject() { Flag = 1, Message = "更新成功!", Result = CardRegistertableVO.QuestionnaireID };
                 }
                 else
                     return new ResultObject() { Flag = 0, Message = "更新失败!", Result = null };
             }
             else
             {
-                CardQuestionnaireVO.CreatedAt = DateTime.Now;
-                CardQuestionnaireVO.CustomerId = customerId;
+                CardRegistertableVO.CreatedAt = DateTime.Now;
+                CardRegistertableVO.CustomerId = customerId;
 
-                int QuestionnaireID = cBO.AddQuestionnaire(CardQuestionnaireVO);
+                int QuestionnaireID = cBO.AddQuestionnaire(CardRegistertableVO);
                 if (QuestionnaireID > 0)
                 {
                     return new ResultObject() { Flag = 1, Message = "添加成功!", Result = QuestionnaireID };
@@ -16249,14 +16249,14 @@ namespace BusinessCard.Controllers
 
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
 
-            CardQuestionnaireVO CardQuestionnaireVO = cBO.FindCardQuestionnaireByQuestionnaireID(QuestionnaireID);
-            if (CardQuestionnaireVO == null)
+            CardRegistertableVO CardRegistertableVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
+            if (CardRegistertableVO == null)
             {
                 return new ResultObject() { Flag = 0, Message = "参数错误!", Result = null };
             }
-            if (CardQuestionnaireVO.CustomerId != customerId)
+            if (CardRegistertableVO.CustomerId != customerId)
             {
                 return new ResultObject() { Flag = 0, Message = "更新失败,你没有权限!", Result = null };
             }
@@ -16274,7 +16274,7 @@ namespace BusinessCard.Controllers
                             int customerid = Convert.ToInt32(messageIdArr[i]);
                             if (!cBO.isQuestionnaireAdmin(QuestionnaireID, customerid))
                             {
-                                CardQuestionnaireAdminVO cCVO = new CardQuestionnaireAdminVO();
+                                CardRegistertableAdminVO cCVO = new CardRegistertableAdminVO();
                                 cCVO.QuestionnaireID = QuestionnaireID;
                                 cCVO.CustomerId = customerid;
                                 cBO.AddQuestionnaireAdmin(cCVO);
@@ -16321,13 +16321,13 @@ namespace BusinessCard.Controllers
 
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
-            List<CardQuestionnaireVO> qVO = cBO.FindCardQuestionnaireByCondtion("CustomerId = " + customerId + " and isTemplate=0");
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+            List<CardRegistertableVO> qVO = cBO.FindCardRegistertableByCondtion("CustomerId = " + customerId + " and isTemplate=0");
 
 
             //仅作为管理员的签到表
-            List<CardQuestionnaireVO> newlVO = new List<CardQuestionnaireVO>();
-            List<CardQuestionnaireAdminVO> aVO = cBO.FindQuestionnaireAdminByCondition("CustomerId = " + customerId);
+            List<CardRegistertableVO> newlVO = new List<CardRegistertableVO>();
+            List<CardRegistertableAdminVO> aVO = cBO.FindQuestionnaireAdminByCondition("CustomerId = " + customerId);
 
             for (int i = 0; i < aVO.Count; i++)
             {
@@ -16335,7 +16335,7 @@ namespace BusinessCard.Controllers
                 {
                     if (!qVO.Exists(p => p.QuestionnaireID == aVO[i].QuestionnaireID))
                     {
-                        CardQuestionnaireVO cVo = cBO.FindCardQuestionnaireByQuestionnaireID(aVO[i].QuestionnaireID);
+                        CardRegistertableVO cVo = cBO.FindCardRegistertableByQuestionnaireID(aVO[i].QuestionnaireID);
 
                         if (cVo != null)
                         {
@@ -16354,13 +16354,13 @@ namespace BusinessCard.Controllers
             else
                 qVO = newlVO;
 
-            IEnumerable<CardQuestionnaireVO> newqVO = qVO.OrderBy(f => f.CreatedAt).Reverse().Skip((PageIndex - 1) * PageCount).Take(PageCount);
+            IEnumerable<CardRegistertableVO> newqVO = qVO.OrderBy(f => f.CreatedAt).Reverse().Skip((PageIndex - 1) * PageCount).Take(PageCount);
 
-            foreach (CardQuestionnaireVO item in newqVO)
+            foreach (CardRegistertableVO item in newqVO)
             {
                 try
                 {
-                    item.PeopleCount = cBO.FindCardQuestionnaireSignup("QuestionnaireID = " + item.QuestionnaireID + " and Status=1");
+                    item.PeopleCount = cBO.FindCardRegistertableSignup("QuestionnaireID = " + item.QuestionnaireID + " and Status=1");
                 }
                 catch
                 {
@@ -16378,8 +16378,8 @@ namespace BusinessCard.Controllers
         [Route("getQuestionnaireByTemplate"), HttpGet, Anonymous]
         public ResultObject getQuestionnaireByTemplate()
         {
-            CardBO cBO = new CardBO(new CustomerProfile());
-            List<CardQuestionnaireVO> qVO = cBO.FindCardQuestionnaireByCondtion("isTemplate = 1");
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+            List<CardRegistertableVO> qVO = cBO.FindCardRegistertableByCondtion("isTemplate = 1");
             return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, };
         }
 
@@ -16391,8 +16391,8 @@ namespace BusinessCard.Controllers
         [Route("getQuestionnaire"), HttpGet, Anonymous]
         public ResultObject getQuestionnaire(int QuestionnaireID, int AppType = 1)
         {
-            CardBO cBO = new CardBO(new CustomerProfile(), AppType);
-            CardQuestionnaireVO qVO = cBO.FindCardQuestionnaireByQuestionnaireID(QuestionnaireID);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), AppType);
+            CardRegistertableVO qVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
 
             if (qVO != null)
             {
@@ -16408,7 +16408,7 @@ namespace BusinessCard.Controllers
                     bVO = BusinessCardBO.FindBusinessCardById(qVO.BusinessID);
                 }
 
-                List<CardQuestionnaireAdminVO> aVO = cBO.FindQuestionnaireAdminByCondition("QuestionnaireID = " + QuestionnaireID);
+                List<CardRegistertableAdminVO> aVO = cBO.FindQuestionnaireAdminByCondition("QuestionnaireID = " + QuestionnaireID);
 
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Subsidiary = bVO, Subsidiary2 = aVO };
             }
@@ -16432,8 +16432,8 @@ namespace BusinessCard.Controllers
             int customerId = cProfile.CustomerId;
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
-            CardQuestionnaireVO uVO = cBO.FindCardQuestionnaireByQuestionnaireID(QuestionnaireID);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+            CardRegistertableVO uVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
 
 
             if (uVO != null)
@@ -16443,7 +16443,7 @@ namespace BusinessCard.Controllers
                     return new ResultObject() { Flag = 0, Message = "你没有权限删除!", Result = null };
                 }
                 //删除所有签到
-                List<CardQuestionnaireSignupVO> qsVO = cBO.FindCardQuestionnaireSignupByCondtion("QuestionnaireID = " + QuestionnaireID);
+                List<CardRegistertableSignupVO> qsVO = cBO.FindCardRegistertableSignupByCondtion("QuestionnaireID = " + QuestionnaireID);
                 for (int i = 0; i < qsVO.Count; i++)
                 {
                     cBO.DeleteByQuestionnaireSignupID(qsVO[i].QuestionnaireSignupID);
@@ -16464,13 +16464,13 @@ namespace BusinessCard.Controllers
         /// <summary>
         /// 添加或更新签到
         /// </summary>
-        /// <param name="CardQuestionnaireSignupVO"></param>
+        /// <param name="CardRegistertableSignupVO"></param>
         /// <param name="token">口令</param>
         /// <returns></returns>
         [Route("UpdateQuestionnaireSignup"), HttpPost]
-        public ResultObject UpdateQuestionnaire([FromBody] CardQuestionnaireSignupVO CardQuestionnaireSignupVO, string token)
+        public ResultObject UpdateQuestionnaire([FromBody] CardRegistertableSignupVO CardRegistertableSignupVO, string token)
         {
-            if (CardQuestionnaireSignupVO == null)
+            if (CardRegistertableSignupVO == null)
             {
                 return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
             }
@@ -16481,9 +16481,9 @@ namespace BusinessCard.Controllers
 
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
 
-            int oldCount = cBO.FindCardQuestionnaireSignup("CustomerId = " + customerId + " and QuestionnaireID=" + CardQuestionnaireSignupVO.QuestionnaireID + " and NOW()-CreatedAt<30");
+            int oldCount = cBO.FindCardRegistertableSignup("CustomerId = " + customerId + " and QuestionnaireID=" + CardRegistertableSignupVO.QuestionnaireID + " and NOW()-CreatedAt<30");
             if (oldCount > 0)
             {
                 return new ResultObject() { Flag = 0, Message = "操作过于频繁，请稍后!", Result = null };
@@ -16493,24 +16493,24 @@ namespace BusinessCard.Controllers
 
 
                 /*审核文本是否合法*/
-                if (!cBO.msg_sec_check(CardQuestionnaireSignupVO))
+                if (!cBO.msg_sec_check(CardRegistertableSignupVO))
                 {
                     return new ResultObject() { Flag = 0, Message = "有政治敏感或违法关键词，请重新填写!", Result = null };
                 }
                 /*审核文本是否合法*/
 
-                if (CardQuestionnaireSignupVO.QuestionnaireSignupID > 0)
+                if (CardRegistertableSignupVO.QuestionnaireSignupID > 0)
                 {
-                    if (cBO.UpdateCardQuestionnaireSignup(CardQuestionnaireSignupVO))
+                    if (cBO.UpdateCardRegistertableSignup(CardRegistertableSignupVO))
                     {
-                        return new ResultObject() { Flag = 1, Message = "更新成功!", Result = CardQuestionnaireSignupVO.QuestionnaireSignupID };
+                        return new ResultObject() { Flag = 1, Message = "更新成功!", Result = CardRegistertableSignupVO.QuestionnaireSignupID };
                     }
                     else
                         return new ResultObject() { Flag = 0, Message = "更新失败!", Result = null };
                 }
                 else
                 {
-                    CardQuestionnaireVO qVO = cBO.FindCardQuestionnaireByQuestionnaireID(CardQuestionnaireSignupVO.QuestionnaireID);
+                    CardRegistertableVO qVO = cBO.FindCardRegistertableByQuestionnaireID(CardRegistertableSignupVO.QuestionnaireID);
 
                     if (qVO == null)
                     {
@@ -16519,7 +16519,7 @@ namespace BusinessCard.Controllers
 
                     if (qVO.limitPeopleNum > 0)
                     {
-                        int PeopleNum = cBO.FindCardQuestionnaireSignup("QuestionnaireID=" + qVO.QuestionnaireID + " and Status=1");
+                        int PeopleNum = cBO.FindCardRegistertableSignup("QuestionnaireID=" + qVO.QuestionnaireID + " and Status=1");
                         if (PeopleNum >= qVO.limitPeopleNum)
                         {
                             return new ResultObject() { Flag = 2, Message = "签到失败，签到人数已满!", Result = null };
@@ -16528,7 +16528,7 @@ namespace BusinessCard.Controllers
 
                     if (!qVO.isRepeat)
                     {
-                        int PeopleNum = cBO.FindCardQuestionnaireSignup("QuestionnaireID=" + qVO.QuestionnaireID + " and CustomerId=" + customerId + " and Status=1");
+                        int PeopleNum = cBO.FindCardRegistertableSignup("QuestionnaireID=" + qVO.QuestionnaireID + " and CustomerId=" + customerId + " and Status=1");
                         if (PeopleNum > 0)
                         {
                             return new ResultObject() { Flag = 2, Message = "签到失败，您已经提交过了!", Result = null };
@@ -16537,89 +16537,89 @@ namespace BusinessCard.Controllers
 
                     CustomerBO uBO = new CustomerBO(new CustomerProfile());
                     CustomerVO uVO = uBO.FindCustomenById(customerId);
-                    CardQuestionnaireSignupVO.CreatedAt = DateTime.Now;
-                    CardQuestionnaireSignupVO.CustomerId = customerId;
-                    CardQuestionnaireSignupVO.Headimg = uVO.HeaderLogo;
+                    CardRegistertableSignupVO.CreatedAt = DateTime.Now;
+                    CardRegistertableSignupVO.CustomerId = customerId;
+                    CardRegistertableSignupVO.Headimg = uVO.HeaderLogo;
 
-                    var models = JsonConvert.DeserializeObject<List<QuestionnaireSigupForm>>(CardQuestionnaireSignupVO.SigupForm);
+                    var models = JsonConvert.DeserializeObject<List<RegistertableSigupForm>>(CardRegistertableSignupVO.SigupForm);
                     for (int i = 0; i < models.Count; i++)
                     {
                         if (models[i].Name == "姓名")
-                            CardQuestionnaireSignupVO.Name = models[i].value;
+                            CardRegistertableSignupVO.Name = models[i].value;
                         if (models[i].Name == "手机")
-                            CardQuestionnaireSignupVO.Phone = models[i].value;
+                            CardRegistertableSignupVO.Phone = models[i].value;
                     }
 
-                    if (CardQuestionnaireSignupVO.Name == "")
+                    if (CardRegistertableSignupVO.Name == "")
                     {
-                        CardQuestionnaireSignupVO.Name = uVO.CustomerName;
+                        CardRegistertableSignupVO.Name = uVO.CustomerName;
                     }
-                    if (CardQuestionnaireSignupVO.Phone == "")
+                    if (CardRegistertableSignupVO.Phone == "")
                     {
-                        CardQuestionnaireSignupVO.Phone = uVO.Phone;
+                        CardRegistertableSignupVO.Phone = uVO.Phone;
                     }
 
-                    int QuestionnaireSignupID = cBO.AddQuestionnaireSignup(CardQuestionnaireSignupVO);
+                    int QuestionnaireSignupID = cBO.AddQuestionnaireSignup(CardRegistertableSignupVO);
                     if (QuestionnaireSignupID > 0)
                     {
-                        List<CardDataVO> cVO = cBO.FindCardByCustomerId(customerId);
-                        if (cVO.Count <= 0)
-                        {
-                            CardDataVO CardDataVO = new CardDataVO();
-                            CardDataVO.Name = CardQuestionnaireSignupVO.Name;
-                            CardDataVO.Phone = CardQuestionnaireSignupVO.Phone;
-                            CardDataVO.Headimg = CardQuestionnaireSignupVO.Headimg;
+                        //List<CardDataVO> cVO = cBO.FindCardByCustomerId(customerId);
+                        //if (cVO.Count <= 0)
+                        //{
+                        //    CardDataVO CardDataVO = new CardDataVO();
+                        //    CardDataVO.Name = CardRegistertableSignupVO.Name;
+                        //    CardDataVO.Phone = CardRegistertableSignupVO.Phone;
+                        //    CardDataVO.Headimg = CardRegistertableSignupVO.Headimg;
 
-                            try
-                            {
+                        //    try
+                        //    {
 
-                                string Position = "";
-                                string CorporateName = "";
-                                string Address = "";
-                                decimal latitude = 0;
-                                decimal longitude = 0;
-                                string WeChat = "";
+                        //        string Position = "";
+                        //        string CorporateName = "";
+                        //        string Address = "";
+                        //        decimal latitude = 0;
+                        //        decimal longitude = 0;
+                        //        string WeChat = "";
 
-                                var model = JsonConvert.DeserializeObject<List<QuestionnaireSigupForm>>(CardQuestionnaireSignupVO.SigupForm);
+                        //        var model = JsonConvert.DeserializeObject<List<RegistertableSigupForm>>(CardRegistertableSignupVO.SigupForm);
 
-                                for (int i = 0; i < model.Count; i++)
-                                {
-                                    if (model[i].Name == "职位")
-                                        Position = model[i].value;
-                                    if (model[i].Name == "工作单位")
-                                        CorporateName = model[i].value;
-                                    if (model[i].Name == "微信")
-                                        WeChat = model[i].value;
-                                    if (model[i].Name == "单位地址")
-                                    {
-                                        Address = model[i].value;
-                                        WeiXinGeocoder Geocoder = cBO.getLatitudeAndLongitude(model[i].value);
-                                        if (Geocoder != null)
-                                        {
-                                            latitude = Geocoder.result.location.lat;
-                                            longitude = Geocoder.result.location.lng;
-                                        }
-                                    }
-                                }
+                        //        for (int i = 0; i < model.Count; i++)
+                        //        {
+                        //            if (model[i].Name == "职位")
+                        //                Position = model[i].value;
+                        //            if (model[i].Name == "工作单位")
+                        //                CorporateName = model[i].value;
+                        //            if (model[i].Name == "微信")
+                        //                WeChat = model[i].value;
+                        //            if (model[i].Name == "单位地址")
+                        //            {
+                        //                Address = model[i].value;
+                        //                WeiXinGeocoder Geocoder = cBO.getLatitudeAndLongitude(model[i].value);
+                        //                if (Geocoder != null)
+                        //                {
+                        //                    latitude = Geocoder.result.location.lat;
+                        //                    longitude = Geocoder.result.location.lng;
+                        //                }
+                        //            }
+                        //        }
 
-                                CardDataVO.Position = Position;
-                                CardDataVO.CorporateName = CorporateName;
-                                CardDataVO.Address = Address;
-                                CardDataVO.WeChat = WeChat;
-                                CardDataVO.latitude = latitude;
-                                CardDataVO.longitude = longitude;
-                            }
-                            catch
-                            {
-                            }
+                        //        CardDataVO.Position = Position;
+                        //        CardDataVO.CorporateName = CorporateName;
+                        //        CardDataVO.Address = Address;
+                        //        CardDataVO.WeChat = WeChat;
+                        //        CardDataVO.latitude = latitude;
+                        //        CardDataVO.longitude = longitude;
+                        //    }
+                        //    catch
+                        //    {
+                        //    }
 
-                            CardDataVO.CreatedAt = DateTime.Now;
-                            CardDataVO.Status = 1;//0:禁用，1:启用
-                            CardDataVO.CustomerId = customerId;
-                            CardDataVO.isQuestionnaire = 1;
-                            cBO.AddCard(CardDataVO);
-                        }
-                        cBO.AddCardMessage(CustomerVO2.CustomerName + "填写了表格《" + qVO.Title + "》", qVO.CustomerId, "表格签到", "/pages/index/SignInFormByUserList/SignInFormByUserList?QuestionnaireID=" + qVO.QuestionnaireID);
+                        //    CardDataVO.CreatedAt = DateTime.Now;
+                        //    CardDataVO.Status = 1;//0:禁用，1:启用
+                        //    CardDataVO.CustomerId = customerId;
+                        //    CardDataVO.isQuestionnaire = 1;
+                        //    cBO.AddCard(CardDataVO);
+                        //}
+                        //cBO.AddCardMessage(CustomerVO2.CustomerName + "填写了表格《" + qVO.Title + "》", qVO.CustomerId, "表格签到", "/pages/index/SignInFormByUserList/SignInFormByUserList?QuestionnaireID=" + qVO.QuestionnaireID);
                         return new ResultObject() { Flag = 1, Message = "添加成功!", Result = QuestionnaireSignupID };
                     }
                     else
@@ -16646,14 +16646,14 @@ namespace BusinessCard.Controllers
             int customerId = cProfile.CustomerId;
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
 
-            CardQuestionnaireSignupVO uVO = cBO.FindCardQuestionnaireSignupByQuestionnaireSignupID(QuestionnaireSignupID);
+            CardRegistertableSignupVO uVO = cBO.FindCardRegistertableSignupByQuestionnaireSignupID(QuestionnaireSignupID);
 
             if (uVO != null)
             {
                 uVO.Status = 0;
-                cBO.UpdateCardQuestionnaireSignup(uVO);
+                cBO.UpdateCardRegistertableSignup(uVO);
                 return new ResultObject() { Flag = 1, Message = "删除成功!", Result = null };
             }
             else
@@ -16677,16 +16677,16 @@ namespace BusinessCard.Controllers
 
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
-            CardQuestionnaireVO qVO = cBO.FindCardQuestionnaireByQuestionnaireID(QuestionnaireID);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+            CardRegistertableVO qVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
             if (qVO != null)
             {
                 //删除所有签到
-                List<CardQuestionnaireSignupVO> qsVO = cBO.FindCardQuestionnaireSignupByCondtion("QuestionnaireID = " + QuestionnaireID);
+                List<CardRegistertableSignupVO> qsVO = cBO.FindCardRegistertableSignupByCondtion("QuestionnaireID = " + QuestionnaireID);
                 for (int i = 0; i < qsVO.Count; i++)
                 {
                     qsVO[i].Status = 0;
-                    cBO.UpdateCardQuestionnaireSignup(qsVO[i]);
+                    cBO.UpdateCardRegistertableSignup(qsVO[i]);
                 }
                 return new ResultObject() { Flag = 1, Message = "删除成功!", Result = null };
             }
@@ -16714,8 +16714,8 @@ namespace BusinessCard.Controllers
 
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
-            CardQuestionnaireVO qVO = cBO.FindCardQuestionnaireByQuestionnaireID(QuestionnaireID);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+            CardRegistertableVO qVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
             if (qVO != null)
             {
                 string sql = "QuestionnaireID = " + QuestionnaireID + " and Status=1";
@@ -16723,7 +16723,7 @@ namespace BusinessCard.Controllers
                 {
                     sql += " and to_days(CreatedAt) = to_days('" + Time + "')";
                 }
-                List<CardQuestionnaireSignupVO> qsVO = cBO.FindCardQuestionnaireSignupByCondtion(sql);
+                List<CardRegistertableSignupVO> qsVO = cBO.FindCardRegistertableSignupByCondtion(sql);
                 qsVO.Reverse();
                 qVO.PeopleCount = qsVO.Count;
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qsVO.Skip((PageIndex - 1) * PageCount).Take(PageCount), Count = qsVO.Count, Subsidiary = qVO };
@@ -16778,13 +16778,13 @@ namespace BusinessCard.Controllers
             CustomerProfile uProfile = CacheManager.GetUserProfile(token) as CustomerProfile;
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(uProfile.CustomerId);
-            CardBO cBO = new CardBO(new CustomerProfile(), CustomerVO2.AppType);
-            CardQuestionnaireVO qVO = cBO.FindCardQuestionnaireByQuestionnaireID(QuestionnaireID);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+            CardRegistertableVO qVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
 
             if (qVO == null) { return new ResultObject() { Flag = 0, Message = "参数错误!", Result = null }; }
             if (uProfile.CustomerId != qVO.CustomerId) { return new ResultObject() { Flag = 0, Message = "权限不足，下载失败!", Result = null }; }
 
-            List<CardQuestionnaireSignupVO> cVO = cBO.FindCardQuestionnaireSignupByCondtion("QuestionnaireID = " + QuestionnaireID + " and Status = 1");
+            List<CardRegistertableSignupVO> cVO = cBO.FindCardRegistertableSignupByCondtion("QuestionnaireID = " + QuestionnaireID + " and Status = 1");
 
             if (cVO != null)
             {
@@ -16810,7 +16810,7 @@ namespace BusinessCard.Controllers
                         {
 
 
-                            var model = JsonConvert.DeserializeObject<List<QuestionnaireSigupForm>>(cVO[i].SigupForm);
+                            var model = JsonConvert.DeserializeObject<List<RegistertableSigupForm>>(cVO[i].SigupForm);
 
                             for (int j = 0; j < model.Count; j++)
                             {

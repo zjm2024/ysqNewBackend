@@ -12,6 +12,7 @@ using SPLibrary.CoreFramework;
 using SPLibrary.CoreFramework.BO;
 using SPLibrary.CoreFramework.Logging.BO;
 using SPLibrary.CustomerManagement.BO;
+using SPLibrary.CustomerManagement.DAO;
 using SPLibrary.CustomerManagement.VO;
 using SPLibrary.WebConfigInfo;
 using System;
@@ -29,6 +30,7 @@ using System.Web;
 using System.Web.Security;
 using TencentCloud.Cdn.V20180606.Models;
 using TencentCloud.Scf.V20180416.Models;
+using IBankAccountDAO = SPLibrary.BusinessCardManagement.DAO.IBankAccountDAO;
 
 namespace SPLibrary.BusinessCardManagement.BO
 {
@@ -9193,7 +9195,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// <returns></returns>
         public bool isPartyContacts(int PartyID, int CustomerId)
         {
-            //ICardPartyContactsViewDAO pContactsDAO = CustomerManagementDAOFactory.CardPartyContactsViewDAO(this.CurrentCustomerProfile);
+            //ICardPartyContactsViewDAO pContactsDAO = BusinessCardManagementDAOFactory.CardPartyContactsViewDAO(this.CurrentCustomerProfile);
             //return pContactsDAO.FindTotalCount("PartyID=" + PartyID + " and CustomerId=" + CustomerId + " and AppType=" + AppType) > 0;
             return true;
         }
@@ -10999,5 +11001,459 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
         #endregion
+
+        #region 签到
+        /// <summary>
+        /// 添加签到表
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public int AddQuestionnaire(CardRegistertableVO vo)
+        {
+            try
+            {
+                ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
+
+                CommonTranscation t = new CommonTranscation();
+                t.TranscationContextWithReturn += delegate ()
+                {
+                    vo.AppType = AppType;
+                    int AccessRecordsID = rDAO.Insert(vo);
+                    return AccessRecordsID;
+                };
+                int result = t.Go();
+                return Convert.ToInt32(t.TranscationReturnValue);
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 更新签到表
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public bool UpdateCardRegistertable(CardRegistertableVO vo)
+        {
+            ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.UpdateById(vo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 删除签到表
+        /// </summary>
+        /// <param name="QuestionnaireID"></param>
+        /// <returns></returns>
+        public int DeleteByQuestionnaireID(int QuestionnaireID)
+        {
+            ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.DeleteByParams("QuestionnaireID = " + QuestionnaireID + " and AppType=" + AppType);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 获取签到表详情
+        /// </summary>
+        /// <param name="DepartmentID"></param>
+        /// <returns></returns>
+        public CardRegistertableVO FindCardRegistertableByQuestionnaireID(int QuestionnaireID)
+        {
+            ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
+            return rDAO.FindById(QuestionnaireID);
+        }
+
+        /// <summary>
+        /// 获取签到表列表
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public List<CardRegistertableVO> FindCardRegistertableByCondtion(string condtion)
+        {
+            ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
+            return rDAO.FindByParams(condtion + " and AppType=" + AppType);
+        }
+
+        /// <summary>
+        /// 获取签到表列表
+        /// </summary>
+        /// <param name="conditionStr"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="sortcolname"></param>
+        /// <param name="asc"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public List<CardRegistertableVO> FindCardRegistertableAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
+            return rDAO.FindAllByPageIndex(conditionStr + " and AppType=" + AppType, start, end, sortcolname, asc, parameters);
+        }
+
+        /// <summary>
+        /// 获取签到表数量
+        /// </summary>
+        /// <returns></returns>
+        public int FindCardRegistertable(string condition)
+        {
+            ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount(condition + " and AppType=" + AppType);
+        }
+
+        /// <summary>
+        /// 获取签到表列表(视图)
+        /// </summary>
+        /// <param name="conditionStr"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="sortcolname"></param>
+        /// <param name="asc"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public List<CardRegistertableViewVO> FindCardRegistertableViewAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            ICardRegistertableViewDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableViewDAO(this.CurrentCustomerProfile);
+            return rDAO.FindAllByPageIndex(conditionStr + " and AppType=" + AppType, start, end, sortcolname, asc, parameters);
+        }
+
+        /// <summary>
+        /// 获取签到表数量(视图)
+        /// </summary>
+        /// <returns></returns>
+        public int FindCardRegistertableView(string condition)
+        {
+            ICardRegistertableViewDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableViewDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount(condition + " and AppType=" + AppType);
+        }
+
+        /// <summary>
+        /// 添加签到
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public int AddQuestionnaireSignup(CardRegistertableSignupVO vo)
+        {
+            try
+            {
+                ICardRegistertableSignupDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableSignupDAO(this.CurrentCustomerProfile);
+
+                CommonTranscation t = new CommonTranscation();
+                t.TranscationContextWithReturn += delegate ()
+                {
+                    vo.AppType = AppType;
+                    int QuestionnaireSignupID = rDAO.Insert(vo);
+                    return QuestionnaireSignupID;
+                };
+                int result = t.Go();
+                return Convert.ToInt32(t.TranscationReturnValue);
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 更新签到
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public bool UpdateCardRegistertableSignup(CardRegistertableSignupVO vo)
+        {
+            ICardRegistertableSignupDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableSignupDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.UpdateById(vo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 删除签到
+        /// </summary>
+        /// <param name="QuestionnaireSignupID"></param>
+        /// <returns></returns>
+        public int DeleteByQuestionnaireSignupID(int QuestionnaireSignupID)
+        {
+            ICardRegistertableSignupDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableSignupDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.DeleteByParams("QuestionnaireSignupID = " + QuestionnaireSignupID + " and AppType=" + AppType);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 获取签到数量
+        /// </summary>
+        /// <returns></returns>
+        public int FindCardRegistertableSignup(string condition)
+        {
+            ICardRegistertableSignupDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableSignupDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount(condition + " and AppType=" + AppType);
+        }
+
+        /// <summary>
+        /// 获取签到详情
+        /// </summary>
+        /// <param name="DepartmentID"></param>
+        /// <returns></returns>
+        public CardRegistertableSignupVO FindCardRegistertableSignupByQuestionnaireSignupID(int QuestionnaireSignupID)
+        {
+            ICardRegistertableSignupDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableSignupDAO(this.CurrentCustomerProfile);
+            return rDAO.FindById(QuestionnaireSignupID);
+        }
+
+        /// <summary>
+        /// 获取签到列表
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public List<CardRegistertableSignupVO> FindCardRegistertableSignupByCondtion(string condtion)
+        {
+            ICardRegistertableSignupDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableSignupDAO(this.CurrentCustomerProfile);
+            return rDAO.FindByParams(condtion + " and AppType=" + AppType);
+        }
+
+        /// <summary>
+        /// 获取签到列表
+        /// </summary>
+        /// <param name="conditionStr"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="sortcolname"></param>
+        /// <param name="asc"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public List<CardRegistertableSignupVO> FindCardRegistertableSignupAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            ICardRegistertableSignupDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableSignupDAO(this.CurrentCustomerProfile);
+            return rDAO.FindAllByPageIndex(conditionStr + " and AppType=" + AppType, start, end, sortcolname, asc, parameters);
+        }
+
+        /// <summary>
+        /// 添加签到表管理员
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public int AddQuestionnaireAdmin(CardRegistertableAdminVO vo)
+        {
+            try
+            {
+                ICardRegistertableAdminDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableAdminDAO(this.CurrentCustomerProfile);
+
+                CommonTranscation t = new CommonTranscation();
+                t.TranscationContextWithReturn += delegate ()
+                {
+                    vo.AppType = AppType;
+                    int QuestionnaireAdminID = rDAO.Insert(vo);
+                    return QuestionnaireAdminID;
+                };
+                int result = t.Go();
+                return Convert.ToInt32(t.TranscationReturnValue);
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return -1;
+            }
+        }
+        /// <summary>
+        /// 更新签到表管理员
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public bool UpdateQuestionnaireAdmin(CardRegistertableAdminVO vo)
+        {
+            ICardRegistertableAdminDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableAdminDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.UpdateById(vo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return false;
+            }
+        }
+        /// <summary>
+        /// 获取签到表管理员列表
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public List<CardRegistertableAdminVO> FindQuestionnaireAdminByCondition(string condition, params object[] parameters)
+        {
+            ICardRegistertableAdminDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableAdminDAO(this.CurrentCustomerProfile);
+            return rDAO.FindByParams(condition + " and AppType=" + AppType);
+        }
+
+        /// <summary>
+        /// 获取签到表管理员数量
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public int FindQuestionnaireAdminTotalCount(string condition, params object[] parameters)
+        {
+            ICardRegistertableAdminDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableAdminDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount(condition + " and AppType=" + AppType, parameters);
+        }
+        /// <summary>
+        /// 获取签到表管理员详情
+        /// </summary>
+        /// <param name="NoticeID"></param>
+        /// <returns></returns>
+        public CardRegistertableAdminVO FindQuestionnaireAdminById(int QuestionnaireAdminID)
+        {
+            ICardRegistertableAdminDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableAdminDAO(this.CurrentCustomerProfile);
+            return rDAO.FindById(QuestionnaireAdminID);
+        }
+
+        /// <summary>
+        /// 是否是签到表管理员
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public bool isQuestionnaireAdmin(int QuestionnaireID, Int64 CustomerId)
+        {
+            ICardRegistertableAdminDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableAdminDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount("QuestionnaireID=" + QuestionnaireID + " and CustomerId=" + CustomerId + " and AppType=" + AppType) > 0;
+        }
+
+        /// <summary>
+        /// 获取签到表二维码
+        /// </summary>
+        /// <param name="GroupID"></param>
+        /// <returns></returns>
+        public string GetQuestionnaireQR(int QuestionnaireID)
+        {
+            string url;
+            url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appid + "&secret=" + secret + "";
+            string jsonStr = HttpHelper.HtmlFromUrlGet(url);
+            var result = new WeiXinAccessTokenResultDYH();
+            if (jsonStr.Contains("errcode"))
+            {
+                var errorResult = JsonConvert.DeserializeObject<WeiXinHelper.WeiXinErrorMsg>(jsonStr);
+                result.ErrorResult = errorResult;
+                result.Result = false;
+            }
+            else
+            {
+                var model = JsonConvert.DeserializeObject<WeiXinAccessTokenModelDYH>(jsonStr);
+                result.SuccessResult = model;
+                result.Result = true;
+            }
+            string DataJson = string.Empty;
+            string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
+
+            string page = "pages/index/SignInFormByUser/SignInFormByUser";
+            if (Type == 4)
+            {
+                page = "package/package_form/SignInFormByUser/SignInFormByUser";
+            }
+
+            DataJson = "{";
+            DataJson += "\"scene\":\"" + QuestionnaireID + "\",";
+            DataJson += string.Format("\"width\":{0},", 430);
+            DataJson += "\"auto_color\":false,";
+            DataJson += string.Format("\"page\":\"{0}\",", page);//扫码所要跳转的地址，根路径前不要填加'/',不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面                
+            DataJson += "\"line_color\":{";
+            DataJson += string.Format("\"r\":\"{0}\",", "0");
+            DataJson += string.Format("\"g\":\"{0}\",", "0");
+            DataJson += string.Format("\"b\":\"{0}\"", "0");
+            DataJson += "},";
+            DataJson += "\"is_hyaline\":false";
+            DataJson += "}";
+
+            Stream str = HttpHelper.HtmlFromUrlPostByStream(wxaurl, DataJson);
+            Bitmap m_Bitmap = new Bitmap(str); //stream你读取的流。
+            //保存
+            string filePath = "";
+            string folder = "/UploadFolder/QuestionnaireFile/";
+            string newFileName = QuestionnaireID + ".png";
+            filePath = folder + newFileName;
+
+            string localPath = ConfigInfo.Instance.UploadFolder + folder;
+            if (!Directory.Exists(localPath))
+            {
+                Directory.CreateDirectory(localPath);
+            }
+            string physicalPath = localPath + newFileName;
+            m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
+
+            string Cardimg = ConfigInfo.Instance.APIURL + filePath;
+
+            CardRegistertableVO cVO = new CardRegistertableVO();
+            cVO.QuestionnaireID = Convert.ToInt32(QuestionnaireID);
+            cVO.QRImg = Cardimg;
+            UpdateCardRegistertable(cVO);
+            return Cardimg;
+        }
+
+        /// <summary>
+        /// 删除签到表管理员
+        /// </summary>
+        /// <param name="CardID"></param>
+        /// <returns></returns>
+        public int DeleteQuestionnaireAdminById(int QuestionnaireID)
+        {
+            ICardNoticedDAO rDAO = BusinessCardManagementDAOFactory.CardNoticedDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.DeleteByParams("QuestionnaireID = " + QuestionnaireID + " and AppType=" + AppType);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+
+        #endregion
+
     }
 }       

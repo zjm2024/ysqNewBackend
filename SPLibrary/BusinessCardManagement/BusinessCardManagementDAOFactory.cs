@@ -308,5 +308,29 @@ namespace SPLibrary.BusinessCardManagement.DAO
             return new CJWinningRecordsDAO(userProfile);
         }
 
+        public static ICardRegistertableDAO CardRegistertableDAO(UserProfile userProfile)
+        {
+            return new CardRegistertableDAO(userProfile);
+        }
+
+        public static ICardRegistertableSignupDAO CardRegistertableSignupDAO(UserProfile userProfile)
+        {
+            return new CardRegistertableSignupDAO(userProfile);
+        }
+
+        public static ICardRegistertableViewDAO CardRegistertableViewDAO(UserProfile userProfile)
+        {
+            return new CardRegistertableViewDAO(userProfile);
+        }
+
+        public static ICardRegistertableAdminDAO CardRegistertableAdminDAO(UserProfile userProfile)
+        {
+            return new CardRegistertableAdminDAO(userProfile);
+        }
+
+        internal static ICardNoticedDAO CardNoticedDAO(UserProfile userProfile)
+        {
+            return new CardNoticedDAO(userProfile);
+        }
     }
 }
