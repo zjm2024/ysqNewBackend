@@ -11092,8 +11092,9 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// <returns></returns>
         public List<CardRegistertableVO> FindCardRegistertableByCondtion(string condtion)
         {
+            int AppTypes = 30;//粤省情
             ICardRegistertableDAO rDAO = BusinessCardManagementDAOFactory.CardRegistertableDAO(this.CurrentCustomerProfile);
-            return rDAO.FindByParams(condtion + " and AppType=" + AppType);
+            return rDAO.FindByParams(condtion + " and AppType=" + AppTypes);
         }
 
         /// <summary>
