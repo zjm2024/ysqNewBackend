@@ -1,7 +1,7 @@
 ﻿using CoreFramework.VO;
 using Google.Protobuf.WellKnownTypes;
 using Jayrock.Json;
-using MySql.Data.MySqlClient.Memcached;
+using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using SPlatformService;

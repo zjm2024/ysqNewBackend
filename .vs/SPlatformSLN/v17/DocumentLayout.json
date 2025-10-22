@@ -1,26 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Work\\leliao\\",
+  "WorkspaceRootPath": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{71E099A4-5AF0-4018-AF46-C09071DBA788}|SPlatformService\\SPlatformService.csproj|D:\\Work\\leliao\\splatformservice\\controllers\\cardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71E099A4-5AF0-4018-AF46-C09071DBA788}|SPlatformService\\SPlatformService.csproj|solutionrelative:splatformservice\\controllers\\cardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|d:\\mywork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqbackendnew\\ysqbackend\\businesscard\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|solutionrelative:businesscard\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|D:\\Work\\leliao\\businesscard\\controllers\\businesscardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\businesscard\\controllers\\bcopenaicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|solutionrelative:businesscard\\controllers\\bcopenaicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\businesscard\\controllers\\businesscardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|solutionrelative:businesscard\\controllers\\businesscardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4BC662B8-8DDD-451A-A480-B88ABC076B54}|SPLibrary\\SPLibrary.csproj|d:\\work\\leliao\\splibrary\\businesscardmanagement\\bo\\businesscardbo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{71E099A4-5AF0-4018-AF46-C09071DBA788}|SPlatformService\\SPlatformService.csproj|D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\splatformservice\\controllers\\openaicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{71E099A4-5AF0-4018-AF46-C09071DBA788}|SPlatformService\\SPlatformService.csproj|solutionrelative:splatformservice\\controllers\\openaicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4BC662B8-8DDD-451A-A480-B88ABC076B54}|SPLibrary\\SPLibrary.csproj|D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\splibrary\\businesscardmanagement\\bo\\businesscardbo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4BC662B8-8DDD-451A-A480-B88ABC076B54}|SPLibrary\\SPLibrary.csproj|solutionrelative:splibrary\\businesscardmanagement\\bo\\businesscardbo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{71E099A4-5AF0-4018-AF46-C09071DBA788}|SPlatformService\\SPlatformService.csproj|D:\\Work\\leliao\\splatformservice\\controllers\\systemcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71E099A4-5AF0-4018-AF46-C09071DBA788}|SPlatformService\\SPlatformService.csproj|solutionrelative:splatformservice\\controllers\\systemcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4BC662B8-8DDD-451A-A480-B88ABC076B54}|SPLibrary\\SPLibrary.csproj|D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\splibrary\\businesscardmanagement\\businesscardmanagementdaofactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4BC662B8-8DDD-451A-A480-B88ABC076B54}|SPLibrary\\SPLibrary.csproj|solutionrelative:splibrary\\businesscardmanagement\\businesscardmanagementdaofactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|D:\\Work\\leliao\\businesscard\\controllers\\questioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AB71C95B-AE24-4C11-B1FC-57677038F1E1}|BusinessCard\\BusinessCard.csproj|solutionrelative:businesscard\\controllers\\questioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4BC662B8-8DDD-451A-A480-B88ABC076B54}|SPLibrary\\SPLibrary.csproj|D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\splibrary\\customermanagement\\dao\\icardregistertabledao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4BC662B8-8DDD-451A-A480-B88ABC076B54}|SPLibrary\\SPLibrary.csproj|solutionrelative:splibrary\\customermanagement\\dao\\icardregistertabledao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,20 +38,31 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 14,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BusinessCardBO.cs",
-              "DocumentMoniker": "D:\\Work\\leliao\\SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
-              "RelativeDocumentMoniker": "SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
-              "ToolTip": "D:\\Work\\leliao\\SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
-              "RelativeToolTip": "SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
-              "ViewState": "AgIAAGUGAAAAAAAAAAAWwHkGAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-25T02:29:46.323Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Bookmark",
@@ -55,57 +74,109 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SystemController.cs",
-              "DocumentMoniker": "D:\\Work\\leliao\\SPlatformService\\Controllers\\SystemController.cs",
-              "RelativeDocumentMoniker": "SPlatformService\\Controllers\\SystemController.cs",
-              "ToolTip": "D:\\Work\\leliao\\SPlatformService\\Controllers\\SystemController.cs",
-              "RelativeToolTip": "SPlatformService\\Controllers\\SystemController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAADwvw0AAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-02T01:49:05.603Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "QuestionController.cs",
-              "DocumentMoniker": "D:\\Work\\leliao\\BusinessCard\\Controllers\\QuestionController.cs",
-              "RelativeDocumentMoniker": "BusinessCard\\Controllers\\QuestionController.cs",
-              "ToolTip": "D:\\Work\\leliao\\BusinessCard\\Controllers\\QuestionController.cs",
-              "RelativeToolTip": "BusinessCard\\Controllers\\QuestionController.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-19T06:51:37.962Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "BusinessCardController.cs",
-              "DocumentMoniker": "D:\\Work\\leliao\\BusinessCard\\Controllers\\BusinessCardController.cs",
-              "RelativeDocumentMoniker": "BusinessCard\\Controllers\\BusinessCardController.cs",
-              "ToolTip": "D:\\Work\\leliao\\BusinessCard\\Controllers\\BusinessCardController.cs",
-              "RelativeToolTip": "BusinessCard\\Controllers\\BusinessCardController.cs",
-              "ViewState": "AgIAAJItAAAAAAAAAAAawJ8tAAAqAAAAAAAAAA==",
+              "Title": "bcOpenAIController.cs",
+              "DocumentMoniker": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\BusinessCard\\Controllers\\bcOpenAIController.cs",
+              "RelativeDocumentMoniker": "BusinessCard\\Controllers\\bcOpenAIController.cs",
+              "ToolTip": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\BusinessCard\\Controllers\\bcOpenAIController.cs",
+              "RelativeToolTip": "BusinessCard\\Controllers\\bcOpenAIController.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAUwBsAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-16T03:23:17.751Z",
+              "WhenOpened": "2025-10-20T10:05:32.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "OpenAIController.cs",
+              "DocumentMoniker": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPlatformService\\Controllers\\OpenAIController.cs",
+              "RelativeDocumentMoniker": "SPlatformService\\Controllers\\OpenAIController.cs",
+              "ToolTip": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPlatformService\\Controllers\\OpenAIController.cs",
+              "RelativeToolTip": "SPlatformService\\Controllers\\OpenAIController.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAUwBwAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T10:05:13.666Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "CardController.cs",
-              "DocumentMoniker": "D:\\Work\\leliao\\SPlatformService\\Controllers\\CardController.cs",
-              "RelativeDocumentMoniker": "SPlatformService\\Controllers\\CardController.cs",
-              "ToolTip": "D:\\Work\\leliao\\SPlatformService\\Controllers\\CardController.cs",
-              "RelativeToolTip": "SPlatformService\\Controllers\\CardController.cs",
-              "ViewState": "AgIAAMUyAAAAAAAAAAAhwAQzAAAVAAAAAAAAAA==",
+              "Title": "Web.config",
+              "DocumentMoniker": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\BusinessCard\\Web.config",
+              "RelativeDocumentMoniker": "BusinessCard\\Web.config",
+              "ToolTip": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\BusinessCard\\Web.config",
+              "RelativeToolTip": "BusinessCard\\Web.config",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAADkAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-10-20T07:27:28.94Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BusinessCardManagementDAOFactory.cs",
+              "DocumentMoniker": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPLibrary\\BusinessCardManagement\\BusinessCardManagementDAOFactory.cs",
+              "RelativeDocumentMoniker": "SPLibrary\\BusinessCardManagement\\BusinessCardManagementDAOFactory.cs",
+              "ToolTip": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPLibrary\\BusinessCardManagement\\BusinessCardManagementDAOFactory.cs",
+              "RelativeToolTip": "SPLibrary\\BusinessCardManagement\\BusinessCardManagementDAOFactory.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAvwEAAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-27T02:18:18.871Z",
+              "WhenOpened": "2025-10-11T06:28:17.29Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BusinessCardBO.cs",
+              "DocumentMoniker": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
+              "RelativeDocumentMoniker": "SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
+              "ToolTip": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
+              "RelativeToolTip": "SPLibrary\\BusinessCardManagement\\BO\\BusinessCardBO.cs",
+              "ViewState": "AgIAAKMGAAAAAAAAAAAnwLsGAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T06:26:56.318Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BusinessCardController.cs",
+              "DocumentMoniker": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\BusinessCard\\Controllers\\BusinessCardController.cs",
+              "RelativeDocumentMoniker": "BusinessCard\\Controllers\\BusinessCardController.cs",
+              "ToolTip": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\BusinessCard\\Controllers\\BusinessCardController.cs",
+              "RelativeToolTip": "BusinessCard\\Controllers\\BusinessCardController.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAUwDEAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-11T06:19:37.147Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ICardRegistertableDAO.cs",
+              "DocumentMoniker": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPLibrary\\CustomerManagement\\DAO\\ICardRegistertableDAO.cs",
+              "RelativeDocumentMoniker": "SPLibrary\\CustomerManagement\\DAO\\ICardRegistertableDAO.cs",
+              "ToolTip": "D:\\MyWork\\\u5BA2\u6237\u540E\u7AEF\\\u7CA4\u7701\u60C5\\ysqBackEndNew\\ysqBackEnd\\SPLibrary\\CustomerManagement\\DAO\\ICardRegistertableDAO.cs",
+              "RelativeToolTip": "SPLibrary\\CustomerManagement\\DAO\\ICardRegistertableDAO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-13T02:10:34.972Z",
               "EditorCaption": ""
             }
           ]

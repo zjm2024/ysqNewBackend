@@ -47,7 +47,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using Tencent;
-using Ubiety.Dns.Core;
+//using Ubiety.Dns.Core;
 
 namespace BusinessCard.Controllers
 {

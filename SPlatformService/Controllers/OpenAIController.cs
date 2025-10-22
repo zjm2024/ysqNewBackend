@@ -26,7 +26,7 @@ using System.Web.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using MySqlX.XDevAPI.Common;
-using MySql.Data.MySqlClient.Memcached;
+using MySql.Data.MySqlClient;
 using System.Security.Policy;
 using Aop.Api.Domain;
 using TencentCloud.Tci.V20190318.Models;
