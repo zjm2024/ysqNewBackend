@@ -1,0 +1,28 @@
+# 编译输出目录
+bin/
+obj/
+
+# 发布目录
+publish/
+Publish/
+
+# Visual Studio 缓存和配置文件
+.vs/
+*.suo
+*.user
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# 日志和临时文件
+*.log
+*.tmp
+*.bak
+
+# 测试相关
+TestResults/
+coverage/
+
+# 其他工具生成文件
+node_modules/
+bower_components/

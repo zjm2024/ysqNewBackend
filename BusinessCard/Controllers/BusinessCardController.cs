@@ -177,7 +177,7 @@ namespace BusinessCard.Controllers
                         cVO.originType = originType;
                         cVO.originID = originID;
                         cVO.AppType = AppVO.AppType;
-                        
+
                         //新用户赠送一个月会员
                         /*
                         cVO.isVip = true;
@@ -306,7 +306,8 @@ namespace BusinessCard.Controllers
                                     pVO.Headimg = customerVO2.HeaderLogo;
                                     pVO.CreatedAt = DateTime.Now;
                                     pVO.AppType = AppVO.AppType;
-                                    if (AppType == 30) {
+                                    if (AppType == 30)
+                                    {
                                         pVO.BusinessID = 330;
                                     }
                                     cBO.AddPersonal(pVO);
@@ -2687,7 +2688,7 @@ namespace BusinessCard.Controllers
                     InfoSort.Reverse();
 
                     //首页显示活动
-                    List<BCPartyVO> partyvo = cBO.FindBCPartyByCondtion("BusinessID="+ BusinessID +" AND AppType=" + pVO.AppType +" AND IsDisplayIndex=1 and EndTime > now()");
+                    List<BCPartyVO> partyvo = cBO.FindBCPartyByCondtion("BusinessID=" + BusinessID + " AND AppType=" + pVO.AppType + " AND IsDisplayIndex=1 and EndTime > now()");
 
                     object res = new
                     {
@@ -15654,7 +15655,7 @@ namespace BusinessCard.Controllers
                     string lineTitle = "订阅直播";
                     string lineDesc = "7月30号晚上8点准时开播，现场抽奖";
                     List<InfoVO> banner = cBO.FindInfoByCondtion("Type IN ('Banner','MyBanner','MallBanner') AND BusinessID=" + bVO.BusinessID);
-                  
+
                     BusinessCard_JurisdictionVO B_Jurisdiction = cBO.getBusinessCard_Jurisdiction(pVO.BusinessID);
                     JurisdictionViewVO jVO = cBO.FindJurisdictionView(pVO.PersonalID, pVO.BusinessID);
                     List<BCPartyVO> partyvo = cBO.FindBCPartyByCondtion(" AppType=" + pVO.AppType);
@@ -15663,7 +15664,7 @@ namespace BusinessCard.Controllers
                         Personal = pVO,
                         BusinessCard = bVO,
                         Jurisdiction = jVO,
-                       
+
                         PartyList = partyvo,
                         B_Jurisdiction = B_Jurisdiction,
                         Banner = banner,
@@ -15731,7 +15732,8 @@ namespace BusinessCard.Controllers
             else if (status == 1)
             {
                 conditionStr = " status = 1 AND status <> 3 ";//查询进行中的问卷 等于1且不等于3
-            }else if(status == 2)
+            }
+            else if (status == 2)
             {
                 conditionStr = " status = 2 AND status <> 3 ";//查询结束的问卷 等于2且不等于3
             }
@@ -15893,7 +15895,7 @@ namespace BusinessCard.Controllers
                     InfoSort.Reverse();
 
                     //首页显示活动
-                    List<BCPartyVO> partyvo = cBO.FindBCPartyByCondtion("AppType = "+ pVO.AppType+ " and IsDisplayIndex=1 and EndTime > now()");
+                    List<BCPartyVO> partyvo = cBO.FindBCPartyByCondtion("AppType = " + pVO.AppType + " and IsDisplayIndex=1 and EndTime > now()");
 
                     object res = new
                     {
@@ -15966,7 +15968,7 @@ namespace BusinessCard.Controllers
             {
                 return new ResultObject() { Flag = -1, Message = "未查询到数据!", Result = ex };
             }
-     
+
         }
 
         /// <summary>
@@ -16003,7 +16005,7 @@ namespace BusinessCard.Controllers
                 UserProfile uProfile = CacheManager.GetUserProfile(token);
                 CustomerProfile cProfile = uProfile as CustomerProfile;
                 int customerId = cProfile.CustomerId;
-               
+
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
                 if (lotteriesVO.lottery_id > 0)
@@ -16034,7 +16036,7 @@ namespace BusinessCard.Controllers
 
                 return new ResultObject() { Flag = -1, Message = "添加失败!", Result = ex };
             }
-           
+
         }
 
         /// <summary>
@@ -16042,7 +16044,7 @@ namespace BusinessCard.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("ReceivePrize"), HttpPost]
-        public ResultObject ReceivePrize(int lottery_id, string code,string token)
+        public ResultObject ReceivePrize(int lottery_id, string code, string token)
         {
             try
             {
@@ -16060,7 +16062,7 @@ namespace BusinessCard.Controllers
                     return new ResultObject() { Flag = 0, Message = "抽奖活动不存在!", Result = null };
 
                 // 1表示进行中
-                if (lotteries.status != 1) 
+                if (lotteries.status != 1)
                     return new ResultObject() { Flag = 0, Message = "抽奖活动未在进行中!", Result = null };
 
                 // 检查活动时间
@@ -16068,8 +16070,8 @@ namespace BusinessCard.Controllers
                 //    return new ResultObject() { Flag = 0, Message = "不在活动时间内!", Result = null };
 
                 // 2. 验证用户是否已参与
-                int participationCheck = cBO.FindWinningRecordCount("lottery_id ="+ lottery_id + " AND personal_id = "+ pVO.PersonalID);
-                if (participationCheck >0)
+                int participationCheck = cBO.FindWinningRecordCount("lottery_id =" + lottery_id + " AND personal_id = " + pVO.PersonalID);
+                if (participationCheck > 0)
                 {
                     return new ResultObject() { Flag = 0, Message = "您已参与过此活动!", Result = null };
                 }
@@ -16098,7 +16100,7 @@ namespace BusinessCard.Controllers
                         amount = Amount,
                         winningrecords_id = recordId
                     };
-                   return new ResultObject() { Flag = 1, Message = "领取成功!", Result = res };
+                    return new ResultObject() { Flag = 1, Message = "领取成功!", Result = res };
                 }
 
                 return new ResultObject() { Flag = 0, Message = "领取失败!", Result = null };
@@ -16154,10 +16156,12 @@ namespace BusinessCard.Controllers
                 }
 
                 var records = cBO.FindCJWinningRecordsById(winningrecords_id);
-                if (records == null) {
+                if (records == null)
+                {
                     return new ResultObject() { Flag = 0, Message = "红包未领取!", Result = null };
                 }
-                if (records.status == 1) {
+                if (records.status == 1)
+                {
                     return new ResultObject() { Flag = 0, Message = "红包已领取!", Result = null };
                 }
                 // 5. 保存中奖记录
@@ -16389,33 +16393,45 @@ namespace BusinessCard.Controllers
         ///<param name="QuestionnaireID"></param>
         /// <returns></returns>
         [Route("getQuestionnaire"), HttpGet, Anonymous]
-        public ResultObject getQuestionnaire(int QuestionnaireID, int AppType = 1)
+        public ResultObject getQuestionnaire(int QuestionnaireID, int AppType = 30)
         {
-            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), AppType);
-            CardRegistertableVO qVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
-
-            if (qVO != null)
+            try
             {
-                if (qVO.QRImg == "")
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), AppType);
+                CardRegistertableVO qVO = cBO.FindCardRegistertableByQuestionnaireID(QuestionnaireID);
+
+                if (qVO != null)
                 {
-                    qVO.QRImg = cBO.GetQuestionnaireQR(QuestionnaireID);
-                }
+                    var logger = new LogBO(typeof(BusinessCardController));
+                    if (qVO.QRImg == "")
+                    {
+                        qVO.QRImg = cBO.GetQuestionnaireQR(QuestionnaireID,AppType);
+                    }
 
-                BusinessCardBO BusinessCardBO = new BusinessCardBO(new CustomerProfile());
-                BusinessCardVO bVO = new BusinessCardVO();
-                if (qVO.BusinessID != 0)
+                    BusinessCardBO BusinessCardBO = new BusinessCardBO(new CustomerProfile());
+                    BusinessCardVO bVO = new BusinessCardVO();
+                    if (qVO.BusinessID != 0)
+                    {
+                        bVO = BusinessCardBO.FindBusinessCardById(qVO.BusinessID);
+                    }
+
+                    List<CardRegistertableAdminVO> aVO = cBO.FindQuestionnaireAdminByCondition("QuestionnaireID = " + QuestionnaireID);
+
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Subsidiary = bVO, Subsidiary2 = aVO };
+                }
+                else
                 {
-                    bVO = BusinessCardBO.FindBusinessCardById(qVO.BusinessID);
+                    return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
                 }
-
-                List<CardRegistertableAdminVO> aVO = cBO.FindQuestionnaireAdminByCondition("QuestionnaireID = " + QuestionnaireID);
-
-                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Subsidiary = bVO, Subsidiary2 = aVO };
             }
-            else
+            catch (Exception ex)
             {
-                return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
+                LogBO _log = new LogBO(typeof(BusinessCardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return new ResultObject() { Flag = 0, Message = "获取失败!", Result = ex };
             }
+
         }
 
         /// <summary>

@@ -11428,74 +11428,118 @@ namespace SPLibrary.BusinessCardManagement.BO
             return rDAO.FindTotalCount("QuestionnaireID=" + QuestionnaireID + " and CustomerId=" + CustomerId + " and AppType=" + AppType) > 0;
         }
 
+
         /// <summary>
         /// 获取签到表二维码
         /// </summary>
         /// <param name="GroupID"></param>
         /// <returns></returns>
-        public string GetQuestionnaireQR(int QuestionnaireID)
+        public string GetQuestionnaireQR(int QuestionnaireID, int AppType)
         {
-            string url;
-            url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appid + "&secret=" + secret + "";
-            string jsonStr = HttpHelper.HtmlFromUrlGet(url);
-            var result = new WeiXinAccessTokenResultDYH();
-            if (jsonStr.Contains("errcode"))
+            try
             {
-                var errorResult = JsonConvert.DeserializeObject<WeiXinHelper.WeiXinErrorMsg>(jsonStr);
-                result.ErrorResult = errorResult;
-                result.Result = false;
+                var logger = new LogBO(typeof(BusinessCardBO));
+                AppVO AppVO = AppBO.GetApp(AppType);
+
+                logger.Error("appid:" + AppVO.AppId);
+                string url;
+                url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppVO.AppId + "&secret=" + AppVO.Secret + "";
+                string jsonStr = HttpHelper.HtmlFromUrlGet(url);
+                var result = new WeiXinAccessTokenResultDYH();
+                if (jsonStr.Contains("errcode"))
+                {
+                    var errorResult = JsonConvert.DeserializeObject<WeiXinHelper.WeiXinErrorMsg>(jsonStr);
+                    result.ErrorResult = errorResult;
+                    result.Result = false;
+                }
+                else
+                {
+                    var model = JsonConvert.DeserializeObject<WeiXinAccessTokenModelDYH>(jsonStr);
+                    result.SuccessResult = model;
+                    result.Result = true;
+                }
+                string DataJson = string.Empty;
+                string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
+
+                // string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
+                string page = "pages/home/home";
+
+                DataJson = "{";
+                DataJson += "\"scene\":\"" + QuestionnaireID + "\",";
+                DataJson += string.Format("\"width\":{0},", 430);
+                DataJson += "\"auto_color\":false,";
+                DataJson += string.Format("\"page\":\"{0}\",", page);//扫码所要跳转的地址，根路径前不要填加'/',不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面                
+                DataJson += "\"line_color\":{";
+                DataJson += string.Format("\"r\":\"{0}\",", "0");
+                DataJson += string.Format("\"g\":\"{0}\",", "0");
+                DataJson += string.Format("\"b\":\"{0}\"", "0");
+                DataJson += "},";
+                DataJson += "\"is_hyaline\":false";
+                DataJson += "}";
+                logger.Error("DataJson:" + DataJson);
+                Stream str = HttpHelper.HtmlFromUrlPostByStream(wxaurl, DataJson);
+
+                if (str == null)
+                {
+                    // 记录空流错误
+                    logger.Error("微信接口返回流为空或不可读");
+
+                    return null;
+                }
+                // 2. 将原始流复制到可查找的MemoryStream
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    str.CopyTo(ms); // 复制所有内容到内存流
+                    str.Close();//关闭原始流，释放资源
+                    ms.Position = 0; // 内存流支持重置位置，此时可安全操作
+
+                    // 3. 后续操作使用内存流ms，而非原始流
+                    byte[] buffer = ms.ToArray(); // 读取全部字节（无需访问Length）
+
+                    // 验证是否为微信错误信息
+                    string content = Encoding.UTF8.GetString(buffer);
+                    if (content.Contains("errcode"))
+                    {
+                        logger.Error($"微信接口错误：{content}");
+                        return null;
+                    }
+
+                    string filePath = "";
+                    // 4. 用内存流创建Bitmap（此时ms.Position=0，可正常读取）
+                    using (Bitmap m_Bitmap = new Bitmap(ms))
+                    {
+
+                        string folder = "/UploadFolder/QuestionnaireFile/";
+                        string newFileName = QuestionnaireID + ".png";
+                        filePath = folder + newFileName;
+
+                        string localPath = ConfigInfo.Instance.UploadFolder + folder;
+                        if (!Directory.Exists(localPath))
+                        {
+                            Directory.CreateDirectory(localPath);
+                        }
+                        string physicalPath = localPath + newFileName;
+                        m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+
+
+                    string Cardimg = ConfigInfo.Instance.APIURL + filePath;
+                    logger.Error("完成" + Cardimg);
+                    CardRegistertableVO cVO = new CardRegistertableVO();
+                    cVO.QuestionnaireID = Convert.ToInt32(QuestionnaireID);
+                    cVO.QRImg = Cardimg;
+                    UpdateCardRegistertable(cVO);
+                    return Cardimg;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                var model = JsonConvert.DeserializeObject<WeiXinAccessTokenModelDYH>(jsonStr);
-                result.SuccessResult = model;
-                result.Result = true;
-            }
-            string DataJson = string.Empty;
-            string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
-
-            string page = "pages/index/SignInFormByUser/SignInFormByUser";
-            if (Type == 4)
-            {
-                page = "package/package_form/SignInFormByUser/SignInFormByUser";
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return "";
             }
 
-            DataJson = "{";
-            DataJson += "\"scene\":\"" + QuestionnaireID + "\",";
-            DataJson += string.Format("\"width\":{0},", 430);
-            DataJson += "\"auto_color\":false,";
-            DataJson += string.Format("\"page\":\"{0}\",", page);//扫码所要跳转的地址，根路径前不要填加'/',不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面                
-            DataJson += "\"line_color\":{";
-            DataJson += string.Format("\"r\":\"{0}\",", "0");
-            DataJson += string.Format("\"g\":\"{0}\",", "0");
-            DataJson += string.Format("\"b\":\"{0}\"", "0");
-            DataJson += "},";
-            DataJson += "\"is_hyaline\":false";
-            DataJson += "}";
-
-            Stream str = HttpHelper.HtmlFromUrlPostByStream(wxaurl, DataJson);
-            Bitmap m_Bitmap = new Bitmap(str); //stream你读取的流。
-            //保存
-            string filePath = "";
-            string folder = "/UploadFolder/QuestionnaireFile/";
-            string newFileName = QuestionnaireID + ".png";
-            filePath = folder + newFileName;
-
-            string localPath = ConfigInfo.Instance.UploadFolder + folder;
-            if (!Directory.Exists(localPath))
-            {
-                Directory.CreateDirectory(localPath);
-            }
-            string physicalPath = localPath + newFileName;
-            m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
-
-            string Cardimg = ConfigInfo.Instance.APIURL + filePath;
-
-            CardRegistertableVO cVO = new CardRegistertableVO();
-            cVO.QuestionnaireID = Convert.ToInt32(QuestionnaireID);
-            cVO.QRImg = Cardimg;
-            UpdateCardRegistertable(cVO);
-            return Cardimg;
         }
 
         /// <summary>
