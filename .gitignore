@@ -60,3 +60,4 @@ bower_components/
 /BusinessCard/obj/Release/TransformWebConfig/transformed/Web.config
 /BusinessCard/obj/Release/Package/PackageTmp/Web.config
 /BusinessCard/Web.config
+/WebUI/Properties/PublishProfiles/FolderProfile.pubxml
