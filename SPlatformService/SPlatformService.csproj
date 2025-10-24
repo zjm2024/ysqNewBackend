@@ -2036,9 +2036,6 @@
     <Content Include="UserManagement\TradeList.aspx" />
     <Content Include="UserManagement\UserBrowse.aspx" />
     <Content Include="UserManagement\UserCreateEdit.aspx" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\SiteCommon.cs" />
@@ -3263,12 +3260,9 @@
     <Content Include="UploadFolder\Attached\201801\20180118054739.rar" />
     <Content Include="UploadFolder\Attached\201801\20180119091355.rar" />
     <Content Include="UploadFolder\Attached\201809\20180918113739.xls" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="WX_CallbackURL.aspx" />
     <Content Include="Wx_PayConfig\apiclient_cert.p12" />
   </ItemGroup>
@@ -3291,6 +3285,14 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

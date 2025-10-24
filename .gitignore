@@ -61,3 +61,4 @@ bower_components/
 /BusinessCard/obj/Release/Package/PackageTmp/Web.config
 /BusinessCard/Web.config
 /WebUI/Properties/PublishProfiles/FolderProfile.pubxml
+/BusinessCard/Properties/PublishProfiles/FolderProfile1.pubxml.user
