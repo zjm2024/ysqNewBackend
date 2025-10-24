@@ -332,5 +332,9 @@ namespace SPLibrary.BusinessCardManagement.DAO
         {
             return new CardNoticedDAO(userProfile);
         }
+        internal static IRecordingRecordsDAO RecordingRecordsDAO(UserProfile userProfile)
+        {
+            return new RecordingRecordsDAO(userProfile);
+        }
     }
 }

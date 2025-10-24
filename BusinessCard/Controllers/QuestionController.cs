@@ -1,4 +1,5 @@
-﻿using CoreFramework.VO;
+﻿using BusinessCard.Models;
+using CoreFramework.VO;
 using Google.Protobuf.WellKnownTypes;
 using Jayrock.Json;
 using MySql.Data.MySqlClient;
@@ -6,9 +7,10 @@ using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using SPlatformService;
 using SPlatformService.Controllers;
-using BusinessCard.Models;
+using SPlatformService.Models;
 using SPlatformService.TokenMange;
 using SPLibrary.BusinessCardManagement.BO;
+using SPLibrary.BusinessCardManagement.DAO;
 using SPLibrary.BusinessCardManagement.VO;
 using SPLibrary.CoreFramework;
 using SPLibrary.CoreFramework.BO;
@@ -31,7 +33,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.UI.WebControls;
-using SPlatformService.Models;
 
 
 namespace BusinessCard.Controllers
@@ -356,6 +357,101 @@ namespace BusinessCard.Controllers
           
         }
 
+
+        /// <summary>
+        /// 上传录音文件
+        /// </summary>
+        /// <param name="QuestionnaireID">问卷ID</param>
+        /// <param name="token">用户令牌</param>
+        /// <returns></returns>
+        [Route("UploadRecording"), HttpPost]
+        public ResultObject UploadRecording(string ActivityId, string token)
+        {
+            // 验证用户身份
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+            CustomerProfile cProfile = uProfile as CustomerProfile;
+            int customerId = cProfile.CustomerId;
+
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+            PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
+
+            // 验证问卷是否存在
+            QuestionnaireDataVO QVO = cBO.FindQuestionByActivityIdId(ActivityId);
+
+            if (QVO == null)
+            {
+                return new ResultObject() { Flag = 0, Message = "问卷不存在!", Result = null };
+            }
+
+            HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
+            string folder = "/UploadFolder/Recording/" + DateTime.Now.ToString("yyyyMM") + "/";
+            string filePath = "";
+
+            if (hfc.Count > 0)
+            {
+                try
+                {
+                    FileInfo fi = new FileInfo(hfc[0].FileName);
+
+                    string ext = fi.Extension.ToLower();
+                    // 验证文件类型
+                    if (ext != ".aac" && ext != ".mp3" && ext != ".wav" && ext != ".m4a")
+                    {
+                        return new ResultObject() { Flag = 0, Message = "只支持 aac, mp3, wav, m4a 格式的音频文件", Result = null };
+                    }
+
+                    string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + customerId + fi.Extension;
+
+                    // 本地路径
+                    string localPath = ConfigInfo.Instance.UploadFolder + folder;
+                    if (!Directory.Exists(localPath))
+                    {
+                        Directory.CreateDirectory(localPath);
+                    }
+                    string PhysicalPath = localPath + newFileName;
+                    filePath = "~" + folder + newFileName;
+                    hfc[0].SaveAs(PhysicalPath);
+
+                    // 网络路径
+                    string url = ConfigInfo.Instance.APIURL + folder + newFileName;
+
+                    // 获取表单数据
+                    var form = System.Web.HttpContext.Current.Request.Form;
+                    int duration = 0;
+                    int.TryParse(form["duration"], out duration);
+                    string fileName = form["fileName"] ?? "recording" + fi.Extension;
+                    string recordingConfig = form["config"] ?? "";
+
+                    // 创建录音记录
+                    RecordingRecordsVO rvo = new RecordingRecordsVO()
+                    {
+                        file_name = newFileName,
+                        original_file_name = fileName,
+                        file_path = url,
+                        file_size = hfc[0].ContentLength,
+                        duration = duration,
+                        activityid = Convert.ToInt32(ActivityId),
+                        personalid = customerId,
+                        recording_config = recordingConfig,
+                        create_time = DateTime.Now,
+                        status = "Active"
+                    };
+
+                    // 保存到数据库
+                    cBO.CreateRecording(rvo);
+
+                    return new ResultObject() { Flag = 1, Message = "上传成功", Result = url, Subsidiary = null};
+                }
+                catch (Exception er)
+                {
+                    return new ResultObject() { Flag = 0, Message = "上传失败", Result = er.Message, Subsidiary = "" };
+                }
+            }
+            else
+            {
+                return new ResultObject() { Flag = 0, Message = "上传失败", Result = "文件为空", Subsidiary = "" };
+            }
+        }
 
         public class QuestionnaireFromVO
         {

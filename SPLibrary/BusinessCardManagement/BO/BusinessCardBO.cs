@@ -10674,6 +10674,70 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
+        #region 录音
+        /// <summary>
+        /// 添加录音内容
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public int CreateRecording(RecordingRecordsVO vo)
+        {
+            try
+            {
+                IRecordingRecordsDAO rDAO = BusinessCardManagementDAOFactory.RecordingRecordsDAO(this.CurrentCustomerProfile);
+
+                CommonTranscation t = new CommonTranscation();
+                t.TranscationContextWithReturn += delegate ()
+                {
+                    int QuestionId = rDAO.Insert(vo);
+                    return QuestionId;
+                };
+                int result = t.Go();
+                return Convert.ToInt32(t.TranscationReturnValue);
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(BusinessCardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 更新录音
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public bool UpdateRecording(RecordingRecordsVO vo)
+        {
+            IRecordingRecordsDAO rDAO = BusinessCardManagementDAOFactory.RecordingRecordsDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.UpdateById(vo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(BusinessCardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return false;
+            }
+        }
+        /// <summary>
+        /// 查找录音详情
+        /// </summary>
+        /// <param name="QuestionId"></param>
+        /// <returns></returns>
+        public RecordingRecordsVO FindRecordingById(int recording_records_id)
+        {
+            IRecordingRecordsDAO rDAO = BusinessCardManagementDAOFactory.RecordingRecordsDAO(this.CurrentCustomerProfile);
+            return rDAO.FindById(recording_records_id);
+        }
+
+        #endregion
+
         #endregion
 
         #region 粤省情抽奖相关接口

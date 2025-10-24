@@ -1557,6 +1557,8 @@
     <Compile Include="BusinessCardManagement\DAO\ActivityDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\ActivitySignTicketDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\ActivityTicketDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\IRecordingRecordsDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\RecordingRecordsDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\CJLotteriesDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\CJWinningRecordsDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\AnswerSheetDAO.cs" />
@@ -1703,6 +1705,7 @@
     <Compile Include="BusinessCardManagement\VO\ActivitySignTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityVO.cs" />
+    <Compile Include="BusinessCardManagement\VO\RecordingRecordsVO.cs" />
     <Compile Include="BusinessCardManagement\VO\CJWinningRecordsVO.cs" />
     <Compile Include="BusinessCardManagement\VO\CJLotteriesVO.cs" />
     <Compile Include="BusinessCardManagement\VO\AnswerSheetVO.cs" />
