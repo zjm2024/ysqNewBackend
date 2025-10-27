@@ -400,7 +400,7 @@ namespace BusinessCard.Controllers
                         return new ResultObject() { Flag = 0, Message = "只支持 aac, mp3, wav, m4a 格式的音频文件", Result = null };
                     }
 
-                    string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + customerId + fi.Extension;
+                    string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + pVO.PersonalID.ToString() + ActivityId;
 
                     // 本地路径
                     string localPath = ConfigInfo.Instance.UploadFolder + folder;
@@ -413,14 +413,15 @@ namespace BusinessCard.Controllers
                     hfc[0].SaveAs(PhysicalPath);
 
                     // 网络路径
-                    string url = ConfigInfo.Instance.APIURL + folder + newFileName;
-
+                    string url = ConfigInfo.Instance.BCAPIURL + folder + newFileName;
                     // 获取表单数据
                     var form = System.Web.HttpContext.Current.Request.Form;
                     int duration = 0;
                     int.TryParse(form["duration"], out duration);
                     string fileName = form["fileName"] ?? "recording" + fi.Extension;
                     string recordingConfig = form["config"] ?? "";
+
+
 
                     // 创建录音记录
                     RecordingRecordsVO rvo = new RecordingRecordsVO()
@@ -431,16 +432,16 @@ namespace BusinessCard.Controllers
                         file_size = hfc[0].ContentLength,
                         duration = duration,
                         activityid = Convert.ToInt32(ActivityId),
-                        personalid = customerId,
+                        personalid = pVO.PersonalID,
                         recording_config = recordingConfig,
                         create_time = DateTime.Now,
+                        modify_time = DateTime.Now,
                         status = "Active"
                     };
-
                     // 保存到数据库
                     cBO.CreateRecording(rvo);
 
-                    return new ResultObject() { Flag = 1, Message = "上传成功", Result = url, Subsidiary = null};
+                    return new ResultObject() { Flag = 1, Message = "上传成功", Result = url, Subsidiary = rvo };
                 }
                 catch (Exception er)
                 {
