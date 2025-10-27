@@ -16405,7 +16405,7 @@ namespace BusinessCard.Controllers
                     var logger = new LogBO(typeof(BusinessCardController));
                     if (qVO.QRImg == "")
                     {
-                        qVO.QRImg = cBO.GetQuestionnaireQR(QuestionnaireID,AppType);
+                        qVO.QRImg = cBO.GetQuestionnaireQR(QuestionnaireID, AppType);
                     }
 
                     BusinessCardBO BusinessCardBO = new BusinessCardBO(new CustomerProfile());
@@ -16765,15 +16765,14 @@ namespace BusinessCard.Controllers
                 UserProfile uProfile = CacheManager.GetUserProfile(token);
                 CustomerProfile cProfile = uProfile as CustomerProfile;
                 int customerId = cProfile.CustomerId;
-
                 CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
                 CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
                 if (AppType == 1)
                 {
                     AppType = CustomerVO2.AppType;
                 }
-                CardBO cBO = new CardBO(new CustomerProfile(), AppType);
-                string str = cBO.getQRIMGByIDAndType(QuestionnaireID, 5, customerId);
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), AppType);
+                string str = cBO.getQRIMGByIDAndType(QuestionnaireID, 5, customerId,AppType);
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = str };
             }
             catch

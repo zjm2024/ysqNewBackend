@@ -247,6 +247,7 @@
   <ItemGroup>
     <Content Include="css\card.css" />
     <Content Include="css\css.css" />
+    <Content Include="GenerateIMG\BusinessCardIMG2QR.aspx" />
     <Content Include="GenerateIMG\CardIMG5.aspx" />
     <Content Include="GenerateIMG\ColorPageIMG.aspx" />
     <Content Include="GenerateIMG\CardIMG.aspx" />
@@ -1245,6 +1246,13 @@
     <Compile Include="Controllers\LuckyDrawController.cs" />
     <Compile Include="Controllers\bcOpenAIController.cs" />
     <Compile Include="Controllers\ProfitsharingToOrder.cs" />
+    <Compile Include="GenerateIMG\BusinessCardIMG2QR.aspx.cs">
+      <DependentUpon>BusinessCardIMG2QR.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GenerateIMG\BusinessCardIMG2QR.aspx.designer.cs">
+      <DependentUpon>BusinessCardIMG2QR.aspx</DependentUpon>
+    </Compile>
     <Compile Include="GenerateIMG\CardIMG5.aspx.cs">
       <DependentUpon>CardIMG5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

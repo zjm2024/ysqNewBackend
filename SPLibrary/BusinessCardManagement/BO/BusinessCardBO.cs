@@ -11461,7 +11461,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 string DataJson = string.Empty;
                 string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
 
-                // string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
+                //string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
                 string page = "pages/home/home";
 
                 DataJson = "{";
@@ -11523,7 +11523,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                     }
 
 
-                    string Cardimg = ConfigInfo.Instance.APIURL + filePath;
+                    string Cardimg = ConfigInfo.Instance.BCAPIURL + filePath;
                     logger.Error("完成" + Cardimg);
                     CardRegistertableVO cVO = new CardRegistertableVO();
                     cVO.QuestionnaireID = Convert.ToInt32(QuestionnaireID);
@@ -11541,6 +11541,120 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
 
         }
+
+
+        /// <summary>
+        /// 获取签到二维码 携带用户信息
+        /// </summary>
+        /// <param name="QuestionnaireID"></param>
+        /// <param name="CustomerId"></param>
+        /// <returns>返回一个图片的名字xx.png</returns>
+        public string GetCardRegistertableSignupQR(Int64 QuestionnaireID, Int64 InviterCID,int AppType)
+        {
+
+            try
+            {
+                var logger = new LogBO(typeof(BusinessCardBO));
+
+                logger.Error("AppType:" + AppType);
+                AppVO AppVO = AppBO.GetApp(AppType);
+                string url;
+                url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppVO.AppId + "&secret=" + AppVO.Secret + "";
+                logger.Error("url地址:" + url);
+                string jsonStr = HttpHelper.HtmlFromUrlGet(url);
+                var result = new WeiXinAccessTokenResultDYH();
+                if (jsonStr.Contains("errcode"))
+                {
+                    var errorResult = JsonConvert.DeserializeObject<WeiXinHelper.WeiXinErrorMsg>(jsonStr);
+                    result.ErrorResult = errorResult;
+                    result.Result = false;
+                }
+                else
+                {
+                    var model = JsonConvert.DeserializeObject<WeiXinAccessTokenModelDYH>(jsonStr);
+                    result.SuccessResult = model;
+                    result.Result = true;
+                }
+                string DataJson = string.Empty;
+                string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
+
+                //string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
+                string page = "pages/home/home";
+
+                DataJson = "{";
+                DataJson += "\"scene\":\"" + QuestionnaireID + "-" + InviterCID + "\",";
+                DataJson += string.Format("\"width\":{0},", 430);
+                DataJson += "\"auto_color\":false,";
+                DataJson += string.Format("\"page\":\"{0}\",", page);//扫码所要跳转的地址，根路径前不要填加'/',不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面                
+                DataJson += "\"line_color\":{";
+                DataJson += string.Format("\"r\":\"{0}\",", "0");
+                DataJson += string.Format("\"g\":\"{0}\",", "0");
+                DataJson += string.Format("\"b\":\"{0}\"", "0");
+                DataJson += "},";
+                DataJson += "\"is_hyaline\":false";
+                DataJson += "}";
+
+                Stream str = HttpHelper.HtmlFromUrlPostByStream(wxaurl, DataJson);
+                logger.Error("str" + str);
+                if (str == null)
+                {
+                    // 记录空流错误
+                    logger.Error("微信接口返回流为空或不可读");
+
+                    return null;
+                }
+                // 2. 将原始流复制到可查找的MemoryStream
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    str.CopyTo(ms); // 复制所有内容到内存流
+                    str.Close();//关闭原始流，释放资源
+                    ms.Position = 0; // 内存流支持重置位置，此时可安全操作
+
+                    // 3. 后续操作使用内存流ms，而非原始流
+                    byte[] buffer = ms.ToArray(); // 读取全部字节（无需访问Length）
+
+                    // 验证是否为微信错误信息
+                    string content = Encoding.UTF8.GetString(buffer);
+                    if (content.Contains("errcode"))
+                    {
+                        logger.Error($"微信接口错误：{content}");
+                        return null;
+                    }
+
+                    string filePath = "";
+                    // 4. 用内存流创建Bitmap（此时ms.Position=0，可正常读取）
+                    using (Bitmap m_Bitmap = new Bitmap(ms))
+                    {
+
+                        string folder = "/UploadFolder/QuestionnaireFile/";
+                        string newFileName = QuestionnaireID + "_" + InviterCID + ".png";
+                        filePath = folder + newFileName;
+
+                        string localPath = ConfigInfo.Instance.UploadFolder + folder;
+                        if (!Directory.Exists(localPath))
+                        {
+                            Directory.CreateDirectory(localPath);
+                        }
+                        string physicalPath = localPath + newFileName;
+                        m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+
+
+                    string Cardimg = ConfigInfo.Instance.BCAPIURL + filePath;
+                    logger.Error("完成" + Cardimg);
+                    return Cardimg;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return "";
+            }
+
+        }
+
 
         /// <summary>
         /// 删除签到表管理员
@@ -11560,6 +11674,66 @@ namespace SPLibrary.BusinessCardManagement.BO
                 return -1;
             }
         }
+
+        /// <summary>
+        /// 生成小程序码 名字头像二维码
+        /// </summary>
+        /// <param name="ID"></param>
+        ///  <param name="IDType">1:名片，2:名片组，3:活动，5:签到表，6:软文，7:活动报名授权码</param>
+        /// <returns></returns>
+        public string getQRIMGByIDAndType(int ID, int IDType, int AppType,int CustomerId = 0)
+        {
+            try
+            {
+                ICardPartySignUpDAO uDAO = CustomerManagementDAOFactory.CardPartySignUpDAO(this.CurrentCustomerProfile);
+                var logger = new LogBO(typeof(BusinessCardBO));
+                string imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&AppType=" + AppType;
+                logger.Error(imgurl);
+                if (CustomerId != 0)
+                {
+                    imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&CustomerId=" + CustomerId + "&AppType=" + AppType;
+                }
+                
+                Bitmap m_Bitmap = WebSnapshotsHelper.GetWebSiteThumbnail(imgurl, 752, 974, 752, 974);
+
+                string filePath = "";
+                string folder = "";
+                if (IDType == 5) { folder = "/UploadFolder/QuestionnaireFile/"; }
+
+                string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".png";
+                filePath = folder + newFileName;
+
+
+                //可以修改为网络路径
+                string localPath = ConfigInfo.Instance.UploadFolder + folder;
+                if (!Directory.Exists(localPath))
+                {
+                    Directory.CreateDirectory(localPath);
+                }
+                string physicalPath = localPath + newFileName;
+
+                m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
+                string ImgUrl = ConfigInfo.Instance.BCAPIURL + filePath;
+
+                if (IDType == 5)
+                {
+                    CardRegistertableVO cVO = new CardRegistertableVO();
+                    cVO.QuestionnaireID = ID;
+                    cVO.QRImg = ImgUrl;
+                    UpdateCardRegistertable(cVO);
+                }
+                return ImgUrl;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return null;
+            }
+        }
+
+
 
 
         #endregion
