@@ -11589,8 +11589,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                 string DataJson = string.Empty;
                 string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
 
-                //string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
-                string page = "pages/home/home";
+                string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
+                //string page = "pages/home/home";
 
                 DataJson = "{";
                 DataJson += "\"scene\":\"" + QuestionnaireID + "-" + InviterCID + "\",";
