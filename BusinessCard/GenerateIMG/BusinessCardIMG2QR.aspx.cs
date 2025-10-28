@@ -1,14 +1,15 @@
 ﻿using CoreFramework.VO;
 using SPLibrary.BusinessCardManagement.BO;
 using SPLibrary.BusinessCardManagement.VO;
+using SPLibrary.CoreFramework.Logging.BO;
+using SPLibrary.CustomerManagement.BO;
+using SPLibrary.CustomerManagement.VO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using SPLibrary.CustomerManagement.BO;
-using SPLibrary.CustomerManagement.VO;
 
 
 namespace BusinessCard.GenerateIMG
@@ -28,6 +29,7 @@ namespace BusinessCard.GenerateIMG
         public int AppType;
         protected void Page_Load(object sender, EventArgs e)
         {
+            LogBO logger = new LogBO(this.GetType());
             Int64 ID = Convert.ToInt64(string.IsNullOrEmpty(Request.QueryString["ID"]) ? "0" : Request.QueryString["ID"]);
             Int64 ImgName = Convert.ToInt64(string.IsNullOrEmpty(Request.QueryString["ImgName"]) ? "0" : Request.QueryString["ImgName"]);
             Int64 CustomerId = Convert.ToInt64(string.IsNullOrEmpty(Request.QueryString["CustomerId"]) ? "0" : Request.QueryString["CustomerId"]);
@@ -35,8 +37,8 @@ namespace BusinessCard.GenerateIMG
             AppType = Convert.ToInt32(string.IsNullOrEmpty(Request.QueryString["AppType"]) ? "0" : Request.QueryString["AppType"]);
             CardBO cBO = new CardBO(new CustomerProfile(), AppType);
             BusinessCardBO bscBO = new BusinessCardBO(new CustomerProfile(),AppType);
-
-
+            //logger.Info("传入的IDType值：" + Request.QueryString["IDType"]);  // 新增日志
+            //logger.Info("IDType" + IDType);
            if (IDType == 5)
             {
                 //获取签到表详情

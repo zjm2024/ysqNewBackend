@@ -16762,6 +16762,7 @@ namespace BusinessCard.Controllers
         {
             try
             {
+                var logger = new LogBO(typeof(BusinessCardBO));
                 UserProfile uProfile = CacheManager.GetUserProfile(token);
                 CustomerProfile cProfile = uProfile as CustomerProfile;
                 int customerId = cProfile.CustomerId;
@@ -16772,7 +16773,7 @@ namespace BusinessCard.Controllers
                     AppType = CustomerVO2.AppType;
                 }
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), AppType);
-                string str = cBO.getQRIMGByIDAndType(QuestionnaireID, 5, customerId,AppType);
+                string str = cBO.getQRIMGByIDAndType(QuestionnaireID, 5,AppType,customerId);
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = str };
             }
             catch

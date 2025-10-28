@@ -1927,7 +1927,8 @@ namespace SPLibrary.BusinessCardManagement.BO
             {
                 WebVO.NewsSort = FindInfoSortList("special_column", bVO.BusinessID);
             }
-            else {
+            else
+            {
                 WebVO.NewsSort = FindInfoSortList("NewsSort", bVO.BusinessID);
             }
             InfoSortVO alls = new InfoSortVO();
@@ -1949,7 +1950,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                     {
                         InfoSort[i].InfoViewlist = FindInfoViewByInfoID("Case", bVO.BusinessID, InfoSort[i].Toid, "Order_info desc,CreatedAt desc", 3);
                     }
-                    else {
+                    else
+                    {
                         InfoSort[i].InfoViewlist = FindInfoViewByInfoID("News", bVO.BusinessID, InfoSort[i].Toid, "Order_info desc,CreatedAt desc", 3);
                     }
 
@@ -2076,7 +2078,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                     if (iVO.InfoID > 0)
                     {
                         UpdateInfo(iVO);
-                    } else
+                    }
+                    else
                     {
                         iVO.CreatedAt = DateTime.Now;
                         AddInfo(iVO);
@@ -2777,7 +2780,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                     return jVO[0].PersonalID;
                 }
 
-            } else
+            }
+            else
             {
                 return 0;
             }
@@ -3472,7 +3476,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                         }
                     }
                 }
-                catch {
+                catch
+                {
 
                 }
 
@@ -4299,7 +4304,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                                 item.Status = 1;
                                 UpdateOrder(item);
                             }
-                        } else
+                        }
+                        else
                         {
                             OrderVO.Status = 3;//设置为拼团中
                             UpdateOrder(OrderVO);
@@ -4538,7 +4544,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                     return RebateCost1 + RebateCost2 + RebateCost3 + RebateCost4 + PeopleRebateCost + ProfitsharingCost + TowProfitsharingCost;
                 }
 
-            } else if (isPayout == 1)
+            }
+            else if (isPayout == 1)
             {
                 return getBalance(BusinessID);
             }
@@ -4549,7 +4556,8 @@ namespace SPLibrary.BusinessCardManagement.BO
             else if (isPayout == 3)
             {
                 return FindPayOutSumCost(BusinessID, 0);
-            } else
+            }
+            else
             {
                 return 0;
             }
@@ -5193,7 +5201,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                 if (pVO.PayOutStatus == 1)
                 {
                     Status = "提现成功";
-                } else if (pVO.PayOutStatus == -2)
+                }
+                else if (pVO.PayOutStatus == -2)
                 {
                     Status = "提现失败";
                 }
@@ -6413,7 +6422,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                     _log.Error(strErrorMsg);
                     return -1;
                 }
-            } else
+            }
+            else
             {
                 return -1;
             }
@@ -7635,7 +7645,8 @@ namespace SPLibrary.BusinessCardManagement.BO
             if (ShortUrlVO.Count > 0)
             {
                 return ShortUrlVO[0].Url;
-            } else
+            }
+            else
             {
                 return "";
             }
@@ -7656,7 +7667,8 @@ namespace SPLibrary.BusinessCardManagement.BO
             if (AddShortUrl(sVO) > 0)
             {
                 return "http://l.leliaomp.com/" + sVO.Code;
-            } else
+            }
+            else
             {
                 return "";
             }
@@ -10953,7 +10965,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// 开奖领取
         /// </summary>
         /// <returns></returns>
-        public int SaveWinningRecord(int lottery_id,int personal_id, decimal amount,string code,int AppType) 
+        public int SaveWinningRecord(int lottery_id, int personal_id, decimal amount, string code, int AppType)
         {
             try
             {
@@ -10969,7 +10981,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                     openid = openid
                 };
                 int recordId = CreateCJWinningRecords(winningRecord);
-                    
+
                 //CardBO cBO = new CardBO(new CustomerProfile());
                 //// 8. 调用微信支付接口
                 //string retu = cBO.PayforWXLotteries(amount, lottery_id, personal_id, openid, "问卷调查中奖奖金");
@@ -10996,11 +11008,11 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// 开奖领取
         /// </summary>
         /// <returns></returns>
-        public bool WinningRecordPayment(CJWinningRecordsVO vo,int AppType)
+        public bool WinningRecordPayment(CJWinningRecordsVO vo, int AppType)
         {
             try
             {
-              
+
                 CardBO cBO = new CardBO(new CustomerProfile());
                 // 8. 调用微信支付接口
                 string retu = cBO.PayforWXLotteries(vo.winning_amount, vo.lottery_id, vo.personal_id, vo.openid, AppType, "问卷调查中奖奖金");
@@ -11033,7 +11045,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public string getOpenIdByGeneral(string code,int AppType)
+        public string getOpenIdByGeneral(string code, int AppType)
         {
             string jsonStr = "";
             try
@@ -11461,8 +11473,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                 string DataJson = string.Empty;
                 string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
 
-                //string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
-                string page = "pages/home/home";
+                string page = "package/setup/SignInFormByUser/SignInFormByUser";
+                //string page = "pages/home/home";
 
                 DataJson = "{";
                 DataJson += "\"scene\":\"" + QuestionnaireID + "\",";
@@ -11549,18 +11561,17 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// <param name="QuestionnaireID"></param>
         /// <param name="CustomerId"></param>
         /// <returns>返回一个图片的名字xx.png</returns>
-        public string GetCardRegistertableSignupQR(Int64 QuestionnaireID, Int64 InviterCID,int AppType)
+        public string GetCardRegistertableSignupQR(Int64 QuestionnaireID, Int64 InviterCID, int AppType)
         {
-
             try
             {
                 var logger = new LogBO(typeof(BusinessCardBO));
 
-                logger.Error("AppType:" + AppType);
+                logger.Info("AppType:" + AppType);
                 AppVO AppVO = AppBO.GetApp(AppType);
                 string url;
                 url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppVO.AppId + "&secret=" + AppVO.Secret + "";
-                logger.Error("url地址:" + url);
+                logger.Info("url地址:" + url);
                 string jsonStr = HttpHelper.HtmlFromUrlGet(url);
                 var result = new WeiXinAccessTokenResultDYH();
                 if (jsonStr.Contains("errcode"))
@@ -11593,9 +11604,10 @@ namespace SPLibrary.BusinessCardManagement.BO
                 DataJson += "},";
                 DataJson += "\"is_hyaline\":false";
                 DataJson += "}";
+                logger.Info("DataJson" + DataJson);
 
                 Stream str = HttpHelper.HtmlFromUrlPostByStream(wxaurl, DataJson);
-                logger.Error("str" + str);
+
                 if (str == null)
                 {
                     // 记录空流错误
@@ -11655,6 +11667,62 @@ namespace SPLibrary.BusinessCardManagement.BO
 
         }
 
+        /// <summary>
+        /// 生成小程序码 名字头像二维码
+        /// </summary>
+        /// <param name="ID"></param>
+        ///  <param name="IDType">1:名片，2:名片组，3:活动，5:签到表，6:软文，7:活动报名授权码</param>
+        /// <returns></returns>
+        public string getQRIMGByIDAndType(int ID, int IDType, int AppType, int CustomerId = 0)
+        {
+            try
+            {
+                var logger = new LogBO(typeof(BusinessCardBO));
+                string imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&AppType=" + AppType;
+                if (CustomerId != 0)
+                {
+                    imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&CustomerId=" + CustomerId + "&AppType=" + AppType;
+                }
+                logger.Info("二维码路径：" + imgurl);
+                Bitmap m_Bitmap = WebSnapshotsHelper.GetWebSiteThumbnail(imgurl, 752, 974, 752, 974);
+
+                string filePath = "";
+                string folder = "";
+                if (IDType == 5) { folder = "/UploadFolder/QuestionnaireFile/"; }
+                else { folder = "/UploadFolder/QuestionnaireFile/"; }
+
+                string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".png";
+                filePath = folder + newFileName;
+
+
+                //可以修改为网络路径
+                string localPath = ConfigInfo.Instance.UploadFolder + folder;
+                if (!Directory.Exists(localPath))
+                {
+                    Directory.CreateDirectory(localPath);
+                }
+                string physicalPath = localPath + newFileName;
+
+                m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
+                string ImgUrl = ConfigInfo.Instance.BCAPIURL + filePath;
+                logger.Info("生成二维码"+ ImgUrl);
+                CardRegistertableVO cVO = new CardRegistertableVO();
+                cVO.QuestionnaireID = ID;
+                cVO.QRImg = ImgUrl;
+                UpdateCardRegistertable(cVO);
+
+                return ImgUrl;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return null;
+            }
+        }
+
+
 
         /// <summary>
         /// 删除签到表管理员
@@ -11675,68 +11743,7 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
-        /// <summary>
-        /// 生成小程序码 名字头像二维码
-        /// </summary>
-        /// <param name="ID"></param>
-        ///  <param name="IDType">1:名片，2:名片组，3:活动，5:签到表，6:软文，7:活动报名授权码</param>
-        /// <returns></returns>
-        public string getQRIMGByIDAndType(int ID, int IDType, int AppType,int CustomerId = 0)
-        {
-            try
-            {
-                ICardPartySignUpDAO uDAO = CustomerManagementDAOFactory.CardPartySignUpDAO(this.CurrentCustomerProfile);
-                var logger = new LogBO(typeof(BusinessCardBO));
-                string imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&AppType=" + AppType;
-                logger.Error(imgurl);
-                if (CustomerId != 0)
-                {
-                    imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&CustomerId=" + CustomerId + "&AppType=" + AppType;
-                }
-                
-                Bitmap m_Bitmap = WebSnapshotsHelper.GetWebSiteThumbnail(imgurl, 752, 974, 752, 974);
-
-                string filePath = "";
-                string folder = "";
-                if (IDType == 5) { folder = "/UploadFolder/QuestionnaireFile/"; }
-
-                string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".png";
-                filePath = folder + newFileName;
-
-
-                //可以修改为网络路径
-                string localPath = ConfigInfo.Instance.UploadFolder + folder;
-                if (!Directory.Exists(localPath))
-                {
-                    Directory.CreateDirectory(localPath);
-                }
-                string physicalPath = localPath + newFileName;
-
-                m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
-                string ImgUrl = ConfigInfo.Instance.BCAPIURL + filePath;
-
-                if (IDType == 5)
-                {
-                    CardRegistertableVO cVO = new CardRegistertableVO();
-                    cVO.QuestionnaireID = ID;
-                    cVO.QRImg = ImgUrl;
-                    UpdateCardRegistertable(cVO);
-                }
-                return ImgUrl;
-            }
-            catch (Exception ex)
-            {
-                LogBO _log = new LogBO(typeof(CardBO));
-                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
-                _log.Error(strErrorMsg);
-                return null;
-            }
-        }
-
-
-
-
         #endregion
 
     }
-}       
+}
