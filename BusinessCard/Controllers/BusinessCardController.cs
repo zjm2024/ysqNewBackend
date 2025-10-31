@@ -15941,6 +15941,8 @@ namespace BusinessCard.Controllers
         {
             try
             {
+                LogBO _log = new LogBO(typeof(BusinessCardController));
+                _log.Info("获取抽奖活动列表");
                 if (condition == null)
                 {
                     return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };

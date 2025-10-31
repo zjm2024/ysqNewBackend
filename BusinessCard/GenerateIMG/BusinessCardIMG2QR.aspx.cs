@@ -43,9 +43,9 @@ namespace BusinessCard.GenerateIMG
             {
                 //获取签到表详情
                 CardRegistertableVO cqVO = bscBO.FindCardRegistertableByQuestionnaireID(Convert.ToInt32(ID));
-                WrapQR1 = "WrapQR1";
-                WrapQR2 = "WrapQR1";
-                WrapQR3 = "";
+                //WrapQR1 = "WrapQR1";
+                //WrapQR2 = "WrapQR1";
+                WrapQR3 = "WrapQR3";
                 Title = cqVO.Title;
                 cqVO.QRImg = bscBO.GetCardRegistertableSignupQR(cqVO.QuestionnaireID, CustomerId,AppType);
                 CardImg = cqVO.QRImg.Replace("https", "http");

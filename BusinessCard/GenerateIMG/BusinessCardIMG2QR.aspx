@@ -9,7 +9,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="WrapQR <%=WrapQR1 %>">
+       <%-- <div class="WrapQR <%=WrapQR1 %>">
         	<div class="headDiv">
         		<div class="headimg" style="background-image:url(<%=Headimg %>)" ></div>
         		<div class="headname"><%=Name %></div>
@@ -26,7 +26,7 @@
         	</div>
             <img class="cardimg" src="<%=CardImg %>" />
             <div class="footTips">微信扫码进<font style="color:#ff6a00"><%if (AppType == 3){ %>微云智推名片群<%}else{ %>乐聊名片群<%} %></font>，搜索对接资源</div>
-        </div>
+        </div>--%>
          <div class="WrapQR <%=WrapQR3 %>">
         	<div class="headDiv">
         		<div class="headimg" style="background-image:url(<%=Headimg %>)" ></div>

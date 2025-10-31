@@ -10877,8 +10877,12 @@ namespace SPLibrary.BusinessCardManagement.BO
         {
             try
             {
+                LogBO _log = new LogBO(typeof(BusinessCardBO));
+                _log.Info("参数"+ conditionStr);
                 ICJLotteriesDAO rDAO = BusinessCardManagementDAOFactory.CJLotteriesDAO(this.CurrentCustomerProfile);
-                return rDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
+                var cj=  rDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
+                _log.Info("查询结果" + cj);
+                return cj;
             }
             catch (Exception ex)
             {
@@ -11452,8 +11456,6 @@ namespace SPLibrary.BusinessCardManagement.BO
             {
                 var logger = new LogBO(typeof(BusinessCardBO));
                 AppVO AppVO = AppBO.GetApp(AppType);
-
-                logger.Error("appid:" + AppVO.AppId);
                 string url;
                 url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppVO.AppId + "&secret=" + AppVO.Secret + "";
                 string jsonStr = HttpHelper.HtmlFromUrlGet(url);
@@ -11488,7 +11490,6 @@ namespace SPLibrary.BusinessCardManagement.BO
                 DataJson += "},";
                 DataJson += "\"is_hyaline\":false";
                 DataJson += "}";
-                logger.Error("DataJson:" + DataJson);
                 Stream str = HttpHelper.HtmlFromUrlPostByStream(wxaurl, DataJson);
 
                 if (str == null)
@@ -11566,12 +11567,9 @@ namespace SPLibrary.BusinessCardManagement.BO
             try
             {
                 var logger = new LogBO(typeof(BusinessCardBO));
-
-                logger.Info("AppType:" + AppType);
                 AppVO AppVO = AppBO.GetApp(AppType);
                 string url;
                 url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppVO.AppId + "&secret=" + AppVO.Secret + "";
-                logger.Info("url地址:" + url);
                 string jsonStr = HttpHelper.HtmlFromUrlGet(url);
                 var result = new WeiXinAccessTokenResultDYH();
                 if (jsonStr.Contains("errcode"))
@@ -11604,7 +11602,6 @@ namespace SPLibrary.BusinessCardManagement.BO
                 DataJson += "},";
                 DataJson += "\"is_hyaline\":false";
                 DataJson += "}";
-                logger.Info("DataJson" + DataJson);
 
                 Stream str = HttpHelper.HtmlFromUrlPostByStream(wxaurl, DataJson);
 
@@ -11629,7 +11626,11 @@ namespace SPLibrary.BusinessCardManagement.BO
                     string content = Encoding.UTF8.GetString(buffer);
                     if (content.Contains("errcode"))
                     {
-                        logger.Error($"微信接口错误：{content}");
+                        var errorObj = JsonConvert.DeserializeObject<dynamic>(content);
+                        int errcode = errorObj.errcode;
+                        string errmsg = errorObj.errmsg;
+                        logger.Error($"微信接口错误，错误码：{errcode}，错误信息：{errmsg}");
+                        //logger.Error($"微信接口错误：{content}");
                         return null;
                     }
 
@@ -11637,7 +11638,6 @@ namespace SPLibrary.BusinessCardManagement.BO
                     // 4. 用内存流创建Bitmap（此时ms.Position=0，可正常读取）
                     using (Bitmap m_Bitmap = new Bitmap(ms))
                     {
-
                         string folder = "/UploadFolder/QuestionnaireFile/";
                         string newFileName = QuestionnaireID + "_" + InviterCID + ".png";
                         filePath = folder + newFileName;
@@ -11683,7 +11683,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 {
                     imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&CustomerId=" + CustomerId + "&AppType=" + AppType;
                 }
-                logger.Info("二维码路径：" + imgurl);
+                
                 Bitmap m_Bitmap = WebSnapshotsHelper.GetWebSiteThumbnail(imgurl, 752, 974, 752, 974);
 
                 string filePath = "";
