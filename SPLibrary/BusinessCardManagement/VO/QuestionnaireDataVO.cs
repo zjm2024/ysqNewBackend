@@ -39,12 +39,10 @@ namespace SPLibrary.BusinessCardManagement.VO
         public Int32 status { get { return (Int32)GetValue(typeof(Int32), "status"); } set { SetValue("status", value); } }
         [DataMember]
         public Int32 sort { get { return (Int32)GetValue(typeof(Int32), "sort"); } set { SetValue("sort", value); } }
-        [DataMember]
-        public Int32 need_obtain_ip { get { return (Int32)GetValue(typeof(Int32), "need_obtain_ip"); } set { SetValue("need_obtain_ip", value); } }
+        //[DataMember]
+        //public Int32 need_obtain_ip { get { return (Int32)GetValue(typeof(Int32), "need_obtain_ip"); } set { SetValue("need_obtain_ip", value); } }
         [DataMember]
         public String notice { get { return (String)GetValue(typeof(String), "notice"); } set { SetValue("notice", value); } }
-        [DataMember]
-        public Int32 enablerecording { get { return (Int32)GetValue(typeof(Int32), "enablerecording"); } set { SetValue("enablerecording", value); } }
 
         [DataMember]
         public DateTime create_time { get { return (DateTime)GetValue(typeof(DateTime), "create_time"); } set { SetValue("create_time", value); } }

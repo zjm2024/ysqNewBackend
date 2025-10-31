@@ -148,9 +148,9 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 string modifiedJson = jsonData;
                 QuestionnaireDataVO qvo = cBO.FindQuestionByActivityIdId(data.activity.ToString());
-                if (qvo != null && qvo.need_obtain_ip == 0) {
-                    modifiedJson = cBO.RemoveField(data, "ipAddress");
-                }
+                //if (qvo != null && qvo.need_obtain_ip == 0) {
+                //    modifiedJson = cBO.RemoveField(data, "ipAddress");
+                //}
                 
                 cBO.printQuestionnaire("答卷的数据：" + data);
 
@@ -453,6 +453,31 @@ namespace BusinessCard.Controllers
                 return new ResultObject() { Flag = 0, Message = "上传失败", Result = "文件为空", Subsidiary = "" };
             }
         }
+
+
+
+        /// <summary>
+        /// 更新问卷
+        /// </summary>
+        /// <param name="vO">VO</param>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("gettest"), HttpGet , Anonymous]
+        public ResultObject gettest()
+        {
+            try
+            {
+             
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = null };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultObject() { Flag = 0, Message = "更新失败!", Result = ex };
+            }
+        }
+
+
 
         public class QuestionnaireFromVO
         {
