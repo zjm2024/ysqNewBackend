@@ -1612,7 +1612,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         public List<InfoVO> FindInfoByInfoID(string Type, int BusinessID, int SortID)
         {
             IInfoDAO rDAO = BusinessCardManagementDAOFactory.InfoDAO(this.CurrentCustomerProfile);
-            List<InfoVO> cVO = rDAO.FindAllByPageIndex("Type='" + Type + "' and BusinessID = " + BusinessID + " and SortID=" + SortID, "Order_info", "desc");
+            List<InfoVO> cVO = rDAO.FindAllByPageIndex("Type='" + Type + "' and BusinessID = " + BusinessID + " and SortID=" + SortID, "Order_info,CreatedAt", "desc");
             return cVO;
         }
 

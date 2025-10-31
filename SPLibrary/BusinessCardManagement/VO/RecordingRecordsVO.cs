@@ -30,6 +30,8 @@ namespace SPLibrary.BusinessCardManagement.VO
         [DataMember]
         public String recording_config { get { return (String)GetValue(typeof(String), "recording_config"); } set { SetValue("recording_config", value); } }
         [DataMember]
+        public String id_timestamp { get { return (String)GetValue(typeof(String), "id_timestamp"); } set { SetValue("id_timestamp", value); } }
+        [DataMember]
         public String status { get { return (String)GetValue(typeof(String), "status"); } set { SetValue("status", value); } }
         [DataMember]
         public DateTime create_time { get { return (DateTime)GetValue(typeof(DateTime), "create_time"); } set { SetValue("create_time", value); } }

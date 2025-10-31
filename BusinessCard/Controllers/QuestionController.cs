@@ -365,7 +365,7 @@ namespace BusinessCard.Controllers
         /// <param name="token">用户令牌</param>
         /// <returns></returns>
         [Route("UploadRecording"), HttpPost]
-        public ResultObject UploadRecording(string ActivityId, string token)
+        public ResultObject UploadRecording(string ActivityId,string id_timestamp, string token)
         {
             // 验证用户身份
             UserProfile uProfile = CacheManager.GetUserProfile(token);
@@ -434,6 +434,7 @@ namespace BusinessCard.Controllers
                         activityid = Convert.ToInt32(ActivityId),
                         personalid = pVO.PersonalID,
                         recording_config = recordingConfig,
+                        id_timestamp = id_timestamp,
                         create_time = DateTime.Now,
                         modify_time = DateTime.Now,
                         status = "Active"
