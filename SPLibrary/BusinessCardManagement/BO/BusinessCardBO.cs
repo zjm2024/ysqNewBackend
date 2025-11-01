@@ -9438,6 +9438,16 @@ namespace SPLibrary.BusinessCardManagement.BO
             IBCPartyDAO pDAO = BusinessCardManagementDAOFactory.BCPartyDAO(this.CurrentCustomerProfile);
             return pDAO.FindByParams(condtion);
         }
+        /// <summary>
+        /// 获取活动分页
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public List<BCPartyVO> FindBCPartyByPage(string condtion, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            IBCPartyDAO pDAO = BusinessCardManagementDAOFactory.BCPartyDAO(this.CurrentCustomerProfile);
+            return pDAO.FindAllByPageIndex(condtion,start,end,sortcolname,asc,parameters);
+        }
 
         /// <summary>
         /// 获取活动的所有报名填写信息列表
@@ -10877,11 +10887,8 @@ namespace SPLibrary.BusinessCardManagement.BO
         {
             try
             {
-                LogBO _log = new LogBO(typeof(BusinessCardBO));
-                _log.Info("参数"+ conditionStr);
                 ICJLotteriesDAO rDAO = BusinessCardManagementDAOFactory.CJLotteriesDAO(this.CurrentCustomerProfile);
                 var cj=  rDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
-                _log.Info("查询结果" + cj);
                 return cj;
             }
             catch (Exception ex)

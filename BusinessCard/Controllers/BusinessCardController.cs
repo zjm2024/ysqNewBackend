@@ -15523,9 +15523,9 @@ namespace BusinessCard.Controllers
                     int count = uBO.FindRequireTotalCount(condition);
 
                     //BusinessCard_JurisdictionVO B_Jurisdiction = cBO.getBusinessCard_Jurisdiction(BusinessID);
-                    List<InfoViewVO> videolist = cBO.FindInfoViewAllByPageIndex("Type ='Video'  AND Status<>-2 and Status<>0 AND BusinessID =" + BusinessID, 1, 3, "ReadCount", "desc");
+                    List<InfoViewVO> videolist = cBO.FindInfoViewAllByPageIndex("Type ='Video'  AND Status<>-2 and Status<>0 AND BusinessID =" + BusinessID, 1, 3, "CreatedAt", "desc");
                     //首页显示活动 IsDisplayIndex=1 and EndTime > now() and
-                    List<BCPartyVO> partyvo = cBO.FindBCPartyByCondtion(" AppType=" + pVO.AppType);
+                    List <BCPartyVO> partyvo = cBO.FindBCPartyByPage(" AppType=" + pVO.AppType, 1, 6, "IsDisplayIndex", "desc");
                     List<QuestionnaireDataVO> qVO = cBO.FindQuestionnaireByFour(4);
                     object res = new
                     {
@@ -15962,7 +15962,7 @@ namespace BusinessCard.Controllers
                 var count = cBO.FindCJLotteriesCount(conditionStr);
                 if (qVO.Count > 0)
                 {
-                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Count = count };
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Count = count,Subsidiary = condition,Subsidiary2=conditionStr };
                 }
                 return new ResultObject() { Flag = 2, Message = "未查询到数据!", Result = null };
             }
