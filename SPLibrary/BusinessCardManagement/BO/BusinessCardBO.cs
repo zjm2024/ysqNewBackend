@@ -11825,10 +11825,11 @@ namespace SPLibrary.BusinessCardManagement.BO
                 string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
 
                 // 商家转账API地址
-                string url = "https://api.mch.weixin.qq.com/v3/transfer/batches";
+                string url = "https://api.mch.weixin.qq.com";
+                string endpoint = "/v3/transfer/batches";
 
                 // 发送V3 API请求
-                string responseJson = WeChatPayV3PostWithCertificate(url, jsonData, mchid, mchCertSerialNo, certPath, certPassword);
+                string responseJson = WeChatPayV3PostWithCertificate(url, endpoint, jsonData, mchid, mchCertSerialNo, certPath, certPassword);
 
 
                 _log.Info($"微信商家转账API返回: {responseJson}");
@@ -11865,7 +11866,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// <summary>
         /// 使用证书进行微信支付V3 API POST请求
         /// </summary>
-        private string WeChatPayV3PostWithCertificate(string url, string jsonData, string mchId, string certSerialNo, string certPath, string certPassword)
+        private string WeChatPayV3PostWithCertificate(string domain,string endpoint, string jsonData, string mchId, string certSerialNo, string certPath, string certPassword)
         {
             try
             {
@@ -11873,9 +11874,9 @@ namespace SPLibrary.BusinessCardManagement.BO
                 string timestamp = DateTimeOffset.Now.ToUnixTimeSeconds().ToString(); // 时间戳
                 string method = "POST";
                 string body = jsonData;
-
+                var url = domain.TrimEnd('/') + "/" + endpoint.TrimStart('/');
                 // 构造签名原文
-                string message = $"{method}\n{url}\n{timestamp}\n{nonce}\n{body}\n";
+                string message = $"{method}\n{endpoint}\n{timestamp}\n{nonce}\n{body}\n";
 
                 // 使用证书生成签名
                 string signature = GenerateSignatureWithCertificate(message, certPath, certPassword);
@@ -11955,13 +11956,9 @@ namespace SPLibrary.BusinessCardManagement.BO
 
                 // 关键点：在.NET Framework中使用SHA256进行签名
                 // 如果直接使用SignData出现算法无效，可以尝试先计算哈希，再签名
-                using (SHA256 sha256 = SHA256.Create())
-                {
-                    byte[] hash = sha256.ComputeHash(data);
-                    // 使用PKCS#1填充和SHA256哈希进行签名
-                    byte[] signature = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA256"));
-                    return Convert.ToBase64String(signature);
-                }
+                // 直接使用SignData方法
+                byte[] signature = rsa.SignData(data, "SHA256");
+                return Convert.ToBase64String(signature);
             }
             catch (Exception ex)
             {
