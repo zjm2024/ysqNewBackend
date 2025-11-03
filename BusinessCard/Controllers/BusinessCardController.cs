@@ -2564,7 +2564,7 @@ namespace BusinessCard.Controllers
             InfoSort.Reverse();
             InfoSort.Add(SVO);
             InfoSort.Reverse();
-            return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count, Subsidiary = new { BusinessName = bVO.BusinessName, Logo = bVO.LogoImg, DisplayCard = bVO.DisplayCard, InfoSort = InfoSort } };
+            return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count, Subsidiary = new { BusinessName = bVO.BusinessName, Logo = bVO.LogoImg, DisplayCard = bVO.DisplayCard, InfoSort = InfoSort } ,Subsidiary2= (" + condition.Filter.Result() + ") };
         }
 
         /// <summary>
@@ -11797,49 +11797,58 @@ namespace BusinessCard.Controllers
         [Route("UpdateSpecialSort"), HttpPost]
         public ResultObject UpdateSpecialSort([FromBody] InfoSortVO InfoSortVO, string token)
         {
-            if (InfoSortVO == null)
+            try
             {
-                return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
-            }
-
-            UserProfile uProfile = CacheManager.GetUserProfile(token);
-            CustomerProfile cProfile = uProfile as CustomerProfile;
-            int customerId = cProfile.CustomerId;
-
-            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
-            PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
-
-
-            if (!cBO.FindJurisdiction(pVO.PersonalID, pVO.BusinessID, "Web") && !cBO.FindJurisdiction(pVO.PersonalID, pVO.BusinessID, "Admin"))
-            {
-                return new ResultObject() { Flag = 0, Message = "你没有权限!", Result = null };
-            }
-
-            if (InfoSortVO.SortID > 0)
-            {
-                InfoSortVO sVO = cBO.FindInfoSortById(InfoSortVO.SortID);
-                InfoSortVO.BusinessID = sVO.BusinessID;
-                if (cBO.UpdateInfoSort(InfoSortVO))
+                if (InfoSortVO == null)
                 {
-                    return new ResultObject() { Flag = 1, Message = "更新成功!", Result = sVO.SortID, Subsidiary = "修改", Subsidiary2 = InfoSortVO };
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+                LogBO _log = new LogBO(typeof(BusinessCardBO));
+                UserProfile uProfile = CacheManager.GetUserProfile(token);
+                CustomerProfile cProfile = uProfile as CustomerProfile;
+                int customerId = cProfile.CustomerId;
+
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+                PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
+
+
+                if (!cBO.FindJurisdiction(pVO.PersonalID, pVO.BusinessID, "Web") && !cBO.FindJurisdiction(pVO.PersonalID, pVO.BusinessID, "Admin"))
+                {
+                    return new ResultObject() { Flag = 0, Message = "你没有权限!", Result = null };
+                }
+
+                if (InfoSortVO.SortID > 0)
+                {
+                    //根据id查询数据
+                    InfoSortVO sVO = cBO.FindInfoSortById(InfoSortVO.SortID);
+                    _log.Info("参数" + sVO.BusinessID +"参数2" + InfoSortVO.SortID);
+                    InfoSortVO.BusinessID = sVO.BusinessID;
+                    if (cBO.UpdateInfoSort(InfoSortVO))
+                    {
+                        return new ResultObject() { Flag = 1, Message = "更新成功!", Result = sVO.SortID, Subsidiary = "修改", Subsidiary2 = InfoSortVO };
+                    }
+                    else
+                    {
+                        return new ResultObject() { Flag = 0, Message = "更新失败!", Result = InfoSortVO };
+                    }
                 }
                 else
                 {
-                    return new ResultObject() { Flag = 0, Message = "更新失败!", Result = null };
+                    InfoSortVO.BusinessID = pVO.BusinessID;
+                    InfoSortVO.CreatedAt = DateTime.Now;
+                    InfoSortVO.Type = "special_column";
+                    int SortID = cBO.AddInfoSort(InfoSortVO);
+                    if (SortID > 0)
+                        return new ResultObject() { Flag = 1, Message = "添加成功!", Result = SortID, Subsidiary = "添加", Subsidiary2 = InfoSortVO };
+                    else
+                        return new ResultObject() { Flag = 0, Message = "添加失败!", Result = null };
                 }
             }
-            else
+            catch (Exception ex)
             {
-                InfoSortVO.BusinessID = pVO.BusinessID;
-                InfoSortVO.CreatedAt = DateTime.Now;
-                InfoSortVO.Type = "special_column";
-
-                int SortID = cBO.AddInfoSort(InfoSortVO);
-                if (SortID > 0)
-                    return new ResultObject() { Flag = 1, Message = "添加成功!", Result = SortID, Subsidiary = "添加", Subsidiary2 = InfoSortVO };
-                else
-                    return new ResultObject() { Flag = 0, Message = "添加失败!", Result = null };
+                return new ResultObject() { Flag = 0, Message = ex.Message, Result = null };
             }
+          
         }
 
         /// <summary>
@@ -15523,7 +15532,7 @@ namespace BusinessCard.Controllers
                     int count = uBO.FindRequireTotalCount(condition);
 
                     //BusinessCard_JurisdictionVO B_Jurisdiction = cBO.getBusinessCard_Jurisdiction(BusinessID);
-                    List<InfoViewVO> videolist = cBO.FindInfoViewAllByPageIndex("Type ='Video'  AND Status<>-2 and Status<>0 AND BusinessID =" + BusinessID, 1, 3, "CreatedAt", "desc");
+                    List<InfoViewVO> videolist = cBO.FindInfoViewAllByPageIndex("Type ='Video'  AND Status<>-2 and Status<>0 AND Video!='' AND BusinessID =" + BusinessID, 1, 3, "Order_info desc,", "CreatedAt desc");
                     //首页显示活动 IsDisplayIndex=1 and EndTime > now() and
                     List <BCPartyVO> partyvo = cBO.FindBCPartyByPage(" AppType=" + pVO.AppType, 1, 6, "IsDisplayIndex", "desc");
                     List<QuestionnaireDataVO> qVO = cBO.FindQuestionnaireByFour(4);
@@ -16884,6 +16893,29 @@ namespace BusinessCard.Controllers
             }
         }
         #endregion
+
+        /// <summary>
+        /// 123
+        /// </summary>
+        /// <param name="code">第一次拉手返回Code</param>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("Test2"), HttpPost, Anonymous]
+        public ResultObject Test2()
+        {
+            try
+            {
+                //人脸识别
+                //CsharpVO CsharpVO = CsharpTest.Main("新闻", 0);
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), 1);
+                string retu = cBO.wechatPayToChange(0.5M, 2, 23, "oYnrm7SHCMGz-Zws4aucMmNdjUHY", 30, "问卷调查中奖奖金");
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = retu };
+            }
+            catch
+            {
+                return new ResultObject() { Flag = 0, Message = "获取失败,请重试!", Result = null };
+            }
+        }
     }
     class ActivityNameModel
     {
