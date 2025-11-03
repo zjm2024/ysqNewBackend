@@ -11802,31 +11802,44 @@ namespace SPLibrary.BusinessCardManagement.BO
                 }
 
                 // 构造请求数据
+                //var requestData = new
+                //{
+                //    appid = appid,
+                //    out_batch_no = out_bill_no, // 商户批次号
+                //    batch_name = "问卷红包奖励",
+                //    batch_remark = desc,
+                //    total_amount = amount,
+                //    total_num = 1,
+                //    transfer_detail_list = new[]
+                //    {
+                //    new
+                //    {
+                //        out_detail_no = out_bill_no + "D1", // 商户明细单号
+                //        transfer_amount = amount,
+                //        transfer_remark = desc,
+                //        openid = openid1
+                //    }
+                //}
+                //};
+
+                // 2. 构造请求数据
                 var requestData = new
                 {
-                    appid = appid,
-                    out_batch_no = out_bill_no, // 商户批次号
-                    batch_name = "问卷红包奖励",
-                    batch_remark = desc,
-                    total_amount = amount,
-                    total_num = 1,
-                    transfer_detail_list = new[]
-                    {
-                new
-                {
-                    out_detail_no = out_bill_no + "D1", // 商户明细单号
+                    sub_mchid = AppVO.MCHID, // 子商户号[citation:2]
+                    appid = AppVO.AppId,
+                    out_bill_no = "CJ" + out_bill_no ,
+                    transfer_scene_id =  "1000", // 转账场景ID[citation:2]
+                    openid = openid1,
+                    user_name = "",
                     transfer_amount = amount,
-                    transfer_remark = desc,
-                    openid = openid1
-                }
-            }
+                    transfer_remark = desc
                 };
 
                 string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
 
                 // 商家转账API地址
                 string url = "https://api.mch.weixin.qq.com";
-                string endpoint = "/v3/transfer/batches";
+                string endpoint = "/v3/fund-app/mch-transfer/partner/transfer-bills";
 
                 // 发送V3 API请求
                 string responseJson = WeChatPayV3PostWithCertificate(url, endpoint, jsonData, mchid, mchCertSerialNo, certPath, certPassword);
@@ -11855,9 +11868,9 @@ namespace SPLibrary.BusinessCardManagement.BO
             string outBillNo = $"{mchid}{timestamp}{lottery_id}{personal_id}{random}";
 
             // 确保不超过32位
-            if (outBillNo.Length > 32)
+            if (outBillNo.Length > 30)
             {
-                outBillNo = outBillNo.Substring(0, 32);
+                outBillNo = outBillNo.Substring(0, 30);
             }
 
             return outBillNo;
@@ -11896,7 +11909,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                     client.Headers.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
                     client.Headers.Add("Accept", "application/json");
                     client.Headers.Add("Content-Type", "application/json");
-
+                    client.Headers.Add("Wechatpay-Serial", certSerialNo);
                     // 上传数据并获取响应
                     byte[] requestData = Encoding.UTF8.GetBytes(jsonData);
                     byte[] responseData = client.UploadData(url, "POST", requestData);
@@ -11936,35 +11949,68 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
-        public static string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
+        //public static string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
+        //{
+        //    try
+        //    {
+        //        // 加载证书，并明确指定密钥存储标志
+        //        X509Certificate2 cert = new X509Certificate2(certPath, certPassword,
+        //            X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+
+        //        // 获取私钥 (在.NET Framework中，通常这样获取)
+        //        RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)cert.PrivateKey;
+
+        //        if (rsa == null)
+        //        {
+        //            throw new Exception("证书不包含私钥或密码错误");
+        //        }
+
+        //        byte[] data = Encoding.UTF8.GetBytes(message);
+
+        //        // 关键点：在.NET Framework中使用SHA256进行签名
+        //        // 如果直接使用SignData出现算法无效，可以尝试先计算哈希，再签名
+        //        // 直接使用SignData方法
+        //        byte[] signature = rsa.SignData(data, "SHA256");
+        //        return Convert.ToBase64String(signature);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // 记录详细的异常信息
+        //        Console.WriteLine($"证书签名生成失败: {ex.Message}");
+        //        throw new Exception($"证书签名生成失败: {ex.Message}", ex);
+        //    }
+        //}
+
+        private string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
         {
             try
             {
-                // 加载证书，并明确指定密钥存储标志
-                X509Certificate2 cert = new X509Certificate2(certPath, certPassword,
-                    X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+                // 1. 将证书文件作为字节数组读取
+                byte[] certData = File.ReadAllBytes(certPath);
 
-                // 获取私钥 (在.NET Framework中，通常这样获取)
-                RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)cert.PrivateKey;
+                // 2. 从字节数组和密码加载证书
+                X509Certificate2 cert = new X509Certificate2(certData, certPassword,
+                    X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
 
-                if (rsa == null)
+                // 3. 获取支持新算法的RSA实例
+                using (RSA rsa = cert.GetRSAPrivateKey())
                 {
-                    throw new Exception("证书不包含私钥或密码错误");
+                    if (rsa == null)
+                    {
+                        throw new Exception("无法从证书中获取支持算法的RSA私钥。");
+                    }
+
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    // 4. 使用支持SHA256的RSA实例进行签名
+                    byte[] signature = rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    return Convert.ToBase64String(signature);
                 }
-
-                byte[] data = Encoding.UTF8.GetBytes(message);
-
-                // 关键点：在.NET Framework中使用SHA256进行签名
-                // 如果直接使用SignData出现算法无效，可以尝试先计算哈希，再签名
-                // 直接使用SignData方法
-                byte[] signature = rsa.SignData(data, "SHA256");
-                return Convert.ToBase64String(signature);
             }
             catch (Exception ex)
             {
-                // 记录详细的异常信息
-                Console.WriteLine($"证书签名生成失败: {ex.Message}");
-                throw new Exception($"证书签名生成失败: {ex.Message}", ex);
+                LogBO _log = new LogBO(typeof(CardBO));
+                _log.Error($"使用新方法生成证书签名失败: {ex.Message}");
+                throw new Exception($"使用新方法生成证书签名失败: {ex.Message}", ex);
             }
         }
 
