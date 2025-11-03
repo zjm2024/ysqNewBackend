@@ -24,6 +24,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -11751,6 +11752,321 @@ namespace SPLibrary.BusinessCardManagement.BO
         }
 
         #endregion
+
+
+
+        #region 商家转账
+        /// <summary>
+        /// 微信商家转账到零钱(使用证书文件方案)
+        /// </summary>
+        /// <param name="money">转账金额</param>
+        /// <param name="lottery_id">红包记录id</param>
+        /// <param name="personal_id">个人记录id</param>
+        /// <param name="openid1">用户的openid</param>
+        /// <param name="AppType">应用类型</param>
+        /// <param name="desc">转账描述</param>
+        /// <returns></returns>
+        public string wechatPayToChange(Decimal money, int lottery_id, int personal_id, string openid1, int AppType, string desc = "")
+        {
+            if ((double)money < 0.3 || lottery_id < 0 || string.IsNullOrEmpty(openid1))
+            {
+                return "FAIL";
+            }
+            LogBO _log = new LogBO(typeof(BusinessCardBO));
+            try
+            {
+
+                AppVO AppVO = AppBO.GetApp(AppType);
+
+                string mchid = AppVO.MCHID; // 商户号
+                string appid = AppVO.AppId; // AppID
+                string mchCertSerialNo = AppVO.MCH_CERT_SERIAL_NO; // 商户证书序列号
+                string certPath = AppVO.SSLCERT_PATH; // 证书文件路径
+                string certPassword = AppVO.SSLCERT_PASSWORD; // 证书密码
+
+                // 验证必要参数
+                if (string.IsNullOrEmpty(certPath) || string.IsNullOrEmpty(certPassword))
+                {
+                    _log.Error("微信支付证书路径或密码未配置");
+                    return "FAIL";
+                }
+
+                // 生成商户单号
+                string out_bill_no = GenerateOutBillNo(mchid, lottery_id, personal_id);
+
+                int amount = Convert.ToInt32(money * 100); // 转换为分
+
+                if (string.IsNullOrEmpty(desc))
+                {
+                    desc = "恭喜你，成功领取问卷现金红包！";
+                }
+
+                // 构造请求数据
+                var requestData = new
+                {
+                    appid = appid,
+                    out_batch_no = out_bill_no, // 商户批次号
+                    batch_name = "问卷红包奖励",
+                    batch_remark = desc,
+                    total_amount = amount,
+                    total_num = 1,
+                    transfer_detail_list = new[]
+                    {
+                new
+                {
+                    out_detail_no = out_bill_no + "D1", // 商户明细单号
+                    transfer_amount = amount,
+                    transfer_remark = desc,
+                    openid = openid1
+                }
+            }
+                };
+
+                string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
+
+                // 商家转账API地址
+                string url = "https://api.mch.weixin.qq.com/v3/transfer/batches";
+
+                // 发送V3 API请求
+                string responseJson = WeChatPayV3PostWithCertificate(url, jsonData, mchid, mchCertSerialNo, certPath, certPassword);
+
+
+                _log.Info($"微信商家转账API返回: {responseJson}");
+
+                // 解析返回结果
+                return ParseTransferResponse(responseJson, out_bill_no);
+            }
+            catch (Exception ex)
+            {
+                string strErrorMsg = $"微信商家转账异常 - Message: {ex.Message}, Stack: {ex.StackTrace}";
+                _log.Error(strErrorMsg);
+                return "FAIL";
+            }
+        }
+
+        /// <summary>
+        /// 生成商户单号
+        /// </summary>
+        private string GenerateOutBillNo(string mchid, int lottery_id, int personal_id)
+        {
+            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string random = new Random().Next(1000, 9999).ToString();
+            string outBillNo = $"{mchid}{timestamp}{lottery_id}{personal_id}{random}";
+
+            // 确保不超过32位
+            if (outBillNo.Length > 32)
+            {
+                outBillNo = outBillNo.Substring(0, 32);
+            }
+
+            return outBillNo;
+        }
+
+        /// <summary>
+        /// 使用证书进行微信支付V3 API POST请求
+        /// </summary>
+        private string WeChatPayV3PostWithCertificate(string url, string jsonData, string mchId, string certSerialNo, string certPath, string certPassword)
+        {
+            try
+            {
+                string nonce = Guid.NewGuid().ToString("N"); // 随机字符串
+                string timestamp = DateTimeOffset.Now.ToUnixTimeSeconds().ToString(); // 时间戳
+                string method = "POST";
+                string body = jsonData;
+
+                // 构造签名原文
+                string message = $"{method}\n{url}\n{timestamp}\n{nonce}\n{body}\n";
+
+                // 使用证书生成签名
+                string signature = GenerateSignatureWithCertificate(message, certPath, certPassword);
+
+                // 构造Authorization头
+                string authorization = $"WECHATPAY2-SHA256-RSA2048 mchid=\"{mchId}\",nonce_str=\"{nonce}\",signature=\"{signature}\",timestamp=\"{timestamp}\",serial_no=\"{certSerialNo}\"";
+
+                // 设置TLS 1.2
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+
+                // 创建HTTP请求
+                using (WebClient client = new WebClient())
+                {
+                    client.Encoding = Encoding.UTF8;
+                    client.Headers.Add("Authorization", authorization);
+                    client.Headers.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+                    client.Headers.Add("Accept", "application/json");
+                    client.Headers.Add("Content-Type", "application/json");
+
+                    // 上传数据并获取响应
+                    byte[] requestData = Encoding.UTF8.GetBytes(jsonData);
+                    byte[] responseData = client.UploadData(url, "POST", requestData);
+                    string responseContent = Encoding.UTF8.GetString(responseData);
+
+                    LogBO _log = new LogBO(typeof(BusinessCardBO));
+                    _log.Info($"V3 API证书请求成功，URL: {url}");
+
+                    return responseContent;
+                }
+            }
+            catch (WebException webEx)
+            {
+                LogBO _log = new LogBO(typeof(BusinessCardBO));
+
+                if (webEx.Response != null)
+                {
+                    using (var stream = webEx.Response.GetResponseStream())
+                    using (var reader = new System.IO.StreamReader(stream))
+                    {
+                        string errorResponse = reader.ReadToEnd();
+                        _log.Error($"V3 API证书请求Web异常 - Status: {((HttpWebResponse)webEx.Response).StatusCode}, Response: {errorResponse}");
+                    }
+                }
+                else
+                {
+                    _log.Error($"V3 API证书请求Web异常 - Message: {webEx.Message}");
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(BusinessCardBO));
+                _log.Error($"V3 API证书请求异常: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
+        {
+            try
+            {
+                // 加载证书，并明确指定密钥存储标志
+                X509Certificate2 cert = new X509Certificate2(certPath, certPassword,
+                    X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+
+                // 获取私钥 (在.NET Framework中，通常这样获取)
+                RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)cert.PrivateKey;
+
+                if (rsa == null)
+                {
+                    throw new Exception("证书不包含私钥或密码错误");
+                }
+
+                byte[] data = Encoding.UTF8.GetBytes(message);
+
+                // 关键点：在.NET Framework中使用SHA256进行签名
+                // 如果直接使用SignData出现算法无效，可以尝试先计算哈希，再签名
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    byte[] hash = sha256.ComputeHash(data);
+                    // 使用PKCS#1填充和SHA256哈希进行签名
+                    byte[] signature = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA256"));
+                    return Convert.ToBase64String(signature);
+                }
+            }
+            catch (Exception ex)
+            {
+                // 记录详细的异常信息
+                Console.WriteLine($"证书签名生成失败: {ex.Message}");
+                throw new Exception($"证书签名生成失败: {ex.Message}", ex);
+            }
+        }
+
+        ///// <summary>
+        ///// 使用证书生成签名
+        ///// </summary>
+        //private string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
+        //{
+        //    try
+        //    {
+        //        // 加载证书
+        //        X509Certificate2 cert = new X509Certificate2(certPath, certPassword,
+        //            X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+
+        //        // 获取私钥
+        //        RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)cert.PrivateKey;
+
+        //        if (rsa == null)
+        //        {
+        //            throw new Exception("证书不包含私钥或密码错误");
+        //        }
+
+        //        byte[] data = Encoding.UTF8.GetBytes(message);
+        //        byte[] signature = rsa.SignData(data, "SHA256");
+
+        //        return Convert.ToBase64String(signature);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogBO _log = new LogBO(typeof(BusinessCardBO));
+        //        _log.Error($"证书签名生成失败: {ex.Message}");
+        //        throw new Exception($"证书签名生成失败: {ex.Message}");
+        //    }
+        //}
+
+        /// <summary>
+        /// 解析转账响应
+        /// </summary>
+        private string ParseTransferResponse(string responseJson, string outBillNo)
+        {
+            if (string.IsNullOrEmpty(responseJson))
+            {
+                return "FAIL";
+            }
+
+            LogBO _log = new LogBO(typeof(BusinessCardBO));
+
+            try
+            {
+                dynamic resultObj = Newtonsoft.Json.JsonConvert.DeserializeObject(responseJson);
+
+                // 检查批次状态
+                string batchStatus = resultObj.batch_status?.ToString();
+                string outBatchNo = resultObj.out_batch_no?.ToString();
+
+                if (!string.IsNullOrEmpty(batchStatus))
+                {
+                    _log.Info($"转账批次状态: {batchStatus}, 商户批次号: {outBatchNo}");
+
+                    // 如果批次状态是ACCEPTED或PROCESSING，表示请求已接受
+                    if (batchStatus == "ACCEPTED" || batchStatus == "PROCESSING")
+                    {
+                        // 记录微信批次号
+                        string batchNo = resultObj.batch_id?.ToString();
+                        if (!string.IsNullOrEmpty(batchNo))
+                        {
+                            _log.Info($"微信转账批次号: {batchNo}");
+                        }
+                        return "SUCCESS";
+                    }
+                }
+
+                // 检查错误信息
+                if (resultObj.code != null)
+                {
+                    string errorCode = resultObj.code.ToString();
+                    string errorMessage = resultObj.message?.ToString();
+                    _log.Error($"微信商家转账API错误: {errorCode} - {errorMessage}");
+                }
+
+                return "FAIL";
+            }
+            catch (Exception jsonEx)
+            {
+                _log.Error($"解析微信返回JSON失败: {jsonEx.Message}, 返回内容: {responseJson}");
+                return "FAIL";
+            }
+        }
+
+        /// <summary>
+        /// 获取时间戳（备用方法）
+        /// </summary>
+        private string GetTimestamp()
+        {
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalSeconds).ToString();
+        }
+        #endregion
+
 
     }
 }

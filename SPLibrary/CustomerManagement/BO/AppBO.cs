@@ -103,8 +103,9 @@ namespace SPLibrary.CustomerManagement.BO
                     AppVO.MCHID = "1623715013";
                     AppVO.KEY = "2weryYTG7698hjkwyr281AMKDUEasdSC";
                     AppVO.APPSECRET = "822bc05f9d5c51eaae3b14e2bc3cebbd";
-                    AppVO.SSLCERT_PATH = "C:/web/ca/ysq/1623715013_20250916_cert/apiclient_cert.p12";
+                    AppVO.SSLCERT_PATH = "C:/cert/ca/ysq/1623715013_20250916_cert/apiclient_cert.p12";
                     AppVO.SSLCERT_PASSWORD = "1623715013";
+                    AppVO.MCH_CERT_SERIAL_NO = "1D65F1C596C2DA416932DC336F1F3C6663CECB3B";
                     AppVO.AppType = 30;
                     AppVO.TPersonalID = 18093;
                     break;
@@ -116,7 +117,7 @@ namespace SPLibrary.CustomerManagement.BO
                     AppVO.MCHID = "1723564517";
                     AppVO.KEY = "bnedfcv2dfgCVGY68943HJREdeg7unjk";
                     AppVO.APPSECRET = "4d60dea1857d13c37fe7c8d11731a785";
-                    AppVO.SSLCERT_PATH = "C:/web/ca/yml/1723564517_20250728_cert/apiclient_cert.p12";
+                    AppVO.SSLCERT_PATH = "C:/cert/ca/yml/1723564517_20250728_cert/apiclient_cert.p12";
                     AppVO.SSLCERT_PASSWORD = "1723564517";
                     AppVO.AppType = 31;
                     AppVO.TPersonalID = 18063;
@@ -312,5 +313,19 @@ namespace SPLibrary.CustomerManagement.BO
         /// 默认名片id
         /// </summary>
         public int TPersonalID { get; set; }
+
+
+        /// <summary>
+        /// 商户证书序列号
+        /// </summary>
+        public string MCH_CERT_SERIAL_NO { get; set; }
+        /// <summary>
+        /// 商户API证书私钥内容（PEM格式）
+        /// </summary>
+        public string PRIVATE_KEY { get; set; }
+        /// <summary>
+        /// APIv3密钥
+        /// </summary>
+        public string API_V3_KEY { get; set; }
     }
 }

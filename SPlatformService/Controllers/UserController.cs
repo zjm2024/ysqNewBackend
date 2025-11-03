@@ -2421,8 +2421,8 @@ namespace SPlatformService.Controllers
             {
                 //人脸识别
                 //CsharpVO CsharpVO = CsharpTest.Main("新闻", 0);
-                CardBO cBO = new CardBO(new CustomerProfile(), 1);
-                string retu = cBO.PayforWXLotteries(0.5M, 2, 23, "oYnrm7SHCMGz-Zws4aucMmNdjUHY", 30, "问卷调查中奖奖金");
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), 1);
+                string retu = cBO.wechatPayToChange(0.5M, 2, 23, "oYnrm7SHCMGz-Zws4aucMmNdjUHY", 30, "问卷调查中奖奖金");
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = retu };
             }
             catch
