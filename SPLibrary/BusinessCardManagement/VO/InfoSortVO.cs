@@ -32,6 +32,8 @@ namespace SPLibrary.BusinessCardManagement.VO
         [DataMember]
         public String Remark { get { return (String)GetValue(typeof(String), "Remark"); } set { SetValue("Remark", value); } }
         [DataMember]
+        public Int32 AppType { get { return (Int32)GetValue(typeof(Int32), "AppType"); } set { SetValue("AppType", value); } }
+        [DataMember]
         public List<InfoVO> Infolist { get; set; }
         [DataMember]
         public List<InfoViewVO> InfoViewlist { get; set; }

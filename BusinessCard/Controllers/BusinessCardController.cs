@@ -11821,7 +11821,6 @@ namespace BusinessCard.Controllers
                 {
                     //根据id查询数据
                     InfoSortVO sVO = cBO.FindInfoSortById(InfoSortVO.SortID);
-                    _log.Info("参数" + sVO.BusinessID +"参数2" + InfoSortVO.SortID);
                     InfoSortVO.BusinessID = sVO.BusinessID;
                     if (cBO.UpdateInfoSort(InfoSortVO))
                     {
