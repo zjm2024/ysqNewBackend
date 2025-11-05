@@ -172,3 +172,11 @@ packages/
 /packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/lib/net45/Microsoft.AI.WindowsServer.xml
 /packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/lib/netstandard1.6/Microsoft.AI.WindowsServer.dll
 /packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/Microsoft.ApplicationInsights.WindowsServer.2.9.0.nupkg
+/SPlatformService/logs
+/SPLibrary/obj/Debug/build.force
+/SPlatformService/obj/Debug/build.force
+/BusinessCard/obj/Debug/build.force
+/OpenAIAPP/OpenAIAPP.csproj.user
+/SPlatformService/SPlatformService.csproj.user
+/WebUI/WebUI.csproj.user
+/.vs/SPlatformSLN/config/applicationhost.config
