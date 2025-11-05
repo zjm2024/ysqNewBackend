@@ -15448,15 +15448,15 @@ namespace BusinessCard.Controllers
                     //pVO.ReadNum = cBO.FindNumberOfVisitors("Personal", pVO.PersonalID);
                     //pVO.todayReadNum = cBO.FindNumberOfVisitors("Personal", pVO.PersonalID, 1, 0);
 
-                    if (pVO.QRimg == "")
-                    {
-                        pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
-                    }
+                    //if (pVO.QRimg == "")
+                    //{
+                    //    //pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
+                    //}
 
-                    if (pVO.PosterImg3 == "" || BusinessID > 0)
-                    {
-                        pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, BusinessID);
-                    }
+                    //if (pVO.PosterImg3 == "" || BusinessID > 0)
+                    //{
+                    //    pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, BusinessID);
+                    //}
 
                     WebVO WebVO = new WebVO();
                     List<InfoViewVO> product = new List<InfoViewVO>();
