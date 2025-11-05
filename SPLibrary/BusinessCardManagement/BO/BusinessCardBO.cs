@@ -10944,6 +10944,18 @@ namespace SPLibrary.BusinessCardManagement.BO
         }
 
         /// <summary>
+        /// 抽奖订单记录
+        /// </summary>
+        /// <param name="orderNo"></param>
+        /// <returns></returns>
+        public List<CJWinningRecordsVO> FindCJWinningRecordsByorderNo(string orderNo)
+        {
+            ICJWinningRecordsDAO rDAO = BusinessCardManagementDAOFactory.CJWinningRecordsDAO(this.CurrentCustomerProfile);
+            List<CJWinningRecordsVO> cVO = rDAO.FindByParams("payment_no = " + orderNo);
+            return cVO;
+        }
+
+        /// <summary>
         /// 生成随机金额
         /// </summary>
         public decimal GenerateRandomAmount(decimal minValue, decimal maxValue, decimal totalAmount, decimal distributedAmount)
@@ -11016,39 +11028,122 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
+        ///// <summary>
+        ///// 开奖领取
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool WinningRecordPayment(CJWinningRecordsVO vo, int AppType)
+        //{
+        //    try
+        //    {
+
+        //        // 8. 调用微信支付接口
+        //        var retu = WechatPayToChange(vo.winning_amount, vo.lottery_id, vo.personal_id, vo.openid, AppType, "问卷调查中奖奖金");
+        //        LogBO _log = new LogBO(typeof(BusinessCardBO));
+        //        _log.Error("领取接口" + retu);
+        //        if (retu == "SUCCESS")
+        //        {
+        //            vo.status = 1;
+        //            vo.payment_time = DateTime.Now;
+        //            UpdateCJWinningRecords(vo);
+        //            // 更新抽奖活动中奖人数
+        //            CJLotteriesVO lo = FindCJLotteriesById(vo.lottery_id);
+        //            lo.winner_count = lo.winner_count + 1;
+        //            UpdateCJLotteries(lo);
+        //            return true;
+        //        }
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogBO _log = new LogBO(typeof(BusinessCardBO));
+        //        string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+        //        _log.Error(strErrorMsg);
+        //        return false;
+        //    }
+        //}
+
         /// <summary>
-        /// 开奖领取
+        /// 开奖领取 - 返回完整微信支付结果
         /// </summary>
-        /// <returns></returns>
-        public bool WinningRecordPayment(CJWinningRecordsVO vo, int AppType)
+        /// <returns>微信支付完整结果</returns>
+        public WeChatTransferResult WinningRecordPayment(CJWinningRecordsVO vo, int AppType)
         {
             try
             {
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
 
-                CardBO cBO = new CardBO(new CustomerProfile());
-                // 8. 调用微信支付接口
-                string retu = cBO.PayforWXLotteries(vo.winning_amount, vo.lottery_id, vo.personal_id, vo.openid, AppType, "问卷调查中奖奖金");
+                // 调用微信支付接口
+                var transferResult = cBO.WechatPayToChange(vo.winning_amount, vo.lottery_id, vo.personal_id, vo.openid, AppType, "问卷调查中奖奖金");
+
                 LogBO _log = new LogBO(typeof(BusinessCardBO));
-                _log.Error("领取接口" + retu);
-                if (retu == "SUCCESS")
+                _log.Info($"领取接口返回: Success={transferResult.Success}, State={transferResult.State}, Message={transferResult.Message}");
+
+                // 根据不同的状态处理业务逻辑
+                if (transferResult.Success)
                 {
-                    vo.status = 1;
-                    vo.payment_time = DateTime.Now;
-                    UpdateCJWinningRecords(vo);
-                    // 更新抽奖活动中奖人数
-                    CJLotteriesVO lo = FindCJLotteriesById(vo.lottery_id);
-                    lo.winner_count = lo.winner_count + 1;
-                    UpdateCJLotteries(lo);
-                    return true;
+                    switch (transferResult.State)
+                    {
+                        case "SUCCESS":
+                            // 转账直接成功，更新数据库状态
+                            vo.status = 1; // 已支付
+                            vo.payment_time = DateTime.Now;
+                            vo.payment_no = transferResult.OutBillNo; // 记录商户单号
+                            UpdateCJWinningRecords(vo);
+
+                            // 更新抽奖活动中奖人数
+                            CJLotteriesVO lo = FindCJLotteriesById(vo.lottery_id);
+                            if (lo != null)
+                            {
+                                lo.winner_count = lo.winner_count + 1;
+                                UpdateCJLotteries(lo);
+                            }
+
+                            _log.Info($"转账直接成功，记录ID: {vo.lottery_id}, 微信转账单号: {transferResult.TransferBillNo}");
+                            break;
+
+                        case "WAIT_USER_CONFIRM":
+                            // 需要用户确认收款，暂时不更新数据库状态
+                            // 或者您可以更新为"等待确认"状态，比如 status = 2
+                            vo.status = 2; // 等待用户确认
+                            vo.payment_no = transferResult.OutBillNo; // 记录商户单号
+                            UpdateCJWinningRecords(vo);
+
+                            _log.Info($"需要用户确认收款，记录ID: {vo.lottery_id}, 商户单号: {transferResult.OutBillNo}");
+                            break;
+
+                        case "PROCESSING":
+
+                            // 处理中，暂时不更新数据库状态
+                            _log.Info($"转账处理中，记录ID: {vo.lottery_id}");
+                            break;
+
+                        default:
+                            _log.Warn($"未知的转账状态: {transferResult.State}，记录ID: {vo.lottery_id}");
+                            break;
+                    }
+
+                    // 记录微信转账单号到日志
+                    if (!string.IsNullOrEmpty(transferResult.TransferBillNo))
+                    {
+                        _log.Info($"微信转账单号: {transferResult.TransferBillNo}");
+                    }
                 }
-                return false;
+                else
+                {
+                    // 记录详细的错误信息
+                    _log.Error($"微信转账失败: Code={transferResult.Code}, Message={transferResult.Message}, ErrorDetail={transferResult.ErrorDetail}");
+                }
+
+                return transferResult;
             }
             catch (Exception ex)
             {
                 LogBO _log = new LogBO(typeof(BusinessCardBO));
-                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                string strErrorMsg = $"开奖领取异常 - Message:{ex.Message}, Stack:{ex.StackTrace}, Source:{ex.Source}";
                 _log.Error(strErrorMsg);
-                return false;
+
+                return WeChatTransferResult.FailResult($"系统异常: {ex.Message}");
             }
         }
 
@@ -11765,36 +11860,47 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// <param name="openid1">用户的openid</param>
         /// <param name="AppType">应用类型</param>
         /// <param name="desc">转账描述</param>
-        /// <returns></returns>
-        public string wechatPayToChange(Decimal money, int lottery_id, int personal_id, string openid1, int AppType, string desc = "")
+        /// <returns>结构化的转账结果</returns>
+        public WeChatTransferResult WechatPayToChange(Decimal money, int lottery_id, int personal_id, string openid1, int AppType, string desc = "")
         {
-            if ((double)money < 0.3 || lottery_id < 0 || string.IsNullOrEmpty(openid1))
-            {
-                return "FAIL";
-            }
             LogBO _log = new LogBO(typeof(BusinessCardBO));
+
+            // 参数验证
+            if ((double)money < 0.3)
+            {
+                return WeChatTransferResult.FailResult("转账金额不能小于0.3元");
+            }
+
+            if (lottery_id < 0)
+            {
+                return WeChatTransferResult.FailResult("红包记录ID无效");
+            }
+
+            if (string.IsNullOrEmpty(openid1))
+            {
+                return WeChatTransferResult.FailResult("用户OpenID不能为空");
+            }
+
             try
             {
-
                 AppVO AppVO = AppBO.GetApp(AppType);
 
-                string mchid = AppVO.MCHID; // 商户号
-                string appid = AppVO.AppId; // AppID
-                string mchCertSerialNo = AppVO.MCH_CERT_SERIAL_NO; // 商户证书序列号
-                string certPath = AppVO.SSLCERT_PATH; // 证书文件路径
-                string certPassword = AppVO.SSLCERT_PASSWORD; // 证书密码
+                string mchid = AppVO.MCHID;
+                string appid = AppVO.AppId;
+                string mchCertSerialNo = AppVO.MCH_CERT_SERIAL_NO;
+                string certPath = AppVO.SSLCERT_PATH;
+                string certPassword = AppVO.SSLCERT_PASSWORD;
 
                 // 验证必要参数
                 if (string.IsNullOrEmpty(certPath) || string.IsNullOrEmpty(certPassword))
                 {
                     _log.Error("微信支付证书路径或密码未配置");
-                    return "FAIL";
+                    return WeChatTransferResult.FailResult("微信支付证书配置不完整");
                 }
 
                 // 生成商户单号
                 string out_bill_no = GenerateOutBillNo(mchid, lottery_id, personal_id);
-
-                int amount = Convert.ToInt32(money * 100); // 转换为分
+                int amount = Convert.ToInt32(money * 100);
 
                 if (string.IsNullOrEmpty(desc))
                 {
@@ -11802,48 +11908,27 @@ namespace SPLibrary.BusinessCardManagement.BO
                 }
 
                 // 构造请求数据
-                //var requestData = new
-                //{
-                //    appid = appid,
-                //    out_batch_no = out_bill_no, // 商户批次号
-                //    batch_name = "问卷红包奖励",
-                //    batch_remark = desc,
-                //    total_amount = amount,
-                //    total_num = 1,
-                //    transfer_detail_list = new[]
-                //    {
-                //    new
-                //    {
-                //        out_detail_no = out_bill_no + "D1", // 商户明细单号
-                //        transfer_amount = amount,
-                //        transfer_remark = desc,
-                //        openid = openid1
-                //    }
-                //}
-                //};
-
-                // 2. 构造请求数据
                 var requestData = new
                 {
-                    sub_mchid = AppVO.MCHID, // 子商户号[citation:2]
-                    appid = AppVO.AppId,
-                    out_bill_no = "CJ" + out_bill_no ,
-                    transfer_scene_id =  "1000", // 转账场景ID[citation:2]
+                    appid = appid,
+                    out_bill_no = "CJ" + out_bill_no,
+                    transfer_scene_id = "1000",
                     openid = openid1,
-                    user_name = "",
                     transfer_amount = amount,
-                    transfer_remark = desc
+                    transfer_remark = desc,
+                    notify_url = "https://gx.gdsqzx.com.cn:8080/BusinessCard/Pay/Lottery_Notify_Url.aspx",
+                    transfer_scene_report_infos = new[]{
+                     new { info_type = "活动名称", info_content = "新会员有礼" },
+                     new { info_type = "奖励说明", info_content = "关注分享，抽奖有礼" }
+                     }
                 };
 
                 string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
-
-                // 商家转账API地址
                 string url = "https://api.mch.weixin.qq.com";
-                string endpoint = "/v3/fund-app/mch-transfer/partner/transfer-bills";
+                string endpoint = "/v3/fund-app/mch-transfer/transfer-bills";
 
                 // 发送V3 API请求
                 string responseJson = WeChatPayV3PostWithCertificate(url, endpoint, jsonData, mchid, mchCertSerialNo, certPath, certPassword);
-
 
                 _log.Info($"微信商家转账API返回: {responseJson}");
 
@@ -11854,7 +11939,7 @@ namespace SPLibrary.BusinessCardManagement.BO
             {
                 string strErrorMsg = $"微信商家转账异常 - Message: {ex.Message}, Stack: {ex.StackTrace}";
                 _log.Error(strErrorMsg);
-                return "FAIL";
+                return WeChatTransferResult.FailResult($"系统异常: {ex.Message}");
             }
         }
 
@@ -11865,7 +11950,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         {
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string random = new Random().Next(1000, 9999).ToString();
-            string outBillNo = $"{mchid}{timestamp}{lottery_id}{personal_id}{random}";
+            string outBillNo = $"{timestamp}{lottery_id}{personal_id}{random}";
 
             // 确保不超过32位
             if (outBillNo.Length > 30)
@@ -11949,38 +12034,9 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
-        //public static string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
-        //{
-        //    try
-        //    {
-        //        // 加载证书，并明确指定密钥存储标志
-        //        X509Certificate2 cert = new X509Certificate2(certPath, certPassword,
-        //            X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
-
-        //        // 获取私钥 (在.NET Framework中，通常这样获取)
-        //        RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)cert.PrivateKey;
-
-        //        if (rsa == null)
-        //        {
-        //            throw new Exception("证书不包含私钥或密码错误");
-        //        }
-
-        //        byte[] data = Encoding.UTF8.GetBytes(message);
-
-        //        // 关键点：在.NET Framework中使用SHA256进行签名
-        //        // 如果直接使用SignData出现算法无效，可以尝试先计算哈希，再签名
-        //        // 直接使用SignData方法
-        //        byte[] signature = rsa.SignData(data, "SHA256");
-        //        return Convert.ToBase64String(signature);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // 记录详细的异常信息
-        //        Console.WriteLine($"证书签名生成失败: {ex.Message}");
-        //        throw new Exception($"证书签名生成失败: {ex.Message}", ex);
-        //    }
-        //}
-
+        ///// <summary>
+        ///// 使用证书生成签名
+        ///// </summary>
         private string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
         {
             try
@@ -12014,100 +12070,75 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
-        ///// <summary>
-        ///// 使用证书生成签名
-        ///// </summary>
-        //private string GenerateSignatureWithCertificate(string message, string certPath, string certPassword)
-        //{
-        //    try
-        //    {
-        //        // 加载证书
-        //        X509Certificate2 cert = new X509Certificate2(certPath, certPassword,
-        //            X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
-
-        //        // 获取私钥
-        //        RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)cert.PrivateKey;
-
-        //        if (rsa == null)
-        //        {
-        //            throw new Exception("证书不包含私钥或密码错误");
-        //        }
-
-        //        byte[] data = Encoding.UTF8.GetBytes(message);
-        //        byte[] signature = rsa.SignData(data, "SHA256");
-
-        //        return Convert.ToBase64String(signature);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogBO _log = new LogBO(typeof(BusinessCardBO));
-        //        _log.Error($"证书签名生成失败: {ex.Message}");
-        //        throw new Exception($"证书签名生成失败: {ex.Message}");
-        //    }
-        //}
-
         /// <summary>
         /// 解析转账响应
         /// </summary>
-        private string ParseTransferResponse(string responseJson, string outBillNo)
+        private WeChatTransferResult ParseTransferResponse(string responseJson, string outBillNo)
         {
             if (string.IsNullOrEmpty(responseJson))
             {
-                return "FAIL";
+                return WeChatTransferResult.FailResult("微信支付返回空响应");
             }
-
-            LogBO _log = new LogBO(typeof(BusinessCardBO));
 
             try
             {
                 dynamic resultObj = Newtonsoft.Json.JsonConvert.DeserializeObject(responseJson);
 
-                // 检查批次状态
-                string batchStatus = resultObj.batch_status?.ToString();
-                string outBatchNo = resultObj.out_batch_no?.ToString();
-
-                if (!string.IsNullOrEmpty(batchStatus))
-                {
-                    _log.Info($"转账批次状态: {batchStatus}, 商户批次号: {outBatchNo}");
-
-                    // 如果批次状态是ACCEPTED或PROCESSING，表示请求已接受
-                    if (batchStatus == "ACCEPTED" || batchStatus == "PROCESSING")
-                    {
-                        // 记录微信批次号
-                        string batchNo = resultObj.batch_id?.ToString();
-                        if (!string.IsNullOrEmpty(batchNo))
-                        {
-                            _log.Info($"微信转账批次号: {batchNo}");
-                        }
-                        return "SUCCESS";
-                    }
-                }
-
-                // 检查错误信息
+                // 检查是否存在错误码
                 if (resultObj.code != null)
                 {
                     string errorCode = resultObj.code.ToString();
                     string errorMessage = resultObj.message?.ToString();
-                    _log.Error($"微信商家转账API错误: {errorCode} - {errorMessage}");
+                    object errorDetail = resultObj.detail;
+
+                    return WeChatTransferResult.FailResult(errorMessage, errorCode, errorDetail);
                 }
 
-                return "FAIL";
+                // 解析成功响应
+                string state = resultObj.state?.ToString();
+                string transferBillNo = resultObj.transfer_bill_no?.ToString();
+                string packageInfo = resultObj.package_info?.ToString();
+                string createTime = resultObj.create_time?.ToString();
+
+                // 根据状态返回不同结果
+                switch (state)
+                {
+                    case "WAIT_USER_CONFIRM":
+                        return WeChatTransferResult.SuccessResult(
+                            outBillNo,
+                            transferBillNo,
+                            state,
+                            packageInfo
+                        ).WithMessage("转账已提交，等待用户确认收款");
+
+                    case "SUCCESS":
+                        return WeChatTransferResult.SuccessResult(
+                            outBillNo,
+                            transferBillNo,
+                            state
+                        ).WithMessage("转账成功，款项已到账");
+
+                    case "PROCESSING":
+                        return WeChatTransferResult.SuccessResult(
+                            outBillNo,
+                            transferBillNo,
+                            state
+                        ).WithMessage("转账处理中");
+
+                    case "FAILED":
+                        string failReason = resultObj.fail_reason?.ToString();
+                        return WeChatTransferResult.FailResult($"转账失败: {failReason}", "TRANSFER_FAILED");
+
+                    default:
+                        return WeChatTransferResult.FailResult($"未知状态: {state}", "UNKNOWN_STATE");
+                }
             }
             catch (Exception jsonEx)
             {
-                _log.Error($"解析微信返回JSON失败: {jsonEx.Message}, 返回内容: {responseJson}");
-                return "FAIL";
+                return WeChatTransferResult.FailResult($"解析微信返回JSON失败: {jsonEx.Message}");
             }
         }
 
-        /// <summary>
-        /// 获取时间戳（备用方法）
-        /// </summary>
-        private string GetTimestamp()
-        {
-            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return Convert.ToInt64(ts.TotalSeconds).ToString();
-        }
         #endregion
 
 

@@ -36,6 +36,8 @@ namespace SPLibrary.BusinessCardManagement.VO
         public DateTime payment_time { get { return (DateTime)GetValue(typeof(DateTime), "payment_time"); } set { SetValue("payment_time", value); } }
         [DataMember]
         public DateTime updated_at { get { return (DateTime)GetValue(typeof(DateTime), "updated_at"); } set { SetValue("updated_at", value); } }
+        [DataMember]
+        public Int32 apptype { get { return (Int32)GetValue(typeof(Int32), "apptype"); } set { SetValue("apptype", value); } }
 
         #region ICloneable Member
         public override object Clone()

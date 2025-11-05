@@ -16174,11 +16174,30 @@ namespace BusinessCard.Controllers
                 {
                     return new ResultObject() { Flag = 0, Message = "红包已领取!", Result = null };
                 }
-                // 5. 保存中奖记录
-                bool recordSaved = cBO.WinningRecordPayment(records, pVO.AppType);
-                if (recordSaved)
-                    return new ResultObject() { Flag = 1, Message = "领取成功!", Result = null };
-                return new ResultObject() { Flag = 0, Message = "领取失败!", Result = null };
+                // 5.  调用领取方法 保存中奖记录
+                var transferResult = cBO.WinningRecordPayment(records, pVO.AppType);
+
+                // 构建返回给前端的结果
+                var result = new ResultObject
+                {
+                    Flag = transferResult.Success ? 1 : 0,
+                    Message = transferResult.Message,
+                    Result = new
+                    {
+                        success = transferResult.Success,
+                        state = transferResult.State,
+                        message = transferResult.Message,
+                        out_bill_no = transferResult.OutBillNo,
+                        transfer_bill_no = transferResult.TransferBillNo,
+                        package_info = transferResult.PackageInfo,
+                        create_time = transferResult.CreateTime,
+                        need_user_confirm = transferResult.State == "WAIT_USER_CONFIRM",
+                        error_code = transferResult.Code,
+                        error_detail = transferResult.ErrorDetail
+                    }
+                };
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -16907,7 +16926,7 @@ namespace BusinessCard.Controllers
                 //人脸识别
                 //CsharpVO CsharpVO = CsharpTest.Main("新闻", 0);
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), 1);
-                string retu = cBO.wechatPayToChange(0.5M, 2, 23, "oYnrm7SHCMGz-Zws4aucMmNdjUHY", 30, "问卷调查中奖奖金");
+                var retu = cBO.WechatPayToChange(0.5M, 2, 23, "oYnrm7SHCMGz-Zws4aucMmNdjUHY", 30, "问卷调查中奖奖金");
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = retu };
             }
             catch

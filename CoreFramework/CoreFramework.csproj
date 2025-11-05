@@ -139,6 +139,7 @@
     <Compile Include="VO\ResultObject.cs" />
     <Compile Include="VO\UserProfile.cs" />
     <Compile Include="VO\VOHelper.cs" />
+    <Compile Include="VO\WeChatTransferResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
