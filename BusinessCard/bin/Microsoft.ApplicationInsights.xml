@@ -27,6 +27,21 @@
             Gets the name of the TelemetryType. Typically the datatype of the internal Data property. Used internally for serialization.
             </summary>
         </member>
+        <member name="T:Microsoft.ApplicationInsights.Channel.IAsyncFlushable">
+            <summary>
+            Represents a task based flush for sending telemetry to application insights.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Channel.IAsyncFlushable.FlushAsync(System.Threading.CancellationToken)">
+            <summary>
+            Flushes the in-memory buffer asynchronously.
+            </summary>
+            <param name="cancellationToken">CancellationToken.</param>
+            <returns>
+            Returns true when telemetry data is transferred out of process (application insights server or local storage) and are emitted before the flush invocation.
+            Returns false when transfer of telemetry data to server has failed with non-retriable http status code.
+            </returns>
+        </member>
         <member name="T:Microsoft.ApplicationInsights.Channel.InMemoryChannel">
             <summary>
             Represents a communication channel for sending telemetry to Application Insights via HTTPS. There will be a buffer that will not be persisted, to enforce the 
@@ -60,6 +75,15 @@
             Gets or sets the sending interval. Once the interval expires, <see cref="T:Microsoft.ApplicationInsights.Channel.InMemoryChannel"/> 
             serializes the accumulated telemetry items for transmission and sends it over the wire.
             </summary>    
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Channel.InMemoryChannel.Microsoft#ApplicationInsights#Extensibility#Implementation#Authentication#ISupportCredentialEnvelope#CredentialEnvelope">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.CredentialEnvelope"/> which is used for AAD.
+            </summary>
+            <remarks>
+            <see cref="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ISupportCredentialEnvelope.CredentialEnvelope"/> on <see cref="T:Microsoft.ApplicationInsights.Channel.InMemoryChannel"/> sets <see cref="P:Microsoft.ApplicationInsights.Channel.InMemoryTransmitter.CredentialEnvelope"/> 
+            which is used to set <see cref="P:Microsoft.ApplicationInsights.Channel.Transmission.CredentialEnvelope"/> just before calling <see cref="M:Microsoft.ApplicationInsights.Channel.Transmission.SendAsync"/>.
+            </remarks>
         </member>
         <member name="P:Microsoft.ApplicationInsights.Channel.InMemoryChannel.EndpointAddress">
             <summary>
@@ -95,6 +119,18 @@
             </summary>
             <param name="timeout">Timeout interval to abort sending.</param>
         </member>
+        <member name="M:Microsoft.ApplicationInsights.Channel.InMemoryChannel.FlushAsync(System.Threading.CancellationToken)">
+            <summary>
+            Will send all the telemetry items stored in the memory asynchronously.
+            </summary>
+            <param name="cancellationToken">CancellationToken.</param>
+            <returns>
+            This method is hard-coded to return true. This channel offers minimal reliability guarantees and doesn't retry sending telemetry after a failure.
+            </returns>
+            <remarks>
+            <a href="https://docs.microsoft.com/azure/azure-monitor/app/telemetry-channels#built-in-telemetry-channels">Learn more</a>
+            </remarks>
+        </member>
         <member name="M:Microsoft.ApplicationInsights.Channel.InMemoryChannel.Dispose">
             <summary>
             Disposing the channel.
@@ -120,6 +156,15 @@
             <summary>
             The number of times this object was disposed.
             </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Channel.InMemoryTransmitter.CredentialEnvelope">
+            <summary>
+            Gets or sets the <see cref="P:Microsoft.ApplicationInsights.Channel.InMemoryTransmitter.CredentialEnvelope"/> which is used for AAD.
+            </summary>
+            <remarks>
+            <see cref="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ISupportCredentialEnvelope.CredentialEnvelope"/> on <see cref="T:Microsoft.ApplicationInsights.Channel.InMemoryChannel"/> sets <see cref="P:Microsoft.ApplicationInsights.Channel.InMemoryTransmitter.CredentialEnvelope"/> 
+            which is used to set <see cref="P:Microsoft.ApplicationInsights.Channel.Transmission.CredentialEnvelope"/> just before calling <see cref="M:Microsoft.ApplicationInsights.Channel.Transmission.SendAsync"/>.
+            </remarks>
         </member>
         <member name="M:Microsoft.ApplicationInsights.Channel.InMemoryTransmitter.Dispose">
             <summary>
@@ -229,6 +274,23 @@
             Flushes the in-memory buffer.
             </summary>
         </member>
+        <member name="M:Microsoft.ApplicationInsights.Channel.RedirectHttpHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            This method will handle all requests from HttpClient.SendAsync().
+            This inspects <see cref="T:System.Net.Http.HttpResponseMessage"/> to see if we received a redirect from the Ingestion service.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Channel.RedirectHttpHandler.HandleRedirectAsync(System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.Threading.CancellationToken)">
+            <summary>
+            This method handles redirection.
+            This keeps extra var allocation out of the hot path.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Channel.RedirectHttpHandler.Cache`1">
+            <summary>
+            Simple class to encapsulate redirect cache.
+            </summary>
+        </member>
         <member name="T:Microsoft.ApplicationInsights.Channel.SamplingScoreGenerator">
             <summary>
             Utility class for sampling score generation.
@@ -247,6 +309,21 @@
             </summary>
             <param name="telemetry">Telemetry item to score.</param>
             <returns>Item sampling score.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Channel.TaskEx.FromCanceled(System.Threading.CancellationToken)">
+            <summary>
+            Create cancelled task for .NET45.
+            </summary>
+            <param name="cancellationToken">CancellationToken.</param>
+            <returns>Canceled task.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Channel.TaskEx.FromCanceled``1(System.Threading.CancellationToken)">
+            <summary>
+            Generic method to create cancelled task for .NET45.
+            </summary>
+            <typeparam name="TResult">Determines the type of task.</typeparam>
+            <param name="cancellationToken">CancellationToken.</param>
+            <returns>Return cancelled task of specified type.</returns>
         </member>
         <member name="T:Microsoft.ApplicationInsights.Channel.TelemetryBuffer">
             <summary>
@@ -339,6 +416,22 @@
             Gets the number of telemetry items in the transmission.
             </summary>
         </member>
+        <member name="P:Microsoft.ApplicationInsights.Channel.Transmission.CredentialEnvelope">
+            <summary>
+            Gets or sets the <see cref="P:Microsoft.ApplicationInsights.Channel.Transmission.CredentialEnvelope"/> which is used for AAD. 
+            This is used include an AAD token on HTTP Requests sent to ingestion.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Channel.Transmission.FlushAsyncId">
+            <summary>
+            Gets the flush async id for the transmission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Channel.Transmission.IsFlushAsyncInProgress">
+            <summary>
+            Gets or sets a value indicating whether FlushAsync is in progress.
+            </summary>
+        </member>
         <member name="M:Microsoft.ApplicationInsights.Channel.Transmission.SendAsync">
             <summary>
             Executes the request that the current transmission represents.
@@ -354,6 +447,12 @@
             A tuple with the first item being a Transmission object with n ITelemetry objects
             and the second item being a Transmission object with the remaining ITelemetry objects.
             </returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Channel.Transmission.Serialize(System.Uri,System.Collections.Generic.IEnumerable{Microsoft.ApplicationInsights.Channel.ITelemetry},System.TimeSpan)">
+            <summary>
+            Serializes telemetry items.
+            </summary>
+            TODO: Refactor this method, it does more than serialization activity.
         </member>
         <member name="M:Microsoft.ApplicationInsights.Channel.Transmission.CreateRequestMessage(System.Uri,System.IO.Stream)">
             <summary>
@@ -397,6 +496,56 @@
             <summary>
             Gets response duration in milliseconds.
             </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Common.Extensions.DateTimeExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.DateTime"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Common.Extensions.DateTimeExtensions.ToInvariantString(System.DateTime,System.String)">
+            <summary>
+            This is a proxy method to <see cref="M:System.DateTime.ToString(System.String,System.IFormatProvider)"/>.
+            Converts the value of the current System.DateTime object to its equivalent string representation using the specified format and CultureInfo.InvariantCulture.
+            </summary>
+            <param name="input">The date and time value to convert to string.</param>
+            <param name="format">A standard or custom date and time format string.</param>
+            <returns>A string representation of value of the current System.DateTime object as specified by format and provider.</returns>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Common.Extensions.ExceptionExtensions">
+            <summary>
+            Provides a set of extension methods for <see cref="T:System.Exception"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Common.Extensions.ExceptionExtensions.FlattenMessages(System.Exception)">
+            <summary>
+            Concatenate the Message property of an Exception and any InnerExceptions.
+            </summary>
+            <param name="ex">Exception to flatten.</param>
+            <returns>Returns a concatenated string of exception messages.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Common.Extensions.ExceptionExtensions.ToLogString(System.Exception)">
+            <summary>
+            Get a string representing an Exception. Includes Type and Message.
+            </summary>
+            <param name="ex">Input exception.</param>
+            <returns>Returns a string representing the exception.</returns>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Common.InterlockedThrottle">
+            <summary>
+            This class will hold a timestamp and will perform a given action only if the current time has exceeded an interval.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Common.InterlockedThrottle.#ctor(System.TimeSpan)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.Common.InterlockedThrottle"/> class.
+            </summary>
+            <param name="interval">Defines the time period to perform some action.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Common.InterlockedThrottle.PerformThrottledAction(System.Action)">
+            <summary>
+            Will execute the action only if the time period has elapsed.
+            </summary>
+            <param name="action">Action to be executed.</param>
         </member>
         <member name="T:Microsoft.ApplicationInsights.DataContracts.AvailabilityTelemetry">
             <summary>
@@ -2454,6 +2603,222 @@
             <param name="instrumentationKey">Instrumentation key for which Application Id is to be retrieved.</param>
             <returns>Task to resolve Application Id.</returns>
         </member>
+        <member name="F:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthConstants.AzureMonitorScope">
+            <summary>
+            Source: 
+            (https://docs.microsoft.com/azure/active-directory/develop/msal-acquire-cache-tokens#scopes-when-acquiring-tokens).
+            (https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#the-default-scope).
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthConstants.GetScopes">
+            <summary>
+            Get scopes for Azure Monitor as an array.
+            </summary>
+            <returns>An array of scopes.</returns>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken">
+            <summary>
+            This represents the Azure.Core.AccessToken returned by Azure.Core.TokenCredential.
+            (https://github.com/Azure/azure-sdk-for-net/blob/master/sdk/core/Azure.Core/src/AccessToken.cs).
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.#ctor(System.String,System.DateTimeOffset)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken"/>.
+            </summary>
+            <param name="token">Access token.</param>
+            <param name="expiresOn">DateTimeOffset representing when the access token expires.</param>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.Token">
+            <summary>
+            Gets or sets get the access token value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.ExpiresOn">
+            <summary>
+            Gets or sets the time when the provided token expires.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.op_Equality(Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken,Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken)">
+            <summary>
+            Determine if two instance of AuthToken are equal.
+            </summary>
+            <param name="left">An instance of AuthToken on the left side of the operator.</param>
+            <param name="right">An instance of AuthToken on the right side of the operator.</param>
+            <returns>Returns a boolean indicating if the params are equal.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.op_Inequality(Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken,Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken)">
+            <summary>
+            Determine if two instance of AuthToken are not equal.
+            </summary>
+            <param name="left">An instance of AuthToken on the left side of the operator.</param>
+            <param name="right">An instance of AuthToken on the right side of the operator.</param>
+            <returns>Returns a boolean indicating if the params are not equal.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken.Equals(Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.CredentialEnvelope">
+            <summary>
+            This interface defines a class that can interact with Azure.Core.TokenCredential.
+            See also: (https://github.com/Azure/azure-sdk-for-net/blob/master/sdk/core/Azure.Core/src/TokenCredential.cs).
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.CredentialEnvelope.Credential">
+            <summary>
+            Gets the TokenCredential instance held by this class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.CredentialEnvelope.GetToken(System.Threading.CancellationToken)">
+            <summary>
+            Gets an Azure.Core.AccessToken.
+            </summary>
+            <remarks>
+            Whomever uses this MUST verify that it's called within <see cref="M:Microsoft.ApplicationInsights.Extensibility.SdkInternalOperationsMonitor.Enter"/> otherwise dependency calls will be tracked.
+            </remarks>
+            <param name="cancellationToken">The System.Threading.CancellationToken to use.</param>
+            <returns>A valid Azure.Core.AccessToken.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.CredentialEnvelope.GetTokenAsync(System.Threading.CancellationToken)">
+            <summary>
+            Gets an Azure.Core.AccessToken.
+            </summary>
+            <remarks>
+            Whomever uses this MUST verify that it's called within <see cref="M:Microsoft.ApplicationInsights.Extensibility.SdkInternalOperationsMonitor.Enter"/> otherwise dependency calls will be tracked.
+            </remarks>
+            <param name="cancellationToken">The System.Threading.CancellationToken to use.</param>
+            <returns>A valid Azure.Core.AccessToken.</returns>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ISupportCredentialEnvelope">
+            <summary>
+            This interface defines a class that accepts the <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.CredentialEnvelope"/> as a property.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ISupportCredentialEnvelope.CredentialEnvelope">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.CredentialEnvelope"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope">
+            <summary>
+            This is an envelope for an instance of Azure.Core.TokenCredential.
+            This class uses reflection to interact with the Azure.Core library.
+            </summary>
+            <remarks>
+            Our SDK currently targets net452, net46, and netstandard2.0.
+            Azure.Core.TokenCredential is only available for netstandard2.0.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.#ctor(System.Object)">
+            <summary>
+            Create an instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope"/>.
+            </summary>
+            <param name="tokenCredential">An instance of Azure.Core.TokenCredential.</param>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.Credential">
+            <summary>
+            Gets the TokenCredential instance held by this class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.GetToken(System.Threading.CancellationToken)">
+            <summary>
+            Gets an Azure.Core.AccessToken.
+            </summary>
+            <remarks>
+            Whomever uses this MUST verify that it's called within <see cref="M:Microsoft.ApplicationInsights.Extensibility.SdkInternalOperationsMonitor.Enter"/> otherwise dependency calls will be tracked.
+            </remarks>
+            <param name="cancellationToken">The System.Threading.CancellationToken to use.</param>
+            <returns>A valid Azure.Core.AccessToken.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.GetTokenAsync(System.Threading.CancellationToken)">
+            <summary>
+            Gets an Azure.Core.AccessToken.
+            </summary>
+            <remarks>
+            Whomever uses this MUST verify that it's called within <see cref="M:Microsoft.ApplicationInsights.Extensibility.SdkInternalOperationsMonitor.Enter"/> otherwise dependency calls will be tracked.
+            </remarks>
+            <param name="cancellationToken">The System.Threading.CancellationToken to use.</param>
+            <returns>A valid Azure.Core.AccessToken.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.GetTokenCredentialType">
+            <summary>
+            Use reflection to get a <see cref="T:System.Type"/> of "Azure.Core.TokenCredential".
+            This will fail if the Azure.Core library is not loaded into the AppDomain.CurrentDomain.
+            </summary>
+            <remarks>
+            It is unlikely that customers will have a direct dependency on Azure.Core.
+            This is expected to be an indirect dependency from Azure.Identity.
+            </remarks>
+            <returns>
+            Returns a <see cref="T:System.Type"/> of "Azure.Core.TokenCredential".
+            </returns>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.AzureCore">
+            <summary>
+            This class provides Reflection based wrappers around types found in the Azure.Core library.
+            Because of framework incompatibilities, we cannot take a direct reference on these types.
+            
+            This class uses compiled Expression Trees. Read more here: 
+            (https://docs.microsoft.com/dotnet/csharp/programming-guide/concepts/expression-trees/).
+            (https://docs.microsoft.com/dotnet/csharp/expression-trees).
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.AzureCore.MakeTokenRequestContext(System.String[])">
+            <summary>
+            This is a wrapper for the following constructor:
+            <code>public TokenRequestContext (string[] scopes, string? parentRequestId = default, string? claims = default);</code>
+            (https://docs.microsoft.com/dotnet/api/azure.core.tokenrequestcontext.-ctor).
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.AzureCore.BuildDelegateAccessTokenToAuthToken">
+            <summary>
+            This is a wrapper for Azure.Core.AccessToken:
+            <code>public struct AccessToken</code>
+            (https://docs.microsoft.com/dotnet/api/azure.core.accesstoken).
+            </summary>
+            <returns>
+            Returns a delegate that receives an Azure.Core.AccessToken and emits an <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.AuthToken"/>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.AzureCore.BuildDelegateGetToken">
+            <summary>
+            This creates a wrapper for the following method:
+            <code>public abstract Azure.Core.AccessToken GetToken (Azure.Core.TokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken).</code>
+            (https://docs.microsoft.com/dotnet/api/azure.core.tokencredential.gettoken).
+            </summary>
+            <returns>
+            Returns a delegate that receives an Azure.Core.TokenCredential and emits an Azure.Core.AccessToken.
+            </returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.AzureCore.BuildDelegateGetTokenAsync">
+            <summary>
+            This is a wrapper for the following method:
+            <code>public abstract System.Threading.Tasks.ValueTask&lt;Azure.Core.AccessToken> GetTokenAsync (Azure.Core.TokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken);</code>
+            (https://docs.microsoft.com/dotnet/api/azure.core.tokencredential.gettokenasync).
+            </summary>
+            <returns>
+            Returns a delegate that is a wrapper around GetTokenAsync which returns a System.Threading.Tasks.ValueTask of Azure.Core.AccessToken.
+            Then converts that System.Threading.Tasks.ValueTask to <see cref="T:System.Threading.Tasks.Task"/> which can be awaited.
+            NOTE: The Expression Tree library cannot handle async methods.
+            NOTE: ValueTask is not recognized by older versions of .NET Framework.
+            </returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Authentication.ReflectionCredentialEnvelope.AzureCore.BuildGetTaskResult">
+            <summary>
+            This is a wrapper for a <see cref="T:System.Threading.Tasks.Task"/> that came from Azure.Core.AccessToken.GetTokenAsync.
+            <code>public abstract System.Threading.Tasks.ValueTask&lt;Azure.Core.AccessToken> GetTokenAsync (Azure.Core.TokenRequestContext requestContext, System.Threading.CancellationToken cancellationToken);</code>
+            (https://docs.microsoft.com/dotnet/api/azure.core.tokencredential.gettokenasync).
+            </summary>
+            <returns>
+            Returns a delegate which receives a <see cref="T:System.Threading.Tasks.Task"/> and emits an Azure.Core.AccessToken.
+            </returns>
+        </member>
         <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.CallContextHelpers.SaveOperationContext(Microsoft.ApplicationInsights.Extensibility.Implementation.OperationContextForCallContext)">
             <summary>
             Saves the context store to the call context.
@@ -2612,9 +2977,20 @@
         <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Endpoints.EndpointContainer.FormattedIngestionEndpoint">
             <summary>Gets the fully formatted endpoint for the ingestion service.</summary>
         </member>
+        <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Endpoints.EndpointContainer.FormattedIngestionAADEndpoint">
+            <summary>Gets the fully formatted endpoint for the ingestion service with support for AAD.</summary>
+        </member>
         <member name="P:Microsoft.ApplicationInsights.Extensibility.Implementation.Endpoints.EndpointContainer.FormattedApplicationIdEndpoint">
             <summary>Gets the fully formatted endpoint for the application id profile service.</summary>
             <remarks>This returns a string without using the Uri for validation because the consuming method needs to do a string replace.</remarks>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Endpoints.EndpointContainer.GetFormattedIngestionEndpoint(System.Boolean)">
+            <summary>
+            Get the Ingestion Endpoint, depending on if AAD is in use.
+            This can be removed after we fully transition no the newer Ingestion API.
+            </summary>
+            <param name="enableAAD">Boolean to indicate which ingestion service to use.</param>
+            <returns>Fully formatted endpoint for the ingestion service.</returns>
         </member>
         <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Endpoints.EndpointMetaAttribute">
             <summary>
@@ -4387,6 +4763,159 @@
             for mocking for unit test purposes.
             </summary>
         </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler">
+            <summary>
+            MemoryMappedFileHandler open a MemoryMappedFile of a certain size at a certain file path.
+            The class provides a stream object with proper write position.
+            The stream is cached in ThreadLocal to be thread-safe.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler.memoryMappedFileCache">
+            <summary>
+            memoryMappedFileCache is a handle kept in thread-local storage as a cache to indicate whether the cached
+            viewStream is created from the current m_memoryMappedFile.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler.CreateLogFile(System.String,System.Int32)">
+            <summary>
+            Create a log file. If the file already exists, it will be overwritten.
+            </summary>
+            <param name="logDirectory">The directory the log file will be created.</param>
+            <param name="fileSize">The size of the log file.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler.CloseLogFile">
+            <summary>
+            Close the all the resources related to the file created for MemoryMappedFile.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler.Write(System.Byte[],System.Int32)">
+            <summary>
+            Circularly write to the file. If write operation reaches the end of the file, start writing from the beginning of the file.
+            </summary>
+            <param name="buffer">The buffer which contains the data to be written.</param>
+            <param name="byteCount">The count of bytes to be written.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler.TryGetLogStream(System.Int32,System.IO.Stream@,System.Int32@)">
+            <summary>
+            Try to get the log stream which is seeked to the position where the next line of log should be written.
+            </summary>
+            <param name="byteCount">The number of bytes that need to be written.</param>
+            <param name="stream">When this method returns, contains the Stream object where `byteCount` of bytes can be written.</param>
+            <param name="availableByteCount">The number of bytes that is remaining until the end of the stream.</param>
+            <returns>Whether the logger should log in the stream.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.MemoryMappedFileHandler.GetStream">
+            <summary>
+            Get a MemoryMappedViewStream for the MemoryMappedFile object for the current thread.
+            If no MemoryMappedFile is created yet, return null.
+            </summary>
+            <returns>A MemoryMappedViewStream for the MemoryMappedFile object.</returns>
+            <exception cref="T:System.UnauthorizedAccessException">Thrown when access to the memory-mapped file is unauthorized.</exception>
+            <exception cref="T:System.NullReferenceException">Thrown in a race condition when the memory-mapped file is closed after null check.</exception>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsConfigParser.ConfigBufferSize">
+            <summary>
+            ConfigBufferSize is the maximum bytes of config file that will be read.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsConfigRefresher">
+            <summary>
+            SelfDiagnosticsConfigRefresher class checks a location for a configuration file
+            and open a MemoryMappedFile of a configured size at the configured file path.
+            The class provides a stream object with proper write position if the configuration
+            file is present and valid. Otherwise, the stream object would be unavailable,
+            nothing will be logged to any file.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsConfigRefresher.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsEventListener">
+            <summary>
+            SelfDiagnosticsEventListener class enables the events from OpenTelemetry event sources
+            and write the events to a local file in a circular way.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsEventListener.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsEventListener.EncodeInBuffer(System.String,System.Boolean,System.Byte[],System.Int32)">
+            <summary>
+            Encode a string into the designated position in a buffer of bytes, which will be written as log.
+            If isParameter is true, wrap "{}" around the string.
+            The buffer should not be filled to full, leaving at least one byte empty space to fill a '\n' later.
+            If the buffer cannot hold all characters, truncate the string and replace extra content with "...".
+            The buffer is not guaranteed to be filled until the last byte due to variable encoding length of UTF-8,
+            in order to prioritize speed over space.
+            </summary>
+            <param name="str">The string to be encoded.</param>
+            <param name="isParameter">Whether the string is a parameter. If true, "{}" will be wrapped around the string.</param>
+            <param name="buffer">The byte array to contain the resulting sequence of bytes.</param>
+            <param name="position">The position at which to start writing the resulting sequence of bytes.</param>
+            <returns>The position of the buffer after the last byte of the resulting sequence.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsEventListener.DateTimeGetBytes(System.DateTime,System.Byte[],System.Int32)">
+            <summary>
+            Write the <c>datetime</c> formatted string into <c>bytes</c> byte-array starting at <c>byteIndex</c> position.
+            <para>
+            [DateTimeKind.Utc]
+            format: yyyy - MM - dd T HH : mm : ss . fffffff Z (i.e. 2020-12-09T10:20:50.4659412Z).
+            </para>
+            <para>
+            [DateTimeKind.Local]
+            format: yyyy - MM - dd T HH : mm : ss . fffffff +|- HH : mm (i.e. 2020-12-09T10:20:50.4659412-08:00).
+            </para>
+            <para>
+            [DateTimeKind.Unspecified]
+            format: yyyy - MM - dd T HH : mm : ss . fffffff (i.e. 2020-12-09T10:20:50.4659412).
+            </para>
+            </summary>
+            <remarks>
+            The bytes array must be large enough to write 27-33 charaters from the byteIndex starting position.
+            </remarks>
+            <param name="datetime">DateTime.</param>
+            <param name="bytes">Array of bytes to write.</param>
+            <param name="byteIndex">Starting index into bytes array.</param>
+            <returns>The number of bytes written.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsEventListener.OnEventWritten(System.Diagnostics.Tracing.EventWrittenEventArgs)">
+            <summary>
+            This method records the events from event sources to a local file, which is provided as a stream object by
+            SelfDiagnosticsConfigRefresher class. The file size is bound to a upper limit. Once the write position
+            reaches the end, it will be reset to the beginning of the file.
+            </summary>
+            <param name="eventData">Data of the EventSource event.</param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsInitializer">
+            <summary>
+            Self diagnostics class captures the EventSource events sent by Application Insights
+            modules and writes them to local file for internal troubleshooting.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsInitializer.Instance">
+            <summary>
+            Long-living object that hold relevant resources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsInitializer.EnsureInitialized">
+            <summary>
+            Trigger CLR to initialize static fields and static constructors of SelfDiagnosticsModule.
+            No member of SelfDiagnosticsModule class is explicitly called when an EventSource class, say
+            AspNetCoreEventSource, is invoked to send an event.
+            This method needs to be called in order to capture any EventSource event.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsInitializer.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsInitializer.Dispose(System.Boolean)">
+            <summary>
+            Disposes config refresher.
+            </summary>
+        </member>
         <member name="T:Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.TraceEvent">
             <summary>
             Event Source event wrapper.
@@ -4489,6 +5018,11 @@
             </summary>
         </member>
         <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Utils.PopulateRequiredStringValue(System.String,System.String,System.String)">
+            <summary>
+            Validates the string and if null or empty populates it with '$parameterName is a required field for $telemetryType' value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.Implementation.Utils.PopulateRequiredNonWhitespaceStringValue(System.String,System.String,System.String)">
             <summary>
             Validates the string and if null or empty populates it with '$parameterName is a required field for $telemetryType' value.
             </summary>
@@ -5167,6 +5701,12 @@
             Gets the default telemetry sink.
             </summary>
         </member>
+        <member name="P:Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.CredentialEnvelope">
+            <summary>
+            Gets an envelope for Azure.Core.TokenCredential which provides an AAD Authenticated token.
+            To set the Credential use <see cref="M:Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.SetAzureTokenCredential(System.Object)"/>.
+            </summary>
+        </member>
         <member name="P:Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.TelemetryProcessorChain">
             <summary>
             Gets or sets the chain of processors.
@@ -5190,6 +5730,17 @@
             <summary>
             Releases resources used by the current instance of the <see cref="T:Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration"/> class.
             </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.SetAzureTokenCredential(System.Object)">
+            <summary>
+            Set a TokenCredential for this configuration.
+            </summary>
+            <remarks>
+            For more information on expected types, review the documentation for the Azure.Identity library.
+            (https://github.com/Azure/azure-sdk-for-net/tree/master/sdk/identity/Azure.Identity).
+            </remarks>
+            <param name="tokenCredential">An instance of Azure.Core.TokenCredential.</param>
+            <exception cref="T:System.ArgumentException">An ArgumentException is thrown if the provided object does not inherit Azure.Core.TokenCredential.</exception>
         </member>
         <member name="M:Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.SetApplicationIdEndpoint(Microsoft.ApplicationInsights.Extensibility.IApplicationIdProvider,System.String,System.Boolean)">
             <summary>
@@ -7446,8 +7997,8 @@
         </member>
         <member name="T:Microsoft.ApplicationInsights.Metrics.MetricManager">
             <summary>A metric manager coordinates metrics aggregation at a specific scope.
-            It keeps track of the known metrics and is ultimataly respnsibe for correctly
-            initializeing metric data time series.
+            It keeps track of the known metrics and is ultimately responsibe for correctly
+            initializing metric data time series.
             Note that a metric manager deals with zero dimensional time series.
             Metric objects are multidimensional collections of such series and the manager 
             merely holds a collection of such containers for its scope.</summary>
@@ -7507,7 +8058,7 @@
             <summary>Gets the specified metric, or creates one if no such metric exists.</summary>
             <param name="metricIdentifier">The identity of the metric.</param>
             <param name="metricConfiguration">@The configutration of the metric.</param>
-            <returns>A metric witht he specified identify and configuration.</returns>
+            <returns>A metric with the specified identify and configuration.</returns>
             <exception cref="T:System.ArgumentException">If a metric with the specified identify exists,
             but its configuration does not match the specified configuration.
             You may not change a metric configurations once a metric was created for the first time.
@@ -7617,7 +8168,7 @@
         </member>
         <member name="T:Microsoft.ApplicationInsights.Metrics.MetricSeriesConfigurationForMeasurement">
             <summary>Abstracts the configuration for a metric series aggregated using the "measurement" aggregation kind.
-            A mear=surement is best suited for metrics describing sizes or durations.
+            A measurement is best suited for metrics describing sizes or durations.
             It contains the Min, Max, Sum and Count of values tracked during an aggregation period.</summary>
         </member>
         <member name="M:Microsoft.ApplicationInsights.Metrics.MetricSeriesConfigurationForMeasurement.#ctor(System.Boolean)">
@@ -8120,6 +8671,20 @@
             <a href="https://go.microsoft.com/fwlink/?linkid=525722#flushing-data">Learn more</a>
             </remarks>
         </member>
+        <member name="M:Microsoft.ApplicationInsights.TelemetryClient.FlushAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously Flushes the in-memory buffer and any metrics being pre-aggregated.
+            </summary>
+            <remarks>
+            <a href="https://go.microsoft.com/fwlink/?linkid=525722#flushing-data">Learn more</a>
+            </remarks>
+            <returns>
+            Returns true when telemetry data is transferred out of process (application insights server or local storage) and are emitted before the flush invocation.
+            Returns false when transfer of telemetry data to server has failed with non-retriable http status.
+            FlushAsync on InMemoryChannel always returns true, as the channel offers minimal reliability guarantees and doesn't retry sending telemetry after a failure.
+            </returns>
+            TODO: Metrics flush to respect CancellationToken.
+        </member>
         <member name="M:Microsoft.ApplicationInsights.TelemetryClient.GetMetric(System.String)">
             <summary>
             Gets or creates a metric container that you can use to track, aggregate and send metric values.<br />
@@ -8593,56 +9158,6 @@
             <param name="telemetryClient">Telemetry client object.</param>
             <param name="activity">Activity to get tracing context and telemetry properties from.</param>
             <returns>Operation item object with a new telemetry item having current start time and timestamp.</returns>
-        </member>
-        <member name="T:Microsoft.ApplicationInsights.Common.Extensions.DateTimeExtensions">
-            <summary>
-            Provides extension methods for <see cref="T:System.DateTime"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.ApplicationInsights.Common.Extensions.DateTimeExtensions.ToInvariantString(System.DateTime,System.String)">
-            <summary>
-            This is a proxy method to <see cref="M:System.DateTime.ToString(System.String,System.IFormatProvider)"/>.
-            Converts the value of the current System.DateTime object to its equivalent string representation using the specified format and CultureInfo.InvariantCulture.
-            </summary>
-            <param name="input">The date and time value to convert to string.</param>
-            <param name="format">A standard or custom date and time format string.</param>
-            <returns>A string representation of value of the current System.DateTime object as specified by format and provider.</returns>
-        </member>
-        <member name="T:Microsoft.ApplicationInsights.Common.Extensions.ExceptionExtensions">
-            <summary>
-            Provides a set of extension methods for <see cref="T:System.Exception"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.ApplicationInsights.Common.Extensions.ExceptionExtensions.FlattenMessages(System.Exception)">
-            <summary>
-            Concatenate the Message property of an Exception and any InnerExceptions.
-            </summary>
-            <param name="ex">Exception to flatten.</param>
-            <returns>Returns a concatenated string of exception messages.</returns>
-        </member>
-        <member name="M:Microsoft.ApplicationInsights.Common.Extensions.ExceptionExtensions.ToLogString(System.Exception)">
-            <summary>
-            Get a string representing an Exception. Includes Type and Message.
-            </summary>
-            <param name="ex">Input exception.</param>
-            <returns>Returns a string representing the exception.</returns>
-        </member>
-        <member name="T:Microsoft.ApplicationInsights.Common.InterlockedThrottle">
-            <summary>
-            This class will hold a timestamp and will perform a given action only if the current time has exceeded an interval.
-            </summary>
-        </member>
-        <member name="M:Microsoft.ApplicationInsights.Common.InterlockedThrottle.#ctor(System.TimeSpan)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.Common.InterlockedThrottle"/> class.
-            </summary>
-            <param name="interval">Defines the time period to perform some action.</param>
-        </member>
-        <member name="M:Microsoft.ApplicationInsights.Common.InterlockedThrottle.PerformThrottledAction(System.Action)">
-            <summary>
-            Will execute the action only if the time period has elapsed.
-            </summary>
-            <param name="action">Action to be executed.</param>
         </member>
     </members>
 </doc>

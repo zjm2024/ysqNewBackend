@@ -6011,7 +6011,22 @@
             <param name="PartyID"></param>
             <returns></returns>
         </member>
-        <member name="M:SPlatformService.Controllers.UserController.GetPhoneCard(System.String,System.String)">
+        <member name="M:SPlatformService.Controllers.UserController.Test1">
+            <summary>
+            123
+            </summary>
+            <param name="code">第一次拉手返回Code</param>
+            <param name="token">口令</param>
+            <returns></returns>
+        </member>
+        <member name="M:SPlatformService.Controllers.UserController.GenerateWjxSign(System.String)">
+            <summary>
+            生成问卷签名
+            </summary>
+            <param name="activity_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SPlatformService.Controllers.UserController.Test2">
             <summary>
             123
             </summary>
