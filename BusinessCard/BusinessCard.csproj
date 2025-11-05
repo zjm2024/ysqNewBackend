@@ -1219,8 +1219,8 @@
     <Content Include="images\zhongmingzhi.png" />
     <Content Include="Login.aspx" />
     <Content Include="OpenAIDemo.aspx" />
-    <Content Include="Pay\Lottery_Notify_Url.aspx" />
     <Content Include="Pay\BusinessCardParty_Notify_Url.aspx" />
+    <Content Include="Pay\Lottery_Notify_Url.aspx" />
     <Content Include="public\css\iconfont.css" />
     <Content Include="public\css\style.css" />
     <Content Include="public\images\5.png" />
@@ -1343,19 +1343,19 @@
     <Compile Include="OpenAIDemo.aspx.designer.cs">
       <DependentUpon>OpenAIDemo.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Pay\Lottery_Notify_Url.aspx.cs">
-      <DependentUpon>Lottery_Notify_Url.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pay\Lottery_Notify_Url.aspx.designer.cs">
-      <DependentUpon>Lottery_Notify_Url.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Pay\BusinessCardParty_Notify_Url.aspx.cs">
       <DependentUpon>BusinessCardParty_Notify_Url.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Pay\BusinessCardParty_Notify_Url.aspx.designer.cs">
       <DependentUpon>BusinessCardParty_Notify_Url.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pay\Lottery_Notify_Url.aspx.cs">
+      <DependentUpon>Lottery_Notify_Url.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pay\Lottery_Notify_Url.aspx.designer.cs">
+      <DependentUpon>Lottery_Notify_Url.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="index.aspx.cs">
