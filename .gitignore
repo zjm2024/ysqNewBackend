@@ -180,3 +180,10 @@ packages/
 /SPlatformService/SPlatformService.csproj.user
 /WebUI/WebUI.csproj.user
 /.vs/SPlatformSLN/config/applicationhost.config
+/WebUI/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/WebUI/obj/Debug/build.force
+/SPLibrary/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/OpenAIAPP/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/SPLibrary/bin/Debug/BouncyCastle.Crypto.dll
+/SPlatformService/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/OpenAIAPP/obj/Debug/build.force

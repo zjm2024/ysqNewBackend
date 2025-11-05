@@ -1,142 +1,101 @@
 ﻿using BusinessCard.WX_Pay;
-using CoreFramework.VO;
-using SPlatformService;
-using SPLibrary.BusinessCardManagement.BO;
-using SPLibrary.BusinessCardManagement.VO;
+using Newtonsoft.Json;
 using SPLibrary.CoreFramework.Logging.BO;
+using SPLibrary.CustomerManagement.BO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Xml.Linq;
 
 namespace BusinessCard.Pay
 {
-    public partial class Lottery_Notify_Url : System.Web.UI.Page
+    public partial class Lottery_Notify_Url : Page
     {
+        private readonly LogBO _log = new LogBO(typeof(Lottery_Notify_Url));
+        private WeChatPayV3Notify _notifyProcessor;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            LogBO _log = new LogBO(this.GetType());
-            System.IO.Stream s = Request.InputStream;
-            int count = 0;
-            byte[] buffer = new byte[1024];
-            StringBuilder builder = new StringBuilder();
-            while ((count = s.Read(buffer, 0, 1024)) > 0)
-            {
-                builder.Append(Encoding.UTF8.GetString(buffer, 0, count));
-            }
-            s.Flush();
-            s.Close();
-            s.Dispose();
-
-            _log.Info("Receive data from WeChat : " + builder.ToString());
-
-            //转换数据格式并验证签名
-            WxPayData data = new WxPayData();
-            try
-            {
-
-                data.FromXml(builder.ToString());
-            }
-            catch (WxPayException ex)
-            {
-                //若签名错误，则立即返回结果给微信支付后台
-                WxPayData res = new WxPayData();
-                res.SetValue("return_code", "FAIL");
-                res.SetValue("return_msg", ex.Message);
-                _log.Error("Sign check error : " + res.ToXml());
-                Response.Write(res.ToXml());
-                Response.End();
-            }
+            // 设置为JSON响应
+            Response.ContentType = "application/json";
+            Response.Charset = "UTF-8";
 
             try
             {
-                if (!data.IsSet("transaction_id"))
+                // 只处理POST请求
+                if (Request.HttpMethod != "POST")
                 {
-                    //若transaction_id不存在，则立即返回结果给微信支付后台
-                    WxPayData res = new WxPayData();
-                    res.SetValue("return_code", "FAIL");
-                    res.SetValue("return_msg", "支付结果中微信订单号不存在");
-                    _log.Error("The Pay result is error : " + res.ToXml());
-                    Response.Write(res.ToXml());
-                    Response.End();
-                }
-
-                string transfer_bill_no = data.GetValue("transfer_bill_no").ToString();
-
-                //查询订单，判断订单真实性
-                string order = data.GetValue("out_trade_no").ToString();
-                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
-                List<CJWinningRecordsVO> list = cBO.FindCJWinningRecordsByorderNo(order);
-                if (list == null || list.Count == 0)
-                {
-                    _log.Info("can't found order : " + order);
+                    _log.Warn("收到非POST请求，方法: " + Request.HttpMethod);
+                    ReturnError("仅支持POST请求");
                     return;
                 }
-                CJWinningRecordsVO cVO = list[0];
-                if (!QueryOrder(transfer_bill_no, cVO.apptype))
+
+                _log.Info("开始处理微信支付V3回调");
+
+                // 获取API V3密钥
+                string apiV3Key = GetApiV3Key();
+                if (string.IsNullOrEmpty(apiV3Key))
                 {
-                    //若订单查询失败，则立即返回结果给微信支付后台
-                    WxPayData res = new WxPayData();
-                    res.SetValue("return_code", "FAIL");
-                    res.SetValue("return_msg", "订单查询失败");
-                    _log.Error("Order query failure : " + res.ToXml());
-                    Response.Write(res.ToXml());
-                    Response.End();
+                    _log.Error("API V3密钥未配置");
+                    ReturnError("系统配置错误");
+                    return;
                 }
-                //查询订单成功
+
+                // 创建处理器实例
+                var processor = new WeChatPayV3Notify();
+
+                // 处理回调
+                var result = processor.ProcessV3Notify(Request, apiV3Key);
+
+                // 返回结果
+                if (result.Success)
+                {
+                    _log.Info("微信支付回调处理成功");
+                    Response.Write(result.Response);
+                }
                 else
                 {
-                    WxPayData res = new WxPayData();
-                    res.SetValue("return_code", "SUCCESS");
-                    res.SetValue("return_msg", "OK");
-                    _log.Info("order query success : " + res.ToXml());
-                    //更新订单
-                    
-                    //string Wxorder = data.GetValue("product_id").ToString();
-                    //string totalAmount = Request.QueryString["total_amount"];
-                    //bool flag = CheckN(order, Aliorder, totalAmount);
-                    _log.Info("----data=" + data.ToXml() + "-------\r\n");
-
-                    if (cVO.status!=1)
-                    {
-                        //修改订单
-                        CJWinningRecordsVO cpVO = new CJWinningRecordsVO();
-                        cVO.winningrecords_id = cVO.winningrecords_id;
-                        cVO.status = 1;
-                        cVO.payment_time = DateTime.Now;
-                        cBO.UpdateCJWinningRecords(cpVO);
-                        
-                    }
-
-                    Response.Write(res.ToXml());
-                    Response.End();
+                    _log.Error("微信支付回调处理失败: " + result.ErrorMessage);
+                    Response.Write(result.Response);
                 }
-                //Response.Redirect("~/CustomerManagement/MyWallet.aspx", true);
             }
-            catch(Exception err)
+            catch (Exception ex)
             {
-                _log.Error( "Save  check error : " + err.StackTrace);
+                _log.Error("处理微信支付回调异常: " + ex.Message + ", StackTrace: " + ex.StackTrace);
+                ReturnError("系统异常: " + ex.Message);
             }
-            _log.Info( "WX pay Check sign success");
-      
         }
-        private bool QueryOrder(string transfer_bill_no, int AppType)
+
+        /// <summary>
+        /// 获取API V3密钥
+        /// </summary>
+        private string GetApiV3Key()
         {
-            WxTransferService wxTransferService = new WxTransferService();
-            WeChatTransferResult res = wxTransferService.QueryWeChatTransferStatus(transfer_bill_no, "",AppType);
-            if (res.State == "SUCCESS")
+            try
             {
-                return true;
+                // 从web.config的AppSettings中读取
+                AppVO AppVO = AppBO.GetApp(30);
+
+                _log.Info("成功获取API V3密钥");
+                return AppVO.API_V3_KEY;
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                _log.Error("获取API V3密钥失败: " + ex.Message);
+                return null;
             }
+        }
+
+        /// <summary>
+        /// 返回错误响应
+        /// </summary>
+        private void ReturnError(string errorMessage)
+        {
+            var errorResponse = new
+            {
+                code = "FAIL",
+                message = errorMessage
+            };
+
+            Response.Write(JsonConvert.SerializeObject(errorResponse));
         }
     }
 }
- 

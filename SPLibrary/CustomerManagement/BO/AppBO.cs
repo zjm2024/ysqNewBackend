@@ -106,6 +106,7 @@ namespace SPLibrary.CustomerManagement.BO
                     AppVO.SSLCERT_PATH = "C:/cert/ca/ysq/1623715013_20250916_cert/apiclient_cert.p12";
                     AppVO.SSLCERT_PASSWORD = "1623715013";
                     AppVO.MCH_CERT_SERIAL_NO = "1D65F1C596C2DA416932DC336F1F3C6663CECB3B";
+                    AppVO.API_V3_KEY = "Bd58dd54we8d5f48e7sdv4Md58798845";
                     AppVO.AppType = 30;
                     AppVO.TPersonalID = 18093;
                     break;
