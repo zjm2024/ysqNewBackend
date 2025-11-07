@@ -10759,6 +10759,19 @@ namespace SPLibrary.BusinessCardManagement.BO
             return rDAO.FindById(recording_records_id);
         }
 
+        /// <summary>
+        /// 查找录音列表  lzm add
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public List<RecordingRecordsVO> FindRecordingByCondtion(string condtion)
+        {
+            IRecordingRecordsDAO rDAO = BusinessCardManagementDAOFactory.RecordingRecordsDAO(this.CurrentCustomerProfile);
+            return rDAO.FindByParams(condtion);
+       
+        }
+
+
         #endregion
 
         #endregion

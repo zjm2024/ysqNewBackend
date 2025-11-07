@@ -1,4 +1,5 @@
-﻿using BusinessCard.Models;
+﻿using Aop.Api.Domain;
+using BusinessCard.Models;
 using CoreFramework.VO;
 using Google.Protobuf.WellKnownTypes;
 using Jayrock.Json;
@@ -32,6 +33,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Services.Description;
 using System.Web.UI.WebControls;
 
 
@@ -400,7 +402,7 @@ namespace BusinessCard.Controllers
                         return new ResultObject() { Flag = 0, Message = "只支持 aac, mp3, wav, m4a 格式的音频文件", Result = null };
                     }
 
-                    string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + pVO.PersonalID.ToString() + ActivityId;
+                    string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + pVO.PersonalID.ToString() + ActivityId + ext;
 
                     // 本地路径
                     string localPath = ConfigInfo.Instance.UploadFolder + folder;
@@ -479,6 +481,98 @@ namespace BusinessCard.Controllers
         }
 
 
+        /// <summary>
+        /// 获取所有的问卷列表
+        /// </summary>
+        ///<param name="queryParams"></param>
+        /// <returns></returns>
+        [Route("getAllQuestionnaireList"), HttpPost, Anonymous]
+        public ResultObject GetAllQuestionnaireList([FromBody] dynamic queryParams)
+        {
+
+            string dataStr = JsonConvert.SerializeObject(queryParams);
+
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SortName = "", SortType = "asc" } };
+
+            dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
+       
+            try
+            {
+                if (condition == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+              //  else if (condition.Filter == null || condition.PageInfo == null)
+               // {
+                //    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+               // }
+      
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+               // Paging pageInfo = condition.PageInfo;
+               dynamic pageInfo= condition.PageInfo;
+                string conditionStr2 = "1=1";
+           
+                List<QuestionnaireDataVO> qVO = cBO.GetQuestionnaireList(conditionStr2, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
+                var count = cBO.FindQuestionnaireDataCount(conditionStr2);
+                if (qVO.Count > 0)
+                {
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Count = count };
+                }
+                return new ResultObject() { Flag = 1, Message = "未查询到数据!", Result = null };
+            }
+            catch (Exception ex)
+            {
+                return new ResultObject() { Flag = -1, Message = "接口异常!", Result = ex };
+            }
+            
+        }
+
+
+        /// <summary>
+        /// 获取问卷的音频
+        /// </summary>
+        ///<param name="queryParams"></param>
+        /// <returns></returns>
+        [Route("getQuestionAudioList"), HttpPost, Anonymous]
+        
+        public ResultObject GetQuestionAudioList([FromBody] dynamic queryParams)
+        {
+            string dataStr = JsonConvert.SerializeObject(queryParams);
+
+
+    
+
+            var paramsObj = new { PageInfo = new { activityid = 0, SortName = "", SortType = "asc" } };
+
+            dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
+
+            try
+            {
+                if (condition == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+       
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+           
+                dynamic pageInfo = condition.PageInfo;
+                string conditionStr2 = " 1=1 and activityid=" + pageInfo.activityid;
+
+              
+
+                List<RecordingRecordsVO> rVO = cBO.FindRecordingByCondtion(conditionStr2);
+                var count = cBO.FindQuestionnaireDataCount(conditionStr2);
+                if (rVO.Count > 0)
+                {
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = rVO, Count = count };
+                }
+                return new ResultObject() { Flag = 1, Message = "未查询到数据!", Result = null };
+            }
+            catch (Exception ex)
+            {
+                return new ResultObject() { Flag = -1, Message = "接口异常!", Result = ex };
+            }
+        }
 
         public class QuestionnaireFromVO
         {
