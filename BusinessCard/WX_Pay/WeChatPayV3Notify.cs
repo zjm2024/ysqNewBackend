@@ -46,7 +46,7 @@ namespace BusinessCard.WX_Pay
                     return new NotifyResult(false, CreateErrorResponse("请求数据为空"), "请求体为空");
                 }
 
-                _log.Info("收到微信支付V3回调数据");
+                //_log.Info("收到微信支付V3回调数据");
 
                 // 2. 验证签名
                 var validateResult = ValidateV3Signature(request.Headers, requestBody);
@@ -231,54 +231,115 @@ namespace BusinessCard.WX_Pay
         /// </summary>
         private BusinessResult ProcessBusinessLogic(JObject callbackData)
         {
+            string orderNo = string.Empty;
+
             try
             {
-                _log.Info("开始处理业务逻辑");
+                //_log.Info("开始处理业务逻辑");
 
                 // 1. 提取关键信息
-                string orderNo = callbackData["out_trade_no"] != null ? callbackData["out_trade_no"].ToString() : null;
-                string transferBillNo = callbackData["transaction_id"] != null ? callbackData["transaction_id"].ToString() : null;
+                orderNo = callbackData["out_bill_no"] != null ? callbackData["out_bill_no"].ToString() : null;
+                string transferBillNo = callbackData["transfer_bill_no"] != null ? callbackData["transfer_bill_no"].ToString() : null;
+                string transferStatus = callbackData["transfer_status"] != null ? callbackData["transfer_status"].ToString() : null;
 
+                // 验证必要参数
                 if (string.IsNullOrEmpty(orderNo))
                 {
+                    _log.Error("回调数据中未找到商户订单号");
                     return new BusinessResult(false, "未找到商户订单号");
                 }
 
                 if (string.IsNullOrEmpty(transferBillNo))
                 {
+                    _log.Error($"订单 {orderNo} 未找到微信交易单号");
                     return new BusinessResult(false, "未找到微信交易单号");
                 }
 
-                // 2. 获取中奖记录
+                if (string.IsNullOrEmpty(transferStatus))
+                {
+                    _log.Error($"订单 {orderNo} 未找到转账状态");
+                    return new BusinessResult(false, "未找到转账状态");
+                }
+
+                //_log.Info($"订单 {orderNo} 转账状态: {transferStatus}, 微信单号: {transferBillNo}");
+
+                // 2. 验证转账状态
+                var statusResult = ValidateTransferStatus(transferStatus, orderNo);
+                if (!statusResult.Success)
+                {
+                    return statusResult;
+                }
+
+                // 3. 获取中奖记录
                 var winningRecord = GetWinningRecord(orderNo);
                 if (winningRecord == null)
                 {
+                    _log.Error($"订单 {orderNo} 不存在于系统中");
                     return new BusinessResult(false, "订单不存在");
                 }
 
-                // 3. 检查订单状态，避免重复处理
+                // 4. 检查订单状态，避免重复处理
                 if (winningRecord.status == 1)
                 {
-                    _log.Info("订单已是成功状态，跳过处理: " + winningRecord.winningrecords_id);
+                    _log.Info($"订单 {winningRecord.winningrecords_id} 已是成功状态，跳过处理");
                     return new BusinessResult(true, "订单已是成功状态");
                 }
 
-                // 4. 更新订单状态
+                // 5. 更新订单状态
                 if (!UpdateOrderStatus(winningRecord))
                 {
+                    _log.Error($"订单 {winningRecord.winningrecords_id} 状态更新失败");
                     return new BusinessResult(false, "更新订单状态失败");
                 }
 
-                // 5. 更新中奖人数
+                // 6. 更新中奖人数
                 UpdateLotteryWinnerCount(winningRecord.lottery_id);
 
-                _log.Info("业务逻辑处理完成: " + orderNo);
+                // 7. 记录成功日志
+                //_log.Info($"业务逻辑处理完成 - 订单: {orderNo}, 记录ID: {winningRecord.winningrecords_id}, 微信单号: {transferBillNo}");
+
                 return new BusinessResult(true, "业务处理成功");
             }
             catch (Exception ex)
             {
-                _log.Error("处理业务逻辑异常: " + ex.Message);
-                return new BusinessResult(false, "业务处理异常: " + ex.Message);
+                _log.Error($"处理订单 {orderNo} 业务逻辑异常: {ex.Message}, StackTrace: {ex.StackTrace}");
+                return new BusinessResult(false, $"业务处理异常: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 验证转账状态
+        /// </summary>
+        private BusinessResult ValidateTransferStatus(string transferStatus, string orderNo)
+        {
+            switch (transferStatus.ToUpper())
+            {
+                case "SUCCESS":
+                    _log.Info($"订单 {orderNo} 转账成功");
+                    return new BusinessResult(true, "转账成功");
+
+                case "FAIL":
+                    _log.Error($"订单 {orderNo} 转账失败");
+                    return new BusinessResult(false, "转账失败");
+
+                case "ACCEPTED":
+                case "PROCESSING":
+                    _log.Warn($"订单 {orderNo} 转账处理中，状态: {transferStatus}");
+                    return new BusinessResult(false, $"转账处理中: {transferStatus}");
+
+                case "WAIT_USER_CONFIRM":
+                case "TRANSFERING":
+                    _log.Warn($"订单 {orderNo} 待用户确认，状态: {transferStatus}");
+                    return new BusinessResult(false, $"待用户确认: {transferStatus}");
+
+                case "CANCELING":
+                case "CANCELLED":
+                    _log.Warn($"订单 {orderNo} 转账已撤销，状态: {transferStatus}");
+                    return new BusinessResult(false, $"转账已撤销: {transferStatus}");
+
+                default:
+                    _log.Warn($"订单 {orderNo} 未知转账状态: {transferStatus}");
+                    return new BusinessResult(false, $"未知转账状态: {transferStatus}");
             }
         }
 

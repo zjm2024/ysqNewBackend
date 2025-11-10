@@ -28,7 +28,7 @@ namespace BusinessCard.Pay
                     return;
                 }
 
-                _log.Info("开始处理微信支付V3回调");
+                //_log.Info("开始处理微信支付V3回调");
 
                 // 获取API V3密钥
                 string apiV3Key = GetApiV3Key();
