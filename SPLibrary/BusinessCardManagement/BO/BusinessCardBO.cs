@@ -10964,7 +10964,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         public List<CJWinningRecordsVO> FindCJWinningRecordsByorderNo(string orderNo)
         {
             ICJWinningRecordsDAO rDAO = BusinessCardManagementDAOFactory.CJWinningRecordsDAO(this.CurrentCustomerProfile);
-            List<CJWinningRecordsVO> cVO = rDAO.FindByParams("payment_no = " + orderNo);
+            List<CJWinningRecordsVO> cVO = rDAO.FindByParams("payment_no = '" + orderNo + "'");
             return cVO;
         }
 
@@ -11924,7 +11924,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 var requestData = new
                 {
                     appid = appid,
-                    out_bill_no = "CJ" + out_bill_no,
+                    out_bill_no = out_bill_no,
                     transfer_scene_id = "1000",
                     openid = openid1,
                     transfer_amount = amount,
@@ -11963,7 +11963,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         {
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string random = new Random().Next(1000, 9999).ToString();
-            string outBillNo = $"{timestamp}{lottery_id}{personal_id}{random}";
+            string outBillNo = $"CJ{timestamp}{lottery_id}{personal_id}{random}";
 
             // 确保不超过32位
             if (outBillNo.Length > 30)
