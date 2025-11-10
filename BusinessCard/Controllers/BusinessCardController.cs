@@ -13644,7 +13644,7 @@ namespace BusinessCard.Controllers
             int customerId = cProfile.CustomerId;
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
             List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewByPartyID(PartyID, false);
             if (cVO != null)
             {
@@ -14310,7 +14310,7 @@ namespace BusinessCard.Controllers
                 AppType = PayType;
             }
 
-            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
 
             int oldCount = cBO.FindBCPartSignInNumTotalCount("CustomerId = " + customerId + " and PartyID=" + PartyID + " and NOW()-CreatedAt<30");
             if (oldCount > 0)

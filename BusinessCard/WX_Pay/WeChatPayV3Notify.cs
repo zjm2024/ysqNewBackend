@@ -54,7 +54,7 @@ namespace BusinessCard.WX_Pay
                 {
                     return new NotifyResult(false, CreateErrorResponse(validateResult.ErrorMessage), validateResult.ErrorMessage);
                 }
-
+                _log.Info("收到微信支付V3回调数据："+ requestBody);
                 // 3. 解析回调数据
                 var callbackData = JObject.Parse(requestBody);
 

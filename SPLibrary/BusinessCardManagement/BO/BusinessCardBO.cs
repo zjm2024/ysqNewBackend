@@ -39,8 +39,8 @@ namespace SPLibrary.BusinessCardManagement.BO
     {
         static public string appid = "wxc9245bafef27dddf";
         static public string secret = "76fe22240a699f0cceb12c3118b49cab";
-        public int Type = 1;
-        public int AppType = 1;
+        public int Type = 30;
+        public int AppType = 30;
         private CustomerProfile CurrentCustomerProfile = new CustomerProfile();
         public BusinessCardBO(CustomerProfile customerProfile, int apptype = 0)
         {
