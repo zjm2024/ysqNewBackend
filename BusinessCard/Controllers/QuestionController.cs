@@ -31,6 +31,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -490,12 +491,18 @@ namespace BusinessCard.Controllers
         /// <param name="token">口令</param>
         /// <returns></returns>
         [Route("posttest"), HttpPost, Anonymous]
-        public ResultObject posttest()
+        public ResultObject posttest([FromBody] dynamic queryParams,string token)
         {
+            string dataStr = JsonConvert.SerializeObject(queryParams);
+
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText = "", SortName = "", SortType = "asc" } };
+
+            dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
+            dynamic pageInfo = condition.PageInfo;
             try
             {
 
-                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = null };
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = pageInfo.PageIndex };
             }
             catch (Exception ex)
             {
@@ -511,20 +518,17 @@ namespace BusinessCard.Controllers
         ///<param name="queryParams"></param>
         /// <returns></returns>
         [Route("getAllQuestionnaireList"), HttpPost, Anonymous]
-        public ResultObject GetAllQuestionnaireList([FromBody] dynamic queryParams, string token)
+        public ResultObject GetAllQuestionnaireList([FromBody] pagingPage condition, string token)
         {
+       
             // 验证用户身份
             UserProfile uProfile = CacheManager.GetUserProfile(token);
 
             if (uProfile == null)
                 return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
 
-            string dataStr = JsonConvert.SerializeObject(queryParams);
-
-            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText = "", SortName = "", SortType = "asc" } };
-
-            dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
-       
+        
+    
             try
             {
                 if (condition == null)
@@ -537,8 +541,8 @@ namespace BusinessCard.Controllers
                // }
       
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
-               // Paging pageInfo = condition.PageInfo;
-               dynamic pageInfo= condition.PageInfo;
+                pagingPage pageInfo = condition;
+          
                 string conditionStr2 = "1=1";
                 if (pageInfo.SearchText != "")
                     conditionStr2 += " and (activity_name like '%" + pageInfo.SearchText + "%' )";
@@ -567,7 +571,7 @@ namespace BusinessCard.Controllers
         /// <returns></returns>
         [Route("getQuestionAudioList"), HttpPost, Anonymous]
         
-        public ResultObject GetQuestionAudioList([FromBody] dynamic queryParams, string token)
+        public ResultObject GetQuestionAudioList([FromBody] pagingPage condition, string token)
         {
             // 验证用户身份
             UserProfile uProfile = CacheManager.GetUserProfile(token);
@@ -575,12 +579,12 @@ namespace BusinessCard.Controllers
             if (uProfile == null)
                 return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
 
-            string dataStr = JsonConvert.SerializeObject(queryParams);
+            // string dataStr = JsonConvert.SerializeObject(queryParams);
 
-            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0,activityid = 0, SortName = "create_time", SortType = "asc" } };
+            //var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0,activityid = 0, SortName = "create_time", SortType = "asc" } };
 
-            dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
-
+            // dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
+           
             try
             {
                 if (condition == null)
@@ -589,9 +593,9 @@ namespace BusinessCard.Controllers
                 }
        
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
-           
-                dynamic pageInfo = condition.PageInfo;
-                string conditionStr2 = " 1=1 and r.activityid=" + pageInfo.activityid +" Order By r."+ pageInfo.SortName +" "+ pageInfo.SortType ;
+
+                pagingPage pageInfo = condition;
+                string conditionStr2 = " 1=1 and r.activityid=" + pageInfo.SearchText + " Order By r."+ pageInfo.SortName +" "+ pageInfo.SortType ;
                 var parm1 = (pageInfo.PageIndex - 1) * pageInfo.PageCount;
                 var parm2 = pageInfo.PageCount;
                 int total;
@@ -714,6 +718,16 @@ namespace BusinessCard.Controllers
             public string Content { get; set; }
             public string Questions { get; set; }
             public string wjxparams { get; set; } // 用于标识问卷的唯一ID
+
+        }
+
+        public class pagingPage {
+
+            public int PageIndex { get; set; }
+            public int PageCount { get; set; }
+            public string SearchText { get; set; }
+            public string SortName { get; set; }
+            public string SortType { get; set; }
 
         }
 
