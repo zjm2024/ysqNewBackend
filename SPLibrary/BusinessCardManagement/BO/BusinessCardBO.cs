@@ -17,6 +17,7 @@ using SPLibrary.CustomerManagement.VO;
 using SPLibrary.WebConfigInfo;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Drawing;
 using System.IO;
@@ -10764,13 +10765,37 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// </summary>
         /// <param name="condtion"></param>
         /// <returns></returns>
-        public List<RecordingRecordsVO> FindRecordingByCondtion(string condtion)
-        {
-            IRecordingRecordsDAO rDAO = BusinessCardManagementDAOFactory.RecordingRecordsDAO(this.CurrentCustomerProfile);
-            return rDAO.FindByParams(condtion);
-       
-        }
 
+        /// <summary>
+        /// 查找录音列表  lzm add
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public DataTable FindRecordingByCondtion(string condtion, int param1, int param2, out int total)
+        {
+
+            string strSQL = "";
+            strSQL += " SELECT count(r.recording_records_id) as total from t_wjx_recording_records r left join t_bc_personal p on r.personalid=p.personalid \n";
+            strSQL += " Where \n";
+            strSQL += condtion;
+
+            total = Convert.ToInt32(DbHelper.ExecuteDataTable(strSQL).Rows[0]["total"].ToString());
+
+
+            strSQL = "";
+            strSQL += " SELECT r.*,p.Name as username,p.Phone  as phone from t_wjx_recording_records r left join t_bc_personal p on r.personalid=p.personalid \n";
+            strSQL += " Where \n";
+            strSQL += condtion + " LIMIT " + param1 + ", " + param2;
+
+
+            return DbHelper.ExecuteDataTable(strSQL);
+
+
+
+            // IRecordingRecordsDAO rDAO = BusinessCardManagementDAOFactory.RecordingRecordsDAO(this.CurrentCustomerProfile);
+            //     return rDAO.FindByParams(condtion);
+
+        }
 
         #endregion
 

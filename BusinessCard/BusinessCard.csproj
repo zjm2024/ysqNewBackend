@@ -1239,6 +1239,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\BusinessCardController.cs" />
     <Compile Include="Controllers\LuckyDrawController.cs" />

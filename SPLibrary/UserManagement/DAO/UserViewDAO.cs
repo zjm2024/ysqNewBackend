@@ -159,5 +159,49 @@ namespace SPLibrary.UserManagement.DAO
             }
             return totalCount;
         }
-	}
+
+
+
+
+        public List<UserViewVO> FindAllByPageIndex1(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            string strSQL = "";
+
+   
+            strSQL += " select * from V_UserView \n";
+         
+            strSQL += " Where \n";
+            strSQL += conditionStr;
+            strSQL += " order by " + sortcolname + " " + asc;
+            strSQL += " limit " + (start - 1).ToString() + " , " + (end - start + 1).ToString();
+
+
+            return DbHelper.ExecuteVO<UserViewVO>(strSQL, parameters);
+        }
+
+        public int FindTotalCount1(string condition, params object[] parameters)
+        {
+            string strSQL = "";
+
+            strSQL += " select Count(0) from V_UserView \n";
+         
+            strSQL += " Where \n";
+            strSQL += condition;
+            int totalCount = 0;
+            try
+            {
+                totalCount = Convert.ToInt32(DbHelper.ExecuteScalar(strSQL, parameters));
+            }
+            catch
+            {
+                totalCount = -1;
+            }
+            return totalCount;
+        }
+
+
+
+
+
+    }
 }

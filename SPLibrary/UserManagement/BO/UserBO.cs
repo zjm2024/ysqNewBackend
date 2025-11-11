@@ -237,6 +237,20 @@ namespace SPLibrary.UserManagement.BO
             return uDAO.FindTotalCount(condition, parameters);
         }
 
+
+        public List<UserViewVO> FindAllByPageIndex1(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            IUserViewDAO uDAO = UserManagementDAOFactory.CreateUserViewDAO(this.CurrentUserProfile);
+            return uDAO.FindAllByPageIndex1(conditionStr, start, end, sortcolname, asc, parameters);
+        }
+
+        public int FindTotalCount1(string condition, params object[] parameters)
+        {
+            IUserViewDAO uDAO = UserManagementDAOFactory.CreateUserViewDAO(this.CurrentUserProfile);
+            return uDAO.FindTotalCount1(condition, parameters);
+        }
+
+
         public bool IsUserExist(UserVO vo)
         {
             IUserDAO uDAO = UserManagementDAOFactory.CreateUserDAO(this.CurrentUserProfile);

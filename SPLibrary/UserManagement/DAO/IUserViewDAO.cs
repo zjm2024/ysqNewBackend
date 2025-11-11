@@ -57,5 +57,12 @@ namespace SPLibrary.UserManagement.DAO
 		List<UserViewVO> FindAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters);
 
         int FindTotalCount(string condition, params object[] parameters);
+
+
+
+        List<UserViewVO> FindAllByPageIndex1(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters);
+
+        int FindTotalCount1(string condition, params object[] parameters);
+
     }
 }

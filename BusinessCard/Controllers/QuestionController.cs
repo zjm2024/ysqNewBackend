@@ -6,6 +6,7 @@ using Jayrock.Json;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
+using NPOI.XWPF.UserModel;
 using SPlatformService;
 using SPlatformService.Controllers;
 using SPlatformService.Models;
@@ -21,6 +22,7 @@ using SPLibrary.CustomerManagement.VO;
 using SPLibrary.WebConfigInfo;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.EnterpriseServices;
@@ -487,12 +489,17 @@ namespace BusinessCard.Controllers
         ///<param name="queryParams"></param>
         /// <returns></returns>
         [Route("getAllQuestionnaireList"), HttpPost, Anonymous]
-        public ResultObject GetAllQuestionnaireList([FromBody] dynamic queryParams)
+        public ResultObject GetAllQuestionnaireList([FromBody] dynamic queryParams, string token)
         {
+            // 验证用户身份
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+
+            if (uProfile == null)
+                return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
 
             string dataStr = JsonConvert.SerializeObject(queryParams);
 
-            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SortName = "", SortType = "asc" } };
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText = "", SortName = "", SortType = "asc" } };
 
             dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
        
@@ -511,14 +518,17 @@ namespace BusinessCard.Controllers
                // Paging pageInfo = condition.PageInfo;
                dynamic pageInfo= condition.PageInfo;
                 string conditionStr2 = "1=1";
-           
+                if (pageInfo.SearchText != "")
+                    conditionStr2 += " and (activity_name like '%" + pageInfo.SearchText + "%' )";
+
+
                 List<QuestionnaireDataVO> qVO = cBO.GetQuestionnaireList(conditionStr2, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
                 var count = cBO.FindQuestionnaireDataCount(conditionStr2);
                 if (qVO.Count > 0)
                 {
                     return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Count = count };
                 }
-                return new ResultObject() { Flag = 1, Message = "未查询到数据!", Result = null };
+                return new ResultObject() { Flag = 0, Message = "未查询到数据!", Result = null };
             }
             catch (Exception ex)
             {
@@ -535,14 +545,17 @@ namespace BusinessCard.Controllers
         /// <returns></returns>
         [Route("getQuestionAudioList"), HttpPost, Anonymous]
         
-        public ResultObject GetQuestionAudioList([FromBody] dynamic queryParams)
+        public ResultObject GetQuestionAudioList([FromBody] dynamic queryParams, string token)
         {
+            // 验证用户身份
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+
+            if (uProfile == null)
+                return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
+
             string dataStr = JsonConvert.SerializeObject(queryParams);
 
-
-    
-
-            var paramsObj = new { PageInfo = new { activityid = 0, SortName = "", SortType = "asc" } };
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0,activityid = 0, SortName = "create_time", SortType = "asc" } };
 
             dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
 
@@ -556,15 +569,15 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
            
                 dynamic pageInfo = condition.PageInfo;
-                string conditionStr2 = " 1=1 and activityid=" + pageInfo.activityid;
-
-              
-
-                List<RecordingRecordsVO> rVO = cBO.FindRecordingByCondtion(conditionStr2);
-                var count = cBO.FindQuestionnaireDataCount(conditionStr2);
-                if (rVO.Count > 0)
+                string conditionStr2 = " 1=1 and r.activityid=" + pageInfo.activityid +" Order By r."+ pageInfo.SortName +" "+ pageInfo.SortType ;
+                var parm1 = (pageInfo.PageIndex - 1) * pageInfo.PageCount;
+                var parm2 = pageInfo.PageCount;
+                int total;
+                DataTable rVO = cBO.FindRecordingByCondtion(conditionStr2, parm1, parm2,out total);
+                var count = rVO.Rows.Count;
+                if (count > 0)
                 {
-                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = rVO, Count = count };
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = rVO, Count = total };
                 }
                 return new ResultObject() { Flag = 1, Message = "未查询到数据!", Result = null };
             }
@@ -573,6 +586,94 @@ namespace BusinessCard.Controllers
                 return new ResultObject() { Flag = -1, Message = "接口异常!", Result = ex };
             }
         }
+
+
+        /// <summary>
+        /// 下载活动音频连接的Excel文件
+        /// </summary>
+        /// <param name="PartyID"></param>
+        /// <returns></returns>
+        [Route("getQuestionAudioListToExcel"), HttpGet, Anonymous]
+        public ResultObject GetQuestionAudioListToExcel(int PartyID = 13900)
+        {
+            try
+            {
+                if (PartyID > 0)
+                {
+
+                    BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+
+
+                    string conditionStr2 = " 1=1 and r.activityid=" + PartyID + " Order By r.create_time  asc";
+                    var parm1 = 0;
+                    var parm2 = 10000;
+                    int total;
+                    DataTable rVO = cBO.FindRecordingByCondtion(conditionStr2, parm1, parm2, out total);
+                    var count = rVO.Rows.Count;
+
+
+                    if (count > 0)
+                    {
+
+                        DataTable dt = new DataTable();
+
+                        dt.Columns.Add("序号", typeof(Int32));
+                        dt.Columns.Add("ID", typeof(String));
+                        dt.Columns.Add("姓名", typeof(String));
+                        dt.Columns.Add("手机", typeof(String));
+                        dt.Columns.Add("附件连接", typeof(String));
+                        dt.Columns.Add("上传时间", typeof(DateTime));
+
+
+                        dt.Columns.Add("文件大小", typeof(Decimal));
+                        dt.Columns.Add("音频时长", typeof(Decimal));
+
+
+                        for (int i = 0; i < count; i++)
+                        {
+
+                            DataRow row = dt.NewRow();
+                            row["序号"] = i + 1;
+                            row["ID"] = rVO.Rows[i]["id_timestamp"];
+                            row["姓名"] = rVO.Rows[i]["username"];
+                            row["手机"] = rVO.Rows[i]["phone"];
+                            row["附件连接"] = rVO.Rows[i]["file_path"];
+
+                            row["上传时间"] = rVO.Rows[i]["create_time"];
+                            row["文件大小"] = rVO.Rows[i]["file_size"];
+                            row["音频时长"] = rVO.Rows[i]["duration"];
+                            dt.Rows.Add(row);//这样就可以添加了 
+                        }
+
+
+
+                        string FileName = cBO.DataToExcel(dt, "PartyAudioExcel/", PartyID + ".xls");
+
+                        if (FileName != null)
+                        {
+                            return new ResultObject() { Flag = 1, Message = "获取成功!", Result = FileName };
+                        }
+                        else
+                        {
+                            return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
+                        }
+
+                    }
+                    return new ResultObject() { Flag = 0, Message = "未查询到数据!", Result = null };
+                }
+                return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+            }
+
+            catch (Exception ex)
+            {
+                return new ResultObject() { Flag = -1, Message = "接口异常!", Result = ex };
+            }
+
+
+        }
+
+
+
 
         public class QuestionnaireFromVO
         {
