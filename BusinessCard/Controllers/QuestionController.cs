@@ -462,7 +462,7 @@ namespace BusinessCard.Controllers
 
 
         /// <summary>
-        /// 更新问卷
+        /// gettest
         /// </summary>
         /// <param name="vO">VO</param>
         /// <param name="token">口令</param>
@@ -474,6 +474,28 @@ namespace BusinessCard.Controllers
             {
              
                     return new ResultObject() { Flag = 1, Message = "获取成功!", Result = null };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultObject() { Flag = 0, Message = "更新失败!", Result = ex };
+            }
+        }
+
+
+        /// <summary>
+        /// posttest
+        /// </summary>
+        /// <param name="vO">VO</param>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("posttest"), HttpPost, Anonymous]
+        public ResultObject posttest()
+        {
+            try
+            {
+
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = null };
             }
             catch (Exception ex)
             {
