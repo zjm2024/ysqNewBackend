@@ -517,8 +517,8 @@ namespace BusinessCard.Controllers
         /// </summary>
         ///<param name="queryParams"></param>
         /// <returns></returns>
-        [Route("getAllQuestionnaireList"), HttpPost, Anonymous]
-        public ResultObject GetAllQuestionnaireList([FromBody] dynamic queryParams )
+        [Route("getAllQuestionnaireList"), HttpPost]
+        public ResultObject GetAllQuestionnaireList([FromBody] dynamic queryParams, string token)
         {
        
             // 验证用户身份
@@ -574,7 +574,7 @@ namespace BusinessCard.Controllers
         /// </summary>
         ///<param name="queryParams"></param>
         /// <returns></returns>
-        [Route("getQuestionAudioList"), HttpPost, Anonymous]
+        [Route("getQuestionAudioList"), HttpPost]
         
         public ResultObject GetQuestionAudioList([FromBody] dynamic queryParams, string token)
         {
