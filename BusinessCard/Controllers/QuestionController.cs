@@ -490,8 +490,8 @@ namespace BusinessCard.Controllers
         /// <param name="vO">VO</param>
         /// <param name="token">口令</param>
         /// <returns></returns>
-        [Route("posttest"), HttpPost, Anonymous]
-        public ResultObject posttest([FromBody] dynamic queryParams,string token)
+        [Route("posttest"), HttpPost]
+        public ResultObject Posttest([FromBody] dynamic queryParams,string token)
         {
             string dataStr = JsonConvert.SerializeObject(queryParams);
 
@@ -518,17 +518,22 @@ namespace BusinessCard.Controllers
         ///<param name="queryParams"></param>
         /// <returns></returns>
         [Route("getAllQuestionnaireList"), HttpPost, Anonymous]
-        public ResultObject GetAllQuestionnaireList([FromBody] pagingPage condition, string token)
+        public ResultObject GetAllQuestionnaireList([FromBody] dynamic queryParams )
         {
        
             // 验证用户身份
-            UserProfile uProfile = CacheManager.GetUserProfile(token);
+           // UserProfile uProfile = CacheManager.GetUserProfile(token);
 
-            if (uProfile == null)
-                return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
 
-        
-    
+            string dataStr = JsonConvert.SerializeObject(queryParams);
+
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText = "", SortName = "", SortType = "asc" } };
+
+            dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
+      
+
+
+
             try
             {
                 if (condition == null)
@@ -541,8 +546,8 @@ namespace BusinessCard.Controllers
                // }
       
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
-                pagingPage pageInfo = condition;
-          
+                dynamic pageInfo = condition.PageInfo;
+
                 string conditionStr2 = "1=1";
                 if (pageInfo.SearchText != "")
                     conditionStr2 += " and (activity_name like '%" + pageInfo.SearchText + "%' )";
@@ -571,7 +576,7 @@ namespace BusinessCard.Controllers
         /// <returns></returns>
         [Route("getQuestionAudioList"), HttpPost, Anonymous]
         
-        public ResultObject GetQuestionAudioList([FromBody] pagingPage condition, string token)
+        public ResultObject GetQuestionAudioList([FromBody] dynamic queryParams, string token)
         {
             // 验证用户身份
             UserProfile uProfile = CacheManager.GetUserProfile(token);
@@ -579,11 +584,11 @@ namespace BusinessCard.Controllers
             if (uProfile == null)
                 return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
 
-            // string dataStr = JsonConvert.SerializeObject(queryParams);
+             string dataStr = JsonConvert.SerializeObject(queryParams);
 
-            //var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0,activityid = 0, SortName = "create_time", SortType = "asc" } };
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0,Activityid = 0, SortName = "create_time", SortType = "asc" } };
 
-            // dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
+             dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
            
             try
             {
@@ -594,8 +599,8 @@ namespace BusinessCard.Controllers
        
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
 
-                pagingPage pageInfo = condition;
-                string conditionStr2 = " 1=1 and r.activityid=" + pageInfo.SearchText + " Order By r."+ pageInfo.SortName +" "+ pageInfo.SortType ;
+                dynamic pageInfo = condition.PageInfo;
+                string conditionStr2 = " 1=1 and r.activityid=" + pageInfo.Activityid + " Order By r."+ pageInfo.SortName +" "+ pageInfo.SortType ;
                 var parm1 = (pageInfo.PageIndex - 1) * pageInfo.PageCount;
                 var parm2 = pageInfo.PageCount;
                 int total;
@@ -721,15 +726,6 @@ namespace BusinessCard.Controllers
 
         }
 
-        public class pagingPage {
-
-            public int PageIndex { get; set; }
-            public int PageCount { get; set; }
-            public string SearchText { get; set; }
-            public string SortName { get; set; }
-            public string SortType { get; set; }
-
-        }
 
     }
 }

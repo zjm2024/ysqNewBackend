@@ -35,9 +35,9 @@ namespace SPlatformService.TokenMange
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            actionExecutedContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-            actionExecutedContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
-            actionExecutedContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            //actionExecutedContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            //actionExecutedContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
+            //actionExecutedContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
             base.OnActionExecuted(actionExecutedContext);
         }
 

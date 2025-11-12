@@ -101,8 +101,8 @@ namespace BusinessCard.Controllers
         /// </summary>
         /// <param name="token">口令</param>
         /// <returns></returns>
-        [Route("getUserAll"), HttpPost, Anonymous]
-        public ResultObject GetUserAll([FromBody] pagingPage condition, string token)
+        [Route("getUserAll"), HttpPost]
+        public ResultObject GetUserAll([FromBody] dynamic queryParams, string token)
         {
             // 验证用户身份
             UserProfile uProfile = CacheManager.GetUserProfile(token);
@@ -110,11 +110,11 @@ namespace BusinessCard.Controllers
             if (uProfile==null)
                 return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
 
-           // string dataStr = JsonConvert.SerializeObject(queryParams);
+            string dataStr = JsonConvert.SerializeObject(queryParams);
 
-           // var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText="", SortName = "CreatedAt", SortType = "asc" } };
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText="", SortName = "CreatedAt", SortType = "asc" } };
 
-           // dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
+            dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
 
             try
             {
@@ -123,7 +123,7 @@ namespace BusinessCard.Controllers
                     return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
                 }
 
-                pagingPage pageInfo = condition;
+                dynamic pageInfo = condition.PageInfo;
                 UserBO uBO = new UserBO(uProfile);
                 string conditionStr2 = "1=1";
                 if (pageInfo.SearchText != "")
