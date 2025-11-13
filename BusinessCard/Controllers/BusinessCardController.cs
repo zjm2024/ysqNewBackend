@@ -2564,7 +2564,7 @@ namespace BusinessCard.Controllers
             InfoSort.Reverse();
             InfoSort.Add(SVO);
             InfoSort.Reverse();
-            return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count, Subsidiary = new { BusinessName = bVO.BusinessName, Logo = bVO.LogoImg, DisplayCard = bVO.DisplayCard, InfoSort = InfoSort } ,Subsidiary2= (" + condition.Filter.Result() + ") };
+            return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count, Subsidiary = new { BusinessName = bVO.BusinessName, Logo = bVO.LogoImg, DisplayCard = bVO.DisplayCard, InfoSort = InfoSort }, Subsidiary2 = (" + condition.Filter.Result() + ") };
         }
 
         /// <summary>
@@ -11847,7 +11847,7 @@ namespace BusinessCard.Controllers
             {
                 return new ResultObject() { Flag = 0, Message = ex.Message, Result = null };
             }
-          
+
         }
 
         /// <summary>
@@ -15533,7 +15533,7 @@ namespace BusinessCard.Controllers
                     //BusinessCard_JurisdictionVO B_Jurisdiction = cBO.getBusinessCard_Jurisdiction(BusinessID);
                     List<InfoViewVO> videolist = cBO.FindInfoViewAllByPageIndex("Type ='Video'  AND Status<>-2 and Status<>0 AND Video!='' AND BusinessID =" + BusinessID, 1, 3, "Order_info desc,", "CreatedAt desc");
                     //首页显示活动 IsDisplayIndex=1 and EndTime > now() and
-                    List <BCPartyVO> partyvo = cBO.FindBCPartyByPage(" AppType=" + pVO.AppType, 1, 6, "IsDisplayIndex", "desc");
+                    List<BCPartyVO> partyvo = cBO.FindBCPartyByPage(" AppType=" + pVO.AppType, 1, 6, "IsDisplayIndex", "desc");
                     List<QuestionnaireDataVO> qVO = cBO.FindQuestionnaireByFour(4);
                     object res = new
                     {
@@ -15970,7 +15970,7 @@ namespace BusinessCard.Controllers
                 var count = cBO.FindCJLotteriesCount(conditionStr);
                 if (qVO.Count > 0)
                 {
-                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Count = count,Subsidiary = condition,Subsidiary2=conditionStr };
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Count = count, Subsidiary = condition, Subsidiary2 = conditionStr };
                 }
                 return new ResultObject() { Flag = 2, Message = "未查询到数据!", Result = null };
             }
@@ -16802,7 +16802,7 @@ namespace BusinessCard.Controllers
                     AppType = CustomerVO2.AppType;
                 }
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), AppType);
-                string str = cBO.getQRIMGByIDAndType(QuestionnaireID, 5,AppType,customerId);
+                string str = cBO.getQRIMGByIDAndType(QuestionnaireID, 5, AppType, customerId);
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = str };
             }
             catch
@@ -16910,6 +16910,107 @@ namespace BusinessCard.Controllers
                 return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
             }
         }
+        #endregion
+
+        #region 粤省情排行榜单
+        /// <summary>
+        /// 添加或更新榜单
+        /// </summary>
+        /// <param name="rankVO"></param>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("UpdateRank"), HttpPost]
+        public ResultObject UpdateRank([FromBody] RankVO rankVO, string token)
+        {
+            if (rankVO == null)
+            {
+                return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+            }
+
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+            CustomerProfile cProfile = uProfile as CustomerProfile;
+            int customerId = cProfile.CustomerId;
+
+            CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
+            CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+            PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
+            /*审核文本是否合法*/
+            if (!cBO.msg_sec_check(rankVO))
+            {
+                return new ResultObject() { Flag = 0, Message = "有政治敏感或违法关键词，请重新填写!", Result = null };
+            }
+            /*审核文本是否合法*/
+
+            if (rankVO.rank_list_id > 0)
+            {
+                if (cBO.UpdateRank(rankVO))
+                {
+                    return new ResultObject() { Flag = 1, Message = "更新成功!", Result = rankVO.rank_list_id };
+                }
+                else
+                    return new ResultObject() { Flag = 0, Message = "更新失败!", Result = null };
+            }
+            else
+            {
+                rankVO.created_at = DateTime.Now;
+                rankVO.personal_id = pVO.PersonalID;
+                rankVO.publisher = pVO.Name;
+                rankVO.publish_time = DateTime.Now;
+                int rank_list_id = cBO.AddRank(rankVO);
+                if (rank_list_id > 0)
+                {
+                    return new ResultObject() { Flag = 1, Message = "添加成功!", Result = rank_list_id };
+                }
+                else
+                    return new ResultObject() { Flag = 0, Message = "添加失败!", Result = null };
+            }
+        }
+
+        /// <summary>
+        /// 获取榜单列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("QueryRankList"), HttpPost]
+        public ResultObject QueryRankList([FromBody] ConditionModel condition, string token)
+        {
+            try
+            {
+                if (condition == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+                else if (condition.Filter == null || condition.PageInfo == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+
+                UserProfile uProfile = CacheManager.GetUserProfile(token);
+                CustomerProfile cProfile = uProfile as CustomerProfile;
+                int customerId = cProfile.CustomerId;
+
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+                PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
+
+                string conditionStr = " Status=1";
+
+                Paging pageInfo = condition.PageInfo;
+
+                List<RankVO> list = new List<RankVO>();
+                int count = 0;
+
+                list = cBO.FindRankAllByPageIndex(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
+                count = cBO.FindRankCount(conditionStr);
+
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultObject() { Flag = 0, Message = ex.Message, Result = null };
+            }
+        }
+
         #endregion
 
         /// <summary>
