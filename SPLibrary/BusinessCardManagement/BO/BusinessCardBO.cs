@@ -12179,6 +12179,86 @@ namespace SPLibrary.BusinessCardManagement.BO
 
         #endregion
 
+        #region 排行榜
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public int AddRank(RankVO vo)
+        {
+            try
+            {
+                IRankDAO rDAO = BusinessCardManagementDAOFactory.RankDAO(this.CurrentCustomerProfile);
+
+                CommonTranscation t = new CommonTranscation();
+                t.TranscationContextWithReturn += delegate ()
+                {
+                    int AccessRecordsID = rDAO.Insert(vo);
+                    return AccessRecordsID;
+                };
+                int result = t.Go();
+                return Convert.ToInt32(t.TranscationReturnValue);
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public bool UpdateRank(RankVO vo)
+        {
+            IRankDAO rDAO = BusinessCardManagementDAOFactory.RankDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.UpdateById(vo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取榜单分页列表
+        /// </summary>
+        /// <param name="conditionStr"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="sortcolname"></param>
+        /// <param name="asc"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public List<RankVO> FindRankAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            IRankDAO rDAO = BusinessCardManagementDAOFactory.RankDAO(this.CurrentCustomerProfile);
+            List<RankVO> cVO = rDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
+
+            return cVO;
+        }
+
+        /// <summary>
+        /// 获取榜单的数量
+        /// </summary>
+        /// <returns></returns>
+        public int FindRankCount(string condition, params object[] parameters)
+        {
+            IRankDAO rDAO = BusinessCardManagementDAOFactory.RankDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount(condition, parameters);
+        }
+        #endregion
 
     }
 }

@@ -336,5 +336,11 @@ namespace SPLibrary.BusinessCardManagement.DAO
         {
             return new RecordingRecordsDAO(userProfile);
         }
+
+        public static IRankDAO RankDAO(UserProfile userProfile)
+        {
+            return new RankDAO(userProfile);
+        }
+
     }
 }

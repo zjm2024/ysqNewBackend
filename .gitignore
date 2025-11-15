@@ -187,3 +187,6 @@ packages/
 /SPLibrary/bin/Debug/BouncyCastle.Crypto.dll
 /SPlatformService/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 /OpenAIAPP/obj/Debug/build.force
+/BusinessCard/bin/RestSharp.xml
+/SPLibrary/bin/Debug/RestSharp.xml
+/SPLibrary/bin/Release/RestSharp.xml
