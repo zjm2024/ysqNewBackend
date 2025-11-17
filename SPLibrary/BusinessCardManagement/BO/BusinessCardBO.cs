@@ -10775,7 +10775,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         {
 
             string strSQL = "";
-            strSQL += " SELECT count(r.recording_records_id) as total from t_wjx_recording_records r left join t_bc_personal p on r.personalid=p.personalid \n";
+            strSQL += " SELECT count(0) as total from t_wjx_recording_records r left join t_bc_personal p on r.personalid=p.personalid \n";
             strSQL += " Where \n";
             strSQL += condtion;
 
