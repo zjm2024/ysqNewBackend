@@ -16,7 +16,7 @@ namespace SPLibrary.BusinessCardManagement.VO
 
         [DataMember]
         public Int32 rank_list_id { get { return (Int32)GetValue(typeof(Int32), "rank_list_id"); } set { SetValue("rank_list_id", value); } }
-       [DataMember]
+        [DataMember]
         public String list_name { get { return (String)GetValue(typeof(String), "list_name"); } set { SetValue("list_name", value); } }
         [DataMember]
         public Int32 category_id { get { return (Int32)GetValue(typeof(Int32), "category_id"); } set { SetValue("category_id", value); } }

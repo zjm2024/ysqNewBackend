@@ -28,7 +28,7 @@ namespace SPLibrary.BusinessCardManagement.VO
         public decimal annual_output { get { return (decimal)GetValue(typeof(decimal), "annual_output"); } set { SetValue("annual_output", value); } }
         [DataMember]
         public String custom_field1 { get { return (String)GetValue(typeof(String), "custom_field1"); } set { SetValue("custom_field1", value); } }
-       [DataMember]
+        [DataMember]
         public String custom_field2 { get { return (String)GetValue(typeof(String), "custom_field2"); } set { SetValue("custom_field2", value); } }
         [DataMember]
         public Int32 sort_order { get { return (Int32)GetValue(typeof(Int32), "sort_order"); } set { SetValue("sort_order", value); } }
@@ -36,7 +36,7 @@ namespace SPLibrary.BusinessCardManagement.VO
         public Int32 is_bound { get { return (Int32)GetValue(typeof(Int32), "is_bound"); } set { SetValue("is_bound", value); } }
         [DataMember]
         public DateTime created_at { get { return (DateTime)GetValue(typeof(DateTime), "created_at"); } set { SetValue("created_at", value); } }
-        
+
         #region ICloneable Member
         public override object Clone()
         {
