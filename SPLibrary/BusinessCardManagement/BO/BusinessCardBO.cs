@@ -9448,7 +9448,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         public List<BCPartyVO> FindBCPartyByPage(string condtion, int start, int end, string sortcolname, string asc, params object[] parameters)
         {
             IBCPartyDAO pDAO = BusinessCardManagementDAOFactory.BCPartyDAO(this.CurrentCustomerProfile);
-            return pDAO.FindAllByPageIndex(condtion,start,end,sortcolname,asc,parameters);
+            return pDAO.FindAllByPageIndex(condtion, start, end, sortcolname, asc, parameters);
         }
 
         /// <summary>
@@ -10927,7 +10927,7 @@ namespace SPLibrary.BusinessCardManagement.BO
             try
             {
                 ICJLotteriesDAO rDAO = BusinessCardManagementDAOFactory.CJLotteriesDAO(this.CurrentCustomerProfile);
-                var cj=  rDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
+                var cj = rDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
                 return cj;
             }
             catch (Exception ex)
@@ -11728,7 +11728,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 string DataJson = string.Empty;
                 string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
 
-                string page = "package/setup/SignInFormByUser/SignInFormByUser"; 
+                string page = "package/setup/SignInFormByUser/SignInFormByUser";
                 //string page = "pages/home/home";
 
                 DataJson = "{";
@@ -11824,7 +11824,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 {
                     imgurl = ConfigInfo.Instance.BCAPIURL + "/GenerateIMG/BusinessCardIMG2QR.aspx?ID=" + ID + "&IDType=" + IDType + "&CustomerId=" + CustomerId + "&AppType=" + AppType;
                 }
-                
+
                 Bitmap m_Bitmap = WebSnapshotsHelper.GetWebSiteThumbnail(imgurl, 752, 974, 752, 974);
 
                 string filePath = "";
@@ -11846,7 +11846,7 @@ namespace SPLibrary.BusinessCardManagement.BO
 
                 m_Bitmap.Save(physicalPath, System.Drawing.Imaging.ImageFormat.Png);
                 string ImgUrl = ConfigInfo.Instance.BCAPIURL + filePath;
-                logger.Info("生成二维码"+ ImgUrl);
+                logger.Info("生成二维码" + ImgUrl);
                 CardRegistertableVO cVO = new CardRegistertableVO();
                 cVO.QuestionnaireID = ID;
                 cVO.QRImg = ImgUrl;
@@ -12002,7 +12002,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// <summary>
         /// 使用证书进行微信支付V3 API POST请求
         /// </summary>
-        private string WeChatPayV3PostWithCertificate(string domain,string endpoint, string jsonData, string mchId, string certSerialNo, string certPath, string certPassword)
+        private string WeChatPayV3PostWithCertificate(string domain, string endpoint, string jsonData, string mchId, string certSerialNo, string certPath, string certPassword)
         {
             try
             {
