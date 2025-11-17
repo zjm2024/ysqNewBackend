@@ -8909,7 +8909,7 @@ namespace SPLibrary.BusinessCardManagement.BO
             try
             {
                 IBCPartySignUpViewDAO uDAO = BusinessCardManagementDAOFactory.BCPartySignUpViewDAO(this.CurrentCustomerProfile);
-                return uDAO.FindByParams(condition + " GROUP BY PartyID ORDER BY StartTime DESC, CreatedAt DESC");
+                return uDAO.FindByParams(condition + " AND Status=1 GROUP BY PartyID ORDER BY StartTime DESC, CreatedAt DESC");
             }
             catch (Exception ex)
             {
