@@ -17,7 +17,7 @@ namespace SPLibrary.BusinessCardManagement.DAO
             base._tableName = "t_rank_items";
             base._pkId = "rank_items_id";
             base._voType = typeof(RankItemVO);
-            base.CurrentUserProfile = userProfile;
+            base.CurrentUserProfile = userProfile; 
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace SPLibrary.BusinessCardManagement.DAO
     public partial interface IRankItemDAO : ICommonDAO
     {
         /// <summary>
-        /// Find record(s) by some parameters
+        /// Find record(s) by some parameters 
         /// </summary>
         List<RankItemVO> FindByParams(string condtion, params object[] dbParameters);
 

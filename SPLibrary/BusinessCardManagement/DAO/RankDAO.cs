@@ -11,15 +11,15 @@ namespace SPLibrary.BusinessCardManagement.DAO
 {
     public partial class RankDAO : CommonDAO, IRankDAO
     {
-        
-		public RankDAO(UserProfile userProfile)
-		{
-			base._tableName= "t_rank_lists";
-			base._pkId = "rank_list_id";
-			base._voType = typeof(RankVO);
+
+        public RankDAO(UserProfile userProfile)
+        {
+            base._tableName = "t_rank_lists";
+            base._pkId = "rank_list_id";
+            base._voType = typeof(RankVO);
             base.CurrentUserProfile = userProfile;
-        }    
-    
+        }
+
         /// <summary>
         /// Find record(s) by some parameters
         /// </summary>
@@ -79,42 +79,42 @@ namespace SPLibrary.BusinessCardManagement.DAO
         {
             base.UpdateListById<RankVO>(voList);
         }
-        
+
         public void UpdateListByParams(List<RankVO> voList, string conditon, List<string> columnList)
         {
             base.UpdateListByParams<RankVO>(voList, conditon, columnList);
         }
-        
-        public void UpdateListByParams(List<RankVO> voList, string conditon, List<string> columnList,int countEveryRun)
+
+        public void UpdateListByParams(List<RankVO> voList, string conditon, List<string> columnList, int countEveryRun)
         {
-            base.UpdateListByParams<RankVO>(voList, conditon, columnList,countEveryRun);
+            base.UpdateListByParams<RankVO>(voList, conditon, columnList, countEveryRun);
         }
 
         public void UpdateListByParams(List<RankVO> voList, string conditon, params string[] columnList)
         {
             base.UpdateListByParams<RankVO>(voList, conditon, columnList);
         }
-        
-        public void UpdateListByParams(List<RankVO> voList, string conditon,int countEveryRun, params string[] columnList)
+
+        public void UpdateListByParams(List<RankVO> voList, string conditon, int countEveryRun, params string[] columnList)
         {
-            base.UpdateListByParams<RankVO>(voList, conditon,countEveryRun, columnList);
+            base.UpdateListByParams<RankVO>(voList, conditon, countEveryRun, columnList);
         }
-        
+
         public void DeleteListByParams(List<RankVO> voList, string condition, params string[] columnList)
         {
             base.DeleteListByParams(voList, condition, columnList);
         }
-        
+
         public void DeleteListByParams(List<RankVO> voList, string condition, int countEveryRun, params string[] columnList)
         {
             base.DeleteListByParams(voList, condition, countEveryRun, columnList);
         }
 
-		public List<RankVO> FindAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        public List<RankVO> FindAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
         {
             string strSQL = "";
 
-			strSQL += " SELECT * FROM " + this._tableName + " 	 \n";
+            strSQL += " SELECT * FROM " + this._tableName + " 	 \n";
             strSQL += " Where \n";
             strSQL += conditionStr;
             strSQL += " order by " + sortcolname + " " + asc;
@@ -151,7 +151,7 @@ namespace SPLibrary.BusinessCardManagement.DAO
 
             return DbHelper.ExecuteVO<RankVO>(strSQL, parameters);
         }
-        public List<RankVO> FindAllByPageIndex(string conditionStr, string sortcolname, string asc,int limit, params object[] parameters)
+        public List<RankVO> FindAllByPageIndex(string conditionStr, string sortcolname, string asc, int limit, params object[] parameters)
         {
             string strSQL = "";
 
