@@ -13675,12 +13675,16 @@ namespace BusinessCard.Controllers
             CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
             BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
-            List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewByPartyID(PartyID, false);
+            //List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewByPartyID(PartyID, false);
+            string sql = "PartyID = " + PartyID + " and PartySignUpID > 0 and SignUpStatus<>2 and AppType=" + CustomerVO2.AppType;
+            if (PageIndex == 0) PageIndex = 1;
+            List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (PageIndex - 1) * PageCount, (PageIndex+1) * PageCount, "CreatedAt", "DESC");
+            int count = cBO.FindBCPartSignInNumTotalCount(sql);
             if (cVO != null)
             {
                 if (cVO.Count > 0)
                 {
-                    cVO.Reverse();
+                   
                     int numberOfPeople = cBO.FindBCPartSignInSumCount("Number", "PartyID=" + PartyID + " and (SignUpStatus=1 or SignUpStatus=0)"); //总人数
                     decimal Earning = 0; //总金额
                     List<CostItem> CostList = new List<CostItem>();
@@ -13735,14 +13739,11 @@ namespace BusinessCard.Controllers
                         isHost = pVO.CustomerId == customerId;
                     }
 
-                    cVO.Sort((a, b) => a.CreatedAt.CompareTo(b.CreatedAt));
-                    cVO.Reverse();
-
                     int ReadCount = cBO.FindAccessrecordsCount("Type='ReadParty' and ById=" + PartyID);
                     int ForwardCount = cBO.FindAccessrecordsCount("Type='ForwardParty' and ById=" + PartyID);
                     int SignUpPartyCount = cBO.FindAccessrecordsCount("Type='SignUpParty' and ById=" + PartyID);
 
-                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = cVO.Skip((PageIndex - 1) * PageCount).Take(PageCount), Count = cVO.Count, Subsidiary = new { numberOfPeople = numberOfPeople, Earning = Earning, CostList = CostList, Costcount = Costcount, isHost = isHost, ForwardCount = ForwardCount, SignUpPartyCount = SignUpPartyCount, ReadCount = ReadCount } };
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = cVO, Count = count, Subsidiary = new { numberOfPeople = numberOfPeople, Earning = Earning, CostList = CostList, Costcount = Costcount, isHost = isHost, ForwardCount = ForwardCount, SignUpPartyCount = SignUpPartyCount, ReadCount = ReadCount } };
                 }
                 else
                 {
@@ -15394,7 +15395,7 @@ namespace BusinessCard.Controllers
 
                 CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
                 CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(),CustomerVO2.AppType);
                 string conditionStr = " CustomerID=" + customerId;
                 int count = 0;
                 Paging pageInfo = condition.PageInfo;

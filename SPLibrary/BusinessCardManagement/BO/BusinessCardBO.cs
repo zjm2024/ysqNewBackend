@@ -43,7 +43,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         public int Type = 30;
         public int AppType = 30;
         private CustomerProfile CurrentCustomerProfile = new CustomerProfile();
-        public BusinessCardBO(CustomerProfile customerProfile, int apptype = 0)
+        public BusinessCardBO(CustomerProfile customerProfile, int apptype = 30)
         {
             this.CurrentCustomerProfile = customerProfile;
             AppVO AppVO = AppBO.GetApp(apptype);
@@ -9477,14 +9477,37 @@ namespace SPLibrary.BusinessCardManagement.BO
         public List<BCPartySignUpViewVO> FindSignUpViewByPartyID(int PartyID, bool isDisplayRefund = false)
         {
             IBCPartySignUpViewDAO uDAO = BusinessCardManagementDAOFactory.BCPartySignUpViewDAO(this.CurrentCustomerProfile);
-            string sql = "PartyID = " + PartyID + " and PartySignUpID > 0 and SignUpStatus<>2 and AppType=" + Type + " group by PartySignUpID ";
+            string sql = "PartyID = " + PartyID + " and PartySignUpID > 0 and SignUpStatus<>2 and AppType=" + Type ;
             if (isDisplayRefund)
             {
-                sql = "PartyID = " + PartyID + " and PartySignUpID > 0  and AppType=" + Type + " group by PartySignUpID ";
+                sql = "PartyID = " + PartyID + " and PartySignUpID > 0  and AppType=" + Type ;
             }
 
             return uDAO.FindByParams(sql);
         }
+
+
+        /// <summary>
+        /// 获取活动的所有报名列表
+        /// </summary>
+        /// <param name="PartyID"></param>
+        /// <returns></returns>
+        public List<BCPartySignUpViewVO> FindSignUpViewIndexByPartyID(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            try
+            {
+                IBCPartySignUpViewDAO uDAO = BusinessCardManagementDAOFactory.BCPartySignUpViewDAO(this.CurrentCustomerProfile);
+                return uDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return null;
+            }
+        }
+     
 
         /// <summary>
         /// 获取活动的所有费用信息列表

@@ -116,7 +116,7 @@ namespace SPLibrary.BusinessCardManagement.DAO
             strSQL += " Where \n";
             strSQL += conditionStr;
             strSQL += " order by " + sortcolname + " " + asc;
-            strSQL += " limit " + (start - 1).ToString() + " , " + (end - start + 1).ToString();
+            strSQL += " limit " + (start).ToString() + " , " + (end).ToString();
 
             return DbHelper.ExecuteVO<BCPartySignUpViewVO>(strSQL, parameters);
         }
