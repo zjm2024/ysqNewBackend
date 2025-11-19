@@ -7317,6 +7317,49 @@ namespace BusinessCard.Controllers
         }
 
 
+
+        /// <summary>
+        /// 开通企业修改订单发货标识(根据OrderNo)
+        /// </summary>
+        /// <param name="OrderNo"></param>
+        /// <returns></returns>
+        [Route("SetDeliverByOrderNo"), HttpGet, Anonymous]
+        public ResultObject SetDeliverByOrderNo(string OrderNo)
+        {
+
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+
+            OrderViewVO OrderVO = cBO.FindOrderViewByOrderNo(OrderNo);
+
+            if (OrderVO != null)
+            {
+
+                OrderVO oVO = new SPLibrary.BusinessCardManagement.VO.OrderVO();
+                oVO.OrderID = OrderVO.OrderID;
+                oVO.isDeliver = 1;
+                oVO.DeliverAt = DateTime.Now;
+                //oVO.LogisticsOrderNo = LogisticsOrderNo;
+
+                if (cBO.UpdateOrder(oVO))
+                {
+                    return new ResultObject() { Flag = 1, Message = "发货成功!", Result = null };
+                }
+                else
+                {
+                    return new ResultObject() { Flag = 0, Message = "发货失败，请重试!", Result = null };
+                }
+            }
+            else
+            {
+                return new ResultObject() { Flag = 0, Message = "发货失败!", Result = null };
+            }
+        }
+
+
+
+
+
+
         /// <summary>
         /// 获取订单信息(核销)
         /// </summary>
