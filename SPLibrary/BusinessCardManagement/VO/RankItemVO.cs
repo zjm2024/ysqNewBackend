@@ -25,7 +25,7 @@ namespace SPLibrary.BusinessCardManagement.VO
         [DataMember]
         public String brand_name { get { return (String)GetValue(typeof(String), "brand_name"); } set { SetValue("brand_name", value); } }
         [DataMember]
-        public decimal annual_output { get { return (decimal)GetValue(typeof(decimal), "annual_output"); } set { SetValue("annual_output", value); } }
+        public String annual_output { get { return (String)GetValue(typeof(String), "annual_output"); } set { SetValue("annual_output", value); } }
         [DataMember]
         public String custom_field1 { get { return (String)GetValue(typeof(String), "custom_field1"); } set { SetValue("custom_field1", value); } }
         [DataMember]
