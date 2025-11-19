@@ -1711,6 +1711,7 @@
     <Compile Include="BusinessCardManagement\VO\ActivitySignTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityVO.cs" />
+    <Compile Include="BusinessCardManagement\VO\RankItemListVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RankItemVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RankVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RecordingRecordsVO.cs" />
