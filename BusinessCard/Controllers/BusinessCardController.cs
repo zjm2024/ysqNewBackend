@@ -13445,7 +13445,7 @@ namespace BusinessCard.Controllers
         /// <param name="PartyID">活动ID</param>
         /// <returns></returns>
         [Route("GetPartySite"), HttpGet, Anonymous]
-        public ResultObject GetPartySite(int PartyID, int AppType = 0, int InviterCID = 0)
+        public ResultObject GetPartySite(int PartyID, int AppType = 0, int InviterCID = 0,int CustomerId=0)
         {
             BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
 
@@ -13476,7 +13476,7 @@ namespace BusinessCard.Controllers
 
                 BCPartyModel partyModelVO = new BCPartyModel();
                 partyModelVO.BCParty = cVO;
-                partyModelVO.BCPartySignUp = cBO.FindSignUpByCondtion("PartyID=" + PartyID + " GROUP BY CustomerId ORDER BY CreatedAt desc LIMIT 30"); ;
+                partyModelVO.BCPartySignUp = cBO.FindSignUpByCondtion("PartyID=" + PartyID + " ORDER BY CASE WHEN CustomerId = "+ CustomerId + " THEN 0 ELSE 0 END,CreatedAt desc LIMIT 50"); ;
 
 
                 if (cVO.RecordSignUpCount <= 1)
