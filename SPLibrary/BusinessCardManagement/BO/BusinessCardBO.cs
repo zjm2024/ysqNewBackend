@@ -4511,6 +4511,26 @@ namespace SPLibrary.BusinessCardManagement.BO
             return rDAO.FindById(OrderID);
         }
 
+
+
+        /// <summary>
+        /// 获取产品订单
+        /// </summary>
+        /// <param name="OrderNo"></param>
+        /// <returns></returns>
+        public OrderViewVO FindOrderViewByOrderNo(string OrderNo)
+        {
+            IOrderViewDAO rDAO = BusinessCardManagementDAOFactory.OrderViewDAO(this.CurrentCustomerProfile);
+            List<OrderViewVO> voList = rDAO.FindByParams("OrderNo = @OrderNo", new object[] { DbHelper.CreateParameter("@OrderNo", OrderNo) });
+            if (voList.Count > 0)
+                return voList[0];
+            else
+                return null;
+
+        }
+
+
+
         /// <summary>
         /// 获取商家收入
         /// </summary>

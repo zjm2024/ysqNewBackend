@@ -7260,7 +7260,7 @@ namespace BusinessCard.Controllers
         /// <summary>
         /// 获取订单信息(根据OrderID)
         /// </summary>
-        /// <param name="SortID"></param>
+        /// <param name="OrderID"></param>
         /// <returns></returns>
         [Route("GetOrderById"), HttpGet , Anonymous]
         public ResultObject GetOrderById(int OrderID)
@@ -7285,6 +7285,37 @@ namespace BusinessCard.Controllers
             }
 
         }
+
+        /// <summary>
+        /// 获取订单信息(根据OrderNo)
+        /// </summary>
+        /// <param name="OrderNo"></param>
+        /// <returns></returns>
+        [Route("GetOrderByOrderNo"), HttpGet, Anonymous]
+        public ResultObject GetOrderByOrderNo(string OrderNo)
+        {
+            try
+            {
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+
+                OrderViewVO OrderVO = cBO.FindOrderViewByOrderNo(OrderNo);
+
+                if (OrderVO != null)
+                {
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = OrderVO };
+                }
+                else
+                {
+                    return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResultObject() { Flag = -1, Message = "获取失败!", Result = ex };
+            }
+
+        }
+
 
         /// <summary>
         /// 获取订单信息(核销)
