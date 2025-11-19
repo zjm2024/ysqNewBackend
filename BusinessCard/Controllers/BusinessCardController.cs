@@ -17158,6 +17158,18 @@ namespace BusinessCard.Controllers
                 return new ResultObject() { Flag = 0, Message = ex.Message, Result = null };
             }
         }
+
+        /// <summary>
+        /// 获取企业列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("GetBusinessCardList"), HttpGet, Anonymous]
+        public ResultObject GetBusinessCardList(int status,string businessName)
+        {
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+            List<BusinessCardVO> qVO = cBO.FindBusinessCardList(status,businessName);
+            return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, };
+        }
         #endregion
 
         /// <summary>

@@ -9477,10 +9477,10 @@ namespace SPLibrary.BusinessCardManagement.BO
         public List<BCPartySignUpViewVO> FindSignUpViewByPartyID(int PartyID, bool isDisplayRefund = false)
         {
             IBCPartySignUpViewDAO uDAO = BusinessCardManagementDAOFactory.BCPartySignUpViewDAO(this.CurrentCustomerProfile);
-            string sql = "PartyID = " + PartyID + " and PartySignUpID > 0 and SignUpStatus<>2 and AppType=" + Type ;
+            string sql = "PartyID = " + PartyID + " and PartySignUpID > 0 and SignUpStatus<>2 and AppType=" + Type;
             if (isDisplayRefund)
             {
-                sql = "PartyID = " + PartyID + " and PartySignUpID > 0  and AppType=" + Type ;
+                sql = "PartyID = " + PartyID + " and PartySignUpID > 0  and AppType=" + Type;
             }
 
             return uDAO.FindByParams(sql);
@@ -9507,7 +9507,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 return null;
             }
         }
-     
+
 
         /// <summary>
         /// 获取活动的所有费用信息列表
@@ -12372,6 +12372,22 @@ namespace SPLibrary.BusinessCardManagement.BO
         {
             IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
             return rDAO.FindTotalCount(condition, parameters);
+        }
+
+        /// <summary>
+        /// 获取企业列表
+        /// </summary>
+        /// <param name="HeadquartersID"></param>
+        /// <returns></returns>
+        public List<BusinessCardVO> FindBusinessCardList(int status, string businessName)
+        {
+            IBusinessCardDAO rDAO = BusinessCardManagementDAOFactory.BusinessCardDAO(this.CurrentCustomerProfile);
+            if (businessName != null)
+            {
+                List<BusinessCardVO> cVO = rDAO.FindByParams("Status = " + status + " And BusinessName LIKE '%" + businessName + "%' " + " order by createdAt desc");
+                return cVO;
+            }
+            return rDAO.FindByParams("Status = " + status + " order by createdAt desc");
         }
         #endregion
 
