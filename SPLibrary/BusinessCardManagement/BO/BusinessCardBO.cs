@@ -47,6 +47,8 @@ namespace SPLibrary.BusinessCardManagement.BO
         {
             this.CurrentCustomerProfile = customerProfile;
             AppVO AppVO = AppBO.GetApp(apptype);
+            appid = AppVO.AppId;
+            secret = AppVO.Secret;
             Type = AppVO.AppType;
             AppType = AppVO.AppType;
         }
@@ -8960,6 +8962,17 @@ namespace SPLibrary.BusinessCardManagement.BO
                 _log.Error(strErrorMsg);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 获取会员在该活动的报名列表
+        /// </summary>
+        /// <param name="PartyID"></param>
+        /// <returns></returns>
+        public List<BCPartySignUpVO> FindSignUpByPartyID(int PartyID, int CustomerId)
+        {
+            IBCPartySignUpDAO uDAO = BusinessCardManagementDAOFactory.BCPartySignUpDAO(this.CurrentCustomerProfile);
+            return uDAO.FindByParams("PartyID = " + PartyID + " and CustomerId = " + CustomerId + "  and SignUpStatus<>2 and AppType=" + AppType);
         }
 
         /// <summary>

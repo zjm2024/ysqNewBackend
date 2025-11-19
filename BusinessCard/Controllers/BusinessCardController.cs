@@ -14095,6 +14095,82 @@ namespace BusinessCard.Controllers
         }
 
         /// <summary>
+        /// 用户本人核销入场券
+        /// </summary>
+        /// <param name="PartyID"></param>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("VerificationSignUpByUser"), HttpGet]
+        public ResultObject VerificationSignUpByUser(int PartyID, string token)
+        {
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+            CustomerProfile cProfile = uProfile as CustomerProfile;
+            int customerId = cProfile.CustomerId;
+
+            CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
+            CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+
+            List<BCPartySignUpVO> cuVO = cBO.FindSignUpByPartyID(PartyID, customerId);
+
+            if (cuVO.Count <= 0)
+                return new ResultObject() { Flag = 0, Message = "您并未报名本活动!", Result = null };
+
+            BCPartySignUpViewVO cVO = cBO.FindSignUpViewById(cuVO[0].PartySignUpID);
+
+            if (cVO.SignUpStatus == 1)
+                return new ResultObject() { Flag = 0, Message = "已经签到过了，请勿重复操作!", Result = null };
+            if (cVO.SignUpStatus == 2)
+                return new ResultObject() { Flag = 0, Message = "该入场券已退款，无法核销!", Result = null };
+
+            for (int i = 0; i < cuVO.Count; i++)
+            {
+                BCPartySignUpVO csVO = new BCPartySignUpVO();
+                csVO.PartySignUpID = cuVO[i].PartySignUpID;
+                csVO.SignUpStatus = 1;
+                cBO.UpdateSignUp(csVO);
+            }
+
+            try
+            {
+                ////将报名的名片加入活动的名片组
+                //BCPartyVO cpVO = cBO.FindPartyById(cVO.PartyID);
+                //if (cpVO != null && cpVO.GroupID != 0)
+                //{
+                //    List<BCGroupCardViewVO> cgVO = cBO.isJionCardGroup(cVO.CustomerId, cpVO.GroupID);
+                //    if (cgVO.Count <= 0)
+                //    {
+                //        CardGroupCardVO cgcVO = new CardGroupCardVO();
+                //        cgcVO.CustomerId = cVO.CustomerId;
+                //        cgcVO.GroupID = cVO.GroupID;
+
+                //        CardGroupVO gVO = cBO.FindCardGroupById(cpVO.GroupID);
+                //        cgcVO.Status = 1;
+
+                //        cgcVO.CreatedAt = DateTime.Now;
+                //        cgcVO.CardID = cVO.CardID;
+                //        cBO.AddCardToGroup(cgcVO);
+                //    }
+                //    else if (cgVO[0].Status == 0)
+                //    {
+                //        CardGroupCardVO cgcVO = new CardGroupCardVO();
+                //        cgcVO.GroupCardID = cgVO[0].GroupCardID;
+
+                //        CardGroupVO gVO = cBO.FindCardGroupById(cpVO.GroupID);
+                //        cgcVO.Status = 1;
+
+                //        cBO.UpdateCardToGroup(cgcVO);
+                //    }
+                //}
+            }
+            catch
+            {
+                return new ResultObject() { Flag = 0, Message = "签到失败，请重试!", Result = null };
+            }
+            return new ResultObject() { Flag = 1, Message = "签到成功!", Result = null };
+        }
+
+        /// <summary>
         /// 核销入场券
         /// </summary>
         /// <param name="PartySignUpID"></param>
