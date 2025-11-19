@@ -60,6 +60,8 @@ namespace SPLibrary.BusinessCardManagement.DAO
 
         List<RankItemVO> FindAllByPageIndex(string conditionStr, string sortcolname, string asc, int limit, params object[] parameters);
 
+        List<RankItemListVO> FindAllByPageIndexJoin(string conditionStr, string sortcolname, string asc, int pageIndex, int pageSize, params object[] parameters);
+
         int FindTotalCount(string condition, params object[] parameters);
     }
 }

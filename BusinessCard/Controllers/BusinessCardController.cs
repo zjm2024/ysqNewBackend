@@ -17042,6 +17042,122 @@ namespace BusinessCard.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 获取榜单详情
+        /// </summary>
+        /// <returns></returns>
+        [Route("QueryRankDeatail"), HttpGet, Anonymous]
+        public ResultObject QueryRankDeatail(int rank_lists_id)
+        {
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+            RankVO sVO = cBO.FindRankById(rank_lists_id);
+
+            if (sVO != null)
+            {
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = sVO };
+            }
+            else
+            {
+                return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
+            }
+        }
+
+
+        /// <summary>
+        /// 添加或更新榜单
+        /// </summary>
+        /// <param name="rankVO"></param>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("UpdateRankItem"), HttpPost]
+        public ResultObject UpdateRankItem([FromBody] RankItemVO rankItemVO, string token)
+        {
+            if (rankItemVO == null)
+            {
+                return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+            }
+
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+            CustomerProfile cProfile = uProfile as CustomerProfile;
+            int customerId = cProfile.CustomerId;
+
+            CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
+            CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+            PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
+            /*审核文本是否合法*/
+            if (!cBO.msg_sec_check(rankItemVO))
+            {
+                return new ResultObject() { Flag = 0, Message = "有政治敏感或违法关键词，请重新填写!", Result = null };
+            }
+            /*审核文本是否合法*/
+
+            if (rankItemVO.rank_items_id > 0)
+            {
+                if (cBO.UpdateRankItem(rankItemVO))
+                {
+                    return new ResultObject() { Flag = 1, Message = "更新成功!", Result = rankItemVO.rank_items_id };
+                }
+                else
+                    return new ResultObject() { Flag = 0, Message = "更新失败!", Result = null };
+            }
+            else
+            {
+                rankItemVO.created_at = DateTime.Now;
+                int rank_items_id = cBO.AddRankItem(rankItemVO);
+                if (rank_items_id > 0)
+                {
+                    return new ResultObject() { Flag = 1, Message = "添加成功!", Result = rank_items_id };
+                }
+                else
+                    return new ResultObject() { Flag = 0, Message = "添加失败!", Result = null };
+            }
+        }
+
+        /// <summary>
+        /// 获取榜单列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("QueryRankItemList"), HttpPost]
+        public ResultObject QueryRankItemList([FromBody] ConditionModel condition, string token)
+        {
+            try
+            {
+                if (condition == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+                else if (condition.Filter == null || condition.PageInfo == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+
+                UserProfile uProfile = CacheManager.GetUserProfile(token);
+                CustomerProfile cProfile = uProfile as CustomerProfile;
+                int customerId = cProfile.CustomerId;
+
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+                PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
+
+                string conditionStr = " tl.status=1";
+
+                Paging pageInfo = condition.PageInfo;
+
+                List<RankItemListVO> list = new List<RankItemListVO>();
+                int count = 0;
+
+                list = cBO.FindRankItemAllByPageIndex(conditionStr, pageInfo.SortName, pageInfo.SortType, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount);
+                count = cBO.FindRankItemCount(conditionStr);
+
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultObject() { Flag = 0, Message = ex.Message, Result = null };
+            }
+        }
         #endregion
 
         /// <summary>

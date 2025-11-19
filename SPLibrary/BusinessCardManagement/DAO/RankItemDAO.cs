@@ -163,5 +163,22 @@ namespace SPLibrary.BusinessCardManagement.DAO
 
             return DbHelper.ExecuteVO<RankItemVO>(strSQL, parameters);
         }
+
+        public List<RankItemListVO> FindAllByPageIndexJoin(string conditionStr, string sortcolname, string asc, int pageIndex, int pageSize, params object[] parameters)
+        {
+            string strSQL = "";
+
+            // 表连接查询：关联 t_rank_items 和 t_rank_lists
+            strSQL += " SELECT * FROM" // 可按需选择需要的字段（ti是t_rank_items别名，tl是t_rank_lists别名）
+                     + " t_rank_items ti "
+                     + " INNER JOIN t_rank_lists tl ON ti.rank_list_id = tl.rank_list_id \n";
+            strSQL += " WHERE \n";
+            strSQL += conditionStr; // 传入的条件（如 ti.status=1 AND tl.status=1 等）
+            strSQL += " ORDER BY " + sortcolname + " " + asc + " \n";
+            // 分页：limit 偏移量, 每页条数（偏移量 = (页码-1)*每页条数）
+            strSQL += " LIMIT " + ((pageIndex - 1) * pageSize) + ", " + pageSize;
+
+            return DbHelper.ExecuteVO<RankItemListVO>(strSQL, parameters);
+        }
     }
 }

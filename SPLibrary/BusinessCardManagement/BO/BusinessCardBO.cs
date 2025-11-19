@@ -38,8 +38,8 @@ namespace SPLibrary.BusinessCardManagement.BO
 {
     public class BusinessCardBO
     {
-        static public string appid = "wxc9245bafef27dddf";
-        static public string secret = "76fe22240a699f0cceb12c3118b49cab";
+        static public string appid = "wx79943c188a5368a9";
+        static public string secret = "ff88779918706db7fd2deebfc8161058";
         public int Type = 30;
         public int AppType = 30;
         private CustomerProfile CurrentCustomerProfile = new CustomerProfile();
@@ -12279,6 +12279,98 @@ namespace SPLibrary.BusinessCardManagement.BO
         public int FindRankCount(string condition, params object[] parameters)
         {
             IRankDAO rDAO = BusinessCardManagementDAOFactory.RankDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount(condition, parameters);
+        }
+
+        /// <summary>
+        /// 获取榜单详情
+        /// </summary>
+        /// <param name="rank_lists_id"></param>
+        /// <returns></returns>
+        public RankVO FindRankById(int rank_lists_id)
+        {
+            IRankDAO rDAO = BusinessCardManagementDAOFactory.RankDAO(this.CurrentCustomerProfile);
+            return rDAO.FindById(rank_lists_id);
+        }
+
+
+
+        /// <summary>
+        /// 添加榜单项
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public int AddRankItem(RankItemVO vo)
+        {
+            try
+            {
+                IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
+
+                CommonTranscation t = new CommonTranscation();
+                t.TranscationContextWithReturn += delegate ()
+                {
+                    int AccessRecordsID = rDAO.Insert(vo);
+                    return AccessRecordsID;
+                };
+                int result = t.Go();
+                return Convert.ToInt32(t.TranscationReturnValue);
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 更新榜单项
+        /// </summary>
+        /// <param name="vo"></param>
+        /// <returns></returns>
+        public bool UpdateRankItem(RankItemVO vo)
+        {
+            IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.UpdateById(vo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogBO _log = new LogBO(typeof(CardBO));
+                string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
+                _log.Error(strErrorMsg);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取榜单分页列表
+        /// </summary>
+        /// <param name="conditionStr"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="sortcolname"></param>
+        /// <param name="asc"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public List<RankItemListVO> FindRankItemAllByPageIndex(string conditionStr, string sortcolname, string asc, int pageIndex, int pageSize, params object[] parameters)
+        {
+            IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
+            List<RankItemListVO> cVO = rDAO.FindAllByPageIndexJoin(conditionStr, sortcolname, asc, pageIndex, pageSize, parameters);
+
+            return cVO;
+        }
+
+        /// <summary>
+        /// 获取榜单的数量
+        /// </summary>
+        /// <returns></returns>
+        public int FindRankItemCount(string condition, params object[] parameters)
+        {
+            IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
             return rDAO.FindTotalCount(condition, parameters);
         }
         #endregion
