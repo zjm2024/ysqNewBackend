@@ -8976,6 +8976,19 @@ namespace SPLibrary.BusinessCardManagement.BO
         }
 
         /// <summary>
+        /// 判断是否已报名活动
+        /// </summary>
+        /// <param name="CustomerId"></param>
+        /// <param name="GroupID"></param>
+        /// <returns></returns> m  
+        public List<BCPartySignUpVO> isJionBCParty(int CustomerId, int PartyID)
+        {
+            IBCPartySignUpDAO uDAO = BusinessCardManagementDAOFactory.BCPartySignUpDAO(this.CurrentCustomerProfile);
+            List<BCPartySignUpVO> cVO = uDAO.FindByParams("CustomerId = " + CustomerId + " and PartyID=" + PartyID + " and SignUpStatus<>2");
+            return cVO;
+        }
+
+        /// <summary>
         /// 更新活动联系人
         /// </summary>
         /// <param name="vo">活动VO</param>

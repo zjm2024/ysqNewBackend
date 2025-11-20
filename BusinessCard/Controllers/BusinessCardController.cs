@@ -15373,6 +15373,37 @@ namespace BusinessCard.Controllers
                 return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
             }
         }
+
+
+        /// <summary>
+        /// 判断是否已经报名
+        /// </summary>
+        /// <param name="PartyID"></param>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("isJoinBCParty"), HttpGet]
+        public ResultObject isJoinBCParty(int PartyID, string token)
+        {
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+            CustomerProfile cProfile = uProfile as CustomerProfile;
+            int customerId = cProfile.CustomerId;
+
+            CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
+            CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
+            BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
+
+            List<BCPartySignUpVO> cVO = cBO.isJionBCParty(customerId, PartyID);
+            if (cVO.Count > 0)
+            {
+                return new ResultObject() { Flag = 1, Message = "您已经报名了该活动!", Result = cVO[0].PartySignUpID, Subsidiary = cVO };
+            }
+            else
+            {
+                return new ResultObject() { Flag = 0, Message = "您还未报名!", Result = null };
+            }
+
+
+        }
         #endregion
 
         #region 名片列表
