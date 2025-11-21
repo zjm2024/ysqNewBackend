@@ -7262,7 +7262,7 @@ namespace BusinessCard.Controllers
         /// </summary>
         /// <param name="OrderID"></param>
         /// <returns></returns>
-        [Route("GetOrderById"), HttpGet , Anonymous]
+        [Route("GetOrderById"), HttpGet, Anonymous]
         public ResultObject GetOrderById(int OrderID)
         {
             try
@@ -13445,7 +13445,7 @@ namespace BusinessCard.Controllers
         /// <param name="PartyID">活动ID</param>
         /// <returns></returns>
         [Route("GetPartySite"), HttpGet, Anonymous]
-        public ResultObject GetPartySite(int PartyID, int AppType = 0, int InviterCID = 0,int CustomerId=0)
+        public ResultObject GetPartySite(int PartyID, int AppType = 0, int InviterCID = 0, int CustomerId = 0)
         {
             BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
 
@@ -13476,7 +13476,7 @@ namespace BusinessCard.Controllers
 
                 BCPartyModel partyModelVO = new BCPartyModel();
                 partyModelVO.BCParty = cVO;
-                partyModelVO.BCPartySignUp = cBO.FindSignUpByCondtion("PartyID=" + PartyID + " ORDER BY CASE WHEN CustomerId = "+ CustomerId + " THEN 0 ELSE 0 END,CreatedAt desc LIMIT 50"); ;
+                partyModelVO.BCPartySignUp = cBO.FindSignUpByCondtion("PartyID=" + PartyID + " ORDER BY CASE WHEN CustomerId = " + CustomerId + " THEN 0 ELSE 0 END,CreatedAt desc LIMIT 50"); ;
 
 
                 if (cVO.RecordSignUpCount <= 1)
@@ -13752,13 +13752,13 @@ namespace BusinessCard.Controllers
             //List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewByPartyID(PartyID, false);
             string sql = "PartyID = " + PartyID + " and PartySignUpID > 0 and SignUpStatus<>2 and AppType=" + CustomerVO2.AppType;
             if (PageIndex == 0) PageIndex = 1;
-            List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (PageIndex - 1) * PageCount, (PageIndex+1) * PageCount, "CreatedAt", "DESC");
+            List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (PageIndex - 1) * PageCount, (PageIndex + 1) * PageCount, "CreatedAt", "DESC");
             int count = cBO.FindBCPartSignInNumTotalCount(sql);
             if (cVO != null)
             {
                 if (cVO.Count > 0)
                 {
-                   
+
                     int numberOfPeople = cBO.FindBCPartSignInSumCount("Number", "PartyID=" + PartyID + " and (SignUpStatus=1 or SignUpStatus=0)"); //总人数
                     decimal Earning = 0; //总金额
                     List<CostItem> CostList = new List<CostItem>();
@@ -15576,7 +15576,7 @@ namespace BusinessCard.Controllers
 
                 CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
                 CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(),CustomerVO2.AppType);
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
                 string conditionStr = " CustomerID=" + customerId;
                 int count = 0;
                 Paging pageInfo = condition.PageInfo;
@@ -17156,9 +17156,14 @@ namespace BusinessCard.Controllers
 
             if (rankVO.rank_list_id > 0)
             {
-                if (cBO.UpdateRank(rankVO))
+                // 编辑场景：先处理发布状态的特殊逻辑
+                if (rankVO.status == 1)
                 {
-                    return new ResultObject() { Flag = 1, Message = "更新成功!", Result = rankVO.rank_list_id };
+                    rankVO.publish_time = DateTime.Now; // 发布时更新发布时间
+                } 
+                if (cBO.UpdateRank(rankVO))//正常更新
+                {
+                    return new ResultObject() { Flag = 1, Message = "更新成功!", Result = rankVO };
                 }
                 else
                     return new ResultObject() { Flag = 0, Message = "更新失败!", Result = null };
@@ -17168,7 +17173,6 @@ namespace BusinessCard.Controllers
                 rankVO.created_at = DateTime.Now;
                 rankVO.personal_id = pVO.PersonalID;
                 rankVO.publisher = pVO.Name;
-                rankVO.publish_time = DateTime.Now;
                 int rank_list_id = cBO.AddRank(rankVO);
                 if (rank_list_id > 0)
                 {
@@ -17204,7 +17208,7 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
 
-                string conditionStr = " Status=1";
+                string conditionStr = " Status<>2";
 
                 Paging pageInfo = condition.PageInfo;
 
@@ -17246,7 +17250,7 @@ namespace BusinessCard.Controllers
 
 
         /// <summary>
-        /// 添加或更新榜单
+        /// 添加或更新榜单项
         /// </summary>
         /// <param name="rankVO"></param>
         /// <param name="token">口令</param>
@@ -17297,7 +17301,7 @@ namespace BusinessCard.Controllers
         }
 
         /// <summary>
-        /// 获取榜单列表
+        /// 获取榜单项列表
         /// </summary>
         /// <returns></returns>
         [Route("QueryRankItemList"), HttpPost]
@@ -17321,7 +17325,7 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
 
-                string conditionStr = " tl.status=1";
+                string conditionStr = " tl.status<>2 and tl.rank_list_id= "+ condition.Filter.rules[0].data;
 
                 Paging pageInfo = condition.PageInfo;
 
@@ -17345,10 +17349,10 @@ namespace BusinessCard.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("GetBusinessCardList"), HttpGet, Anonymous]
-        public ResultObject GetBusinessCardList(int status,string businessName)
+        public ResultObject GetBusinessCardList(int status, string businessName)
         {
             BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
-            List<BusinessCardVO> qVO = cBO.FindBusinessCardList(status,businessName);
+            List<BusinessCardVO> qVO = cBO.FindBusinessCardList(status, businessName);
             return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, };
         }
         #endregion
