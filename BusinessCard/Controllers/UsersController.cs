@@ -113,7 +113,7 @@ namespace BusinessCard.Controllers
 
             string dataStr = JsonConvert.SerializeObject(queryParams);
 
-            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText = "", SortName = "CreatedAt", SortType = "asc" } };
+            var paramsObj = new { PageInfo = new { PageIndex = 0, PageCount = 0, SearchText = "", PhoneSearchText="", SortName = "CreatedAt", SortType = "asc" } };
 
             dynamic condition = JsonConvert.DeserializeAnonymousType(dataStr, paramsObj);
 
@@ -129,10 +129,24 @@ namespace BusinessCard.Controllers
 
 
                 string conditionStr2 = "1=1 and AppType=30";
-                if (pageInfo.SearchText != "")
-                    conditionStr2 += " and ((Name like '%" + pageInfo.SearchText + "%') or (Phone like '%" + pageInfo.SearchText + "%') )";
 
-                List<PersonalVO> list = pAO.FindAllByPageIndex(conditionStr2, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
+
+                if (pageInfo.SearchText != "")
+                    conditionStr2 += " and ((Name like '%" + pageInfo.SearchText + "%') or ( IFNULL(Phone, '') like '%" + pageInfo.SearchText + "%') )";
+
+                if (pageInfo.PhoneSearchText != "all")
+                {
+                    if (pageInfo.PhoneSearchText == "1")
+                        conditionStr2 += " and IFNULL(Phone, '')  <> ''";
+                    else
+                    if (pageInfo.PhoneSearchText == "0")
+                        conditionStr2 += " and IFNULL(Phone, '')  = ''";
+                    else
+                        conditionStr2 += " and IFNULL(Phone, '')  = '"+ pageInfo.PhoneSearchText + "'";
+                }
+                  
+
+                    List<PersonalVO> list = pAO.FindAllByPageIndex(conditionStr2, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
 
 
 
