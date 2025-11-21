@@ -13121,6 +13121,40 @@ namespace BusinessCard.Controllers
         }
 
         /// <summary>
+        /// 获取我发布的活动列表
+        /// </summary>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("FindPartyAndByCustomerId"), HttpPost]
+        public ResultObject FindPartyAndByCustomerId([FromBody] ConditionModel condition, string token)
+        {
+         
+            if (condition == null)
+            {
+                return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+            }
+            else if (condition.Filter == null || condition.PageInfo == null)
+            {
+                return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+            }
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+            CustomerProfile cProfile = uProfile as CustomerProfile;
+            int customerId = cProfile.CustomerId;
+
+            BusinessCardBO bcBO = new BusinessCardBO(new CustomerProfile());
+            PersonalVO pVO = bcBO.FindPersonalByCustomerId(customerId);
+            Paging pageInfo = condition.PageInfo;
+            if (pVO != null) {
+                string conditionStr = " CustomerId=" + pVO.CustomerId + " AND AppType=" + pVO.AppType + " and Status<>0";
+                List<BCPartyViewVO> list = bcBO.FindPartyViewByPageIndex(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
+                int count = bcBO.FindPartyViewCount(conditionStr);
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list };
+            }
+
+            return new ResultObject() { Flag = 1, Message = "未查到数据!", Result = null };
+        }
+
+        /// <summary>
         /// 获取首页活动列表
         /// </summary>
         /// <param name="token">口令</param>

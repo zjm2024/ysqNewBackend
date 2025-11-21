@@ -346,6 +346,10 @@ namespace SPLibrary.BusinessCardManagement.DAO
         {
             return new RankItemDAO(userProfile);
         }
-
+        public static IBCPartyViewDAO BCPartyViewDAO(UserProfile userProfile)
+        {
+            return new BCPartyViewDAO(userProfile);
+        }
+        
     }
 }

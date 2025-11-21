@@ -1559,6 +1559,8 @@
     <Compile Include="BusinessCardManagement\DAO\ActivityDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\ActivitySignTicketDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\ActivityTicketDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\BCPartyViewDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\IBCPartyViewDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\IRankDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\IRankItemDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\IRecordingRecordsDAO.cs" />
@@ -1711,6 +1713,7 @@
     <Compile Include="BusinessCardManagement\VO\ActivitySignTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityVO.cs" />
+    <Compile Include="BusinessCardManagement\VO\BCPartyViewVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RankItemListVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RankItemVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RankVO.cs" />

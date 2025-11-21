@@ -8921,6 +8921,30 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
+ 
+
+        /// <summary>
+        ///  获取我发布的活动列表（分页）
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public List<BCPartyViewVO> FindPartyViewByPageIndex(string condtion, int start, int end, string sortcolname, string asc, params object[] parameters)
+        {
+            IBCPartyViewDAO pDAO = BusinessCardManagementDAOFactory.BCPartyViewDAO(this.CurrentCustomerProfile);
+            return pDAO.FindAllByPageIndex(condtion, start, end, sortcolname, asc, parameters);
+        }
+
+        /// <summary>
+        ///  获取我发布的活动总数
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public int FindPartyViewCount(string condtion)
+        {
+            IBCPartyViewDAO pDAO = BusinessCardManagementDAOFactory.BCPartyViewDAO(this.CurrentCustomerProfile);
+            return pDAO.FindTotalCount(condtion);
+        }
+
         /// <summary>
         /// 获取首页全部的活动
         /// </summary>
@@ -9904,8 +9928,8 @@ namespace SPLibrary.BusinessCardManagement.BO
                 result.Result = true;
             }
             string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
-            //string page = "package/package_party/Party/SignUpShow/SignUpShow";
-            string page = "pages/index/index";
+            string page = "package/package_party/Party/SignUpShow/SignUpShow";
+            //string page = "pages/index/index";
             var data = new
             {
                 scene = PartySignUpID.ToString(),
@@ -10019,7 +10043,7 @@ namespace SPLibrary.BusinessCardManagement.BO
             //{
             //    page = "package/package_party/PartyShow/PartyShow";
             //}
-            string page = "pages/index/index";
+            string page = "package/package_party/Party/PartyShow/PartyShow";
 
             //BCPartyVO pVO = FindPartyById(PartyID);
             //if ((pVO.Type == 3 || pVO.isBlindBox == 1) && Type == 4)
@@ -10096,7 +10120,7 @@ namespace SPLibrary.BusinessCardManagement.BO
             //{
             //    page = "package/package_party/SignUpShowByUesr/SignUpShowByUesr";
             //}
-            string page = "pages/index/index";
+            string page = "package/package_party/Party/SignUpShowByUesr/SignUpShowByUesr";
             DataJson = "{";
             DataJson += "\"scene\":\"" + PartyID + "\",";
             DataJson += string.Format("\"width\":{0},", 640);
