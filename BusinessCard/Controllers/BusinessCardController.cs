@@ -17160,7 +17160,7 @@ namespace BusinessCard.Controllers
                 if (rankVO.status == 1)
                 {
                     rankVO.publish_time = DateTime.Now; // 发布时更新发布时间
-                } 
+                }
                 if (cBO.UpdateRank(rankVO))//正常更新
                 {
                     return new ResultObject() { Flag = 1, Message = "更新成功!", Result = rankVO };
@@ -17325,15 +17325,15 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
 
-                string conditionStr = " tl.status<>2 and tl.rank_list_id= "+ condition.Filter.rules[0].data;
-
+                string conditionStr = " tl.status<>2 and tl.rank_list_id=" + condition.Filter.rules[0].data;
+                string conditionStrs = " rank_list_id=" + condition.Filter.rules[0].data;
                 Paging pageInfo = condition.PageInfo;
 
                 List<RankItemListVO> list = new List<RankItemListVO>();
                 int count = 0;
 
                 list = cBO.FindRankItemAllByPageIndex(conditionStr, pageInfo.SortName, pageInfo.SortType, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount);
-                count = cBO.FindRankItemCount(conditionStr);
+                count = cBO.FindRankItemCount(conditionStrs);
 
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count };
             }
