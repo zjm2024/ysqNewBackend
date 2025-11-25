@@ -167,6 +167,7 @@ namespace SPLibrary.BusinessCardManagement.DAO
             string strSQL = "";
 
             strSQL += " SELECT * FROM " + this._tableName + " 	 \n";
+            strSQL += " Where status<>3  \n";
             strSQL += " order by sort asc " ;
             strSQL += " limit " + limit;
 

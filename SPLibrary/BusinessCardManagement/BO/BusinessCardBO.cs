@@ -5,6 +5,7 @@ using ImportEXCEL;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NPOI.SS.Formula.Functions;
+using NPOI.SS.Formula.PTG;
 using SPLibrary.BusinessCardManagement.DAO;
 using SPLibrary.BusinessCardManagement.VO;
 using SPLibrary.BussinessManagement.BO;
@@ -8966,6 +8967,7 @@ namespace SPLibrary.BusinessCardManagement.BO
             }
         }
 
+
         /// <summary>
         /// 更新活动
         /// </summary>
@@ -10120,7 +10122,8 @@ namespace SPLibrary.BusinessCardManagement.BO
             //{
             //    page = "package/package_party/SignUpShowByUesr/SignUpShowByUesr";
             //}
-            string page = "package/package_party/Party/SignUpShowByUesr/SignUpShowByUesr";
+            //string page = "package/package_party/Party/SignUpShowByUesr/SignUpShowByUesr";
+            string page = "pages/index/index";
             DataJson = "{";
             DataJson += "\"scene\":\"" + PartyID + "\",";
             DataJson += string.Format("\"width\":{0},", 640);
