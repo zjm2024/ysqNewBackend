@@ -13128,7 +13128,7 @@ namespace BusinessCard.Controllers
         [Route("FindPartyAndByCustomerId"), HttpPost]
         public ResultObject FindPartyAndByCustomerId([FromBody] ConditionModel condition, string token)
         {
-         
+
             if (condition == null)
             {
                 return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
@@ -13144,7 +13144,8 @@ namespace BusinessCard.Controllers
             BusinessCardBO bcBO = new BusinessCardBO(new CustomerProfile());
             PersonalVO pVO = bcBO.FindPersonalByCustomerId(customerId);
             Paging pageInfo = condition.PageInfo;
-            if (pVO != null) {
+            if (pVO != null)
+            {
                 string conditionStr = " CustomerId=" + pVO.CustomerId + " AND AppType=" + pVO.AppType + " and Status<>0";
                 List<BCPartyViewVO> list = bcBO.FindPartyViewByPageIndex(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
                 int count = bcBO.FindPartyViewCount(conditionStr);
@@ -13173,8 +13174,8 @@ namespace BusinessCard.Controllers
                 //IsDisplayIndex=1 AND EndTime > now() AND Status<>0 AND SignUpStatus<>2 AND
                 string condition = " Status=1 AND AppType=" + pVO.AppType;
                 //List<BCPartySignUpViewVO> uVO = bcBO.FindAllPartyAndSignUp(condition, pVO.AppType);
-                
-                 List<BCPartyViewVO> uVO = bcBO.FindPartyViewByPageIndex(condition,0 , 50, "StartTime", "DESC");
+
+                List<BCPartyViewVO> uVO = bcBO.FindPartyViewByPageIndex(condition, 0, 50, "StartTime", "DESC");
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = uVO };
             }
             catch (Exception ex)
@@ -13211,11 +13212,11 @@ namespace BusinessCard.Controllers
                 string conditionStr = " Status=1 AND AppType=" + pVO.AppType + " AND " + condition.Filter.Result();
 
                 //List<BCPartySignUpViewVO> uVO = bcBO.FindAllPartyAndSignUp(condition, pVO.AppType);
-                
+
                 Paging pageInfo = condition.PageInfo;
                 List<BCPartyViewVO> uVO = bcBO.FindPartyViewByPageIndex(conditionStr, (pageInfo.PageIndex) * pageInfo.PageCount, pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
                 int count = bcBO.FindPartyViewCount(conditionStr);
-                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = uVO, Count = count,Subsidiary = conditionStr };
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = uVO, Count = count, Subsidiary = conditionStr };
             }
             catch (Exception ex)
             {
@@ -14874,14 +14875,14 @@ namespace BusinessCard.Controllers
 
                 CustomerBO CustomerBO = new CustomerBO(new CustomerProfile());
                 CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
-           
+
                 Paging pageInfo = condition.PageInfo;
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 CustomerBO uBO = new CustomerBO(new CustomerProfile());
                 //string sql = "CustomerId = " + CustomerVO2.CustomerId + " AND PartySignUpID > 0 AND SignUpStatus<>2 AND isAutoAdd=0 AND  AppType=" + CustomerVO2.AppType;
                 //sql += " AND " + condition.Filter.Result();
                 string sql = condition.Filter.Result();
-                List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (pageInfo.PageIndex - 1) * pageInfo.PageCount,  pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
+                List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (pageInfo.PageIndex - 1) * pageInfo.PageCount, pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
 
                 int count = cBO.FindBCPartSignInNumTotalCount(sql);
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = cVO, Count = count, Subsidiary = sql };
@@ -14893,7 +14894,7 @@ namespace BusinessCard.Controllers
 
         }
 
-   
+
         /// <summary>
         /// 修改活动是否显示首页
         /// </summary>
@@ -17339,7 +17340,7 @@ namespace BusinessCard.Controllers
                 list = cBO.FindRankAllByPageIndex(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
                 count = cBO.FindRankCount(conditionStr);
 
-                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count };
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count, Subsidiary = pVO };
             }
             catch (Exception ex)
             {
