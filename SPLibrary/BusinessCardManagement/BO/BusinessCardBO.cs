@@ -677,7 +677,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         public List<PersonalVO> FindPersonalByPersonalID(int BusinessID, int PersonalID)
         {
             IPersonalDAO rDAO = BusinessCardManagementDAOFactory.PersonalDAO(this.CurrentCustomerProfile);
-            string sql = "BusinessID = " + BusinessID;
+            string sql = "BusinessID = " + BusinessID + " LIMIT 0,100";//为了性能，默认取前100个成员
             List<PersonalVO> cVO = rDAO.FindByParams(sql);
             List<SecondBusinessVO> sVO = FindSecondBusinessByBusinessID(BusinessID);
             for (int i = 0; i < sVO.Count; i++)
@@ -12429,10 +12429,10 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// <param name="asc"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public List<RankItemListVO> FindRankItemAllByPageIndex(string conditionStr, string sortcolname, string asc, int pageIndex, int pageSize, params object[] parameters)
+        public List<RankItemVO> FindRankItemAllByPageIndex(string conditionStr, int start, int end, string sortcolname, string asc, params object[] parameters)
         {
             IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
-            List<RankItemListVO> cVO = rDAO.FindAllByPageIndexJoin(conditionStr, sortcolname, asc, pageIndex, pageSize, parameters);
+            List<RankItemVO> cVO = rDAO.FindAllByPageIndex(conditionStr, start, end, sortcolname, asc, parameters);
 
             return cVO;
         }
@@ -12461,6 +12461,25 @@ namespace SPLibrary.BusinessCardManagement.BO
                 return cVO;
             }
             return rDAO.FindByParams("Status = " + status + " order by createdAt desc");
+        }
+
+        /// <summary>
+        /// 删除贺卡
+        /// </summary>
+        /// <param name="GreetingCardID"></param>
+        /// <returns></returns>
+        public int DeleteRankItemById(int rank_items_id)
+        {
+            IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
+            try
+            {
+                rDAO.DeleteByParams("rank_items_id = " + rank_items_id);
+                return 1;
+            }
+            catch
+            {
+                return -1;
+            }
         }
         #endregion
 

@@ -47,6 +47,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using Tencent;
+using ZstdSharp.Unsafe;
 //using Ubiety.Dns.Core;
 
 namespace BusinessCard.Controllers
@@ -7138,7 +7139,7 @@ namespace BusinessCard.Controllers
 
 
                 string total_fee_1 = Convert.ToInt32((OrderVO.Cost * 100)).ToString();
-                string NOTIFY_URL = "http://api.leliaomp.com/Pay/BusinessCard_Notify_Url.aspx";
+                string NOTIFY_URL = "https://gx.gdsqzx.com.cn:8080/Pay/BusinessCard_Notify_Url.aspx";
 
                 String costName = Regex.Replace(sVO.Title, @"\p{Cs}", "");
 
@@ -7174,7 +7175,7 @@ namespace BusinessCard.Controllers
                 //如果有个人二级商户，就用二级商户结账
                 if (OrderVO.sub_mchid != "")
                 {
-                    NOTIFY_URL = "https://api.leliaomp.com/Pay/Ecommerce_Business_Notify_Url.aspx";
+                    NOTIFY_URL = "https://gx.gdsqzx.com.cn:8080/Pay/Ecommerce_Business_Notify_Url.aspx";
                     string description = costName;
                     bool profit_sharing = false;
                     if (OrderVO.SplitCost > 0) profit_sharing = true;
@@ -14879,13 +14880,12 @@ namespace BusinessCard.Controllers
                 Paging pageInfo = condition.PageInfo;
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 CustomerBO uBO = new CustomerBO(new CustomerProfile());
-                //string sql = "CustomerId = " + CustomerVO2.CustomerId + " AND PartySignUpID > 0 AND SignUpStatus<>2 AND isAutoAdd=0 AND  AppType=" + CustomerVO2.AppType;
-                //sql += " AND " + condition.Filter.Result();
-                string sql = condition.Filter.Result();
+                string sql = "CustomerId = " + CustomerVO2.CustomerId + " AND PartySignUpID > 0 AND SignUpStatus<>2 AND isAutoAdd=0 AND  AppType=" + CustomerVO2.AppType;
+                sql += " AND " + condition.Filter.Result();
                 List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (pageInfo.PageIndex - 1) * pageInfo.PageCount, pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
 
                 int count = cBO.FindBCPartSignInNumTotalCount(sql);
-                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = cVO, Count = count, Subsidiary = sql };
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = cVO, Count = count };
             }
             catch (Exception ex)
             {
@@ -16079,13 +16079,14 @@ namespace BusinessCard.Controllers
             {
                 conditionStr = " status = 2 AND status <> 3 ";//查询结束的问卷 等于2且不等于3
             }
+            conditionStr += " AND " + condition.Filter.Result();
 
             Paging pageInfo = condition.PageInfo;
             List<QuestionnaireDataVO> qVO = cBO.GetQuestionnaireList(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
             var count = cBO.FindQuestionnaireDataCount(conditionStr);
             if (qVO.Count > 0)
             {
-                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Subsidiary = count };
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Subsidiary = count,Subsidiary2=conditionStr };
             }
             return new ResultObject() { Flag = 2, Message = "未查询到数据!", Result = null };
         }
@@ -17393,12 +17394,7 @@ namespace BusinessCard.Controllers
             CustomerVO CustomerVO2 = CustomerBO.FindCustomenById(customerId);
             BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile(), CustomerVO2.AppType);
             PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
-            /*审核文本是否合法*/
-            if (!cBO.msg_sec_check(rankItemVO))
-            {
-                return new ResultObject() { Flag = 0, Message = "有政治敏感或违法关键词，请重新填写!", Result = null };
-            }
-            /*审核文本是否合法*/
+       
 
             if (rankItemVO.rank_items_id > 0)
             {
@@ -17447,15 +17443,13 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
 
-                string conditionStr = " tl.status<>2 and tl.rank_list_id=" + condition.Filter.rules[0].data;
-                string conditionStrs = " rank_list_id=" + condition.Filter.rules[0].data;
+                string conditionStr = condition.Filter.Result();
                 Paging pageInfo = condition.PageInfo;
 
-                List<RankItemListVO> list = new List<RankItemListVO>();
-                int count = 0;
-
-                list = cBO.FindRankItemAllByPageIndex(conditionStr, pageInfo.SortName, pageInfo.SortType, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount);
-                count = cBO.FindRankItemCount(conditionStrs);
+                List<RankItemVO> list = new List<RankItemVO>();
+                
+                list = cBO.FindRankItemAllByPageIndex(conditionStr,(pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
+                int count = cBO.FindRankItemCount(conditionStr);
 
                 return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count };
             }
@@ -17466,6 +17460,52 @@ namespace BusinessCard.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取榜单项列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("QueryRankOrItemList"), HttpPost]
+        public ResultObject QueryRankOrItemList([FromBody] ConditionModel condition, string token,int rank_list_id = 0)
+        {
+            try
+            {
+                if (condition == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+                else if (condition.Filter == null || condition.PageInfo == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+
+                UserProfile uProfile = CacheManager.GetUserProfile(token);
+                CustomerProfile cProfile = uProfile as CustomerProfile;
+                int customerId = cProfile.CustomerId;
+
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+                PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
+
+                string conditionStr = condition.Filter.Result();
+                Paging pageInfo = condition.PageInfo;
+                RankVO rankVO = new RankVO();
+                if (rank_list_id > 0)
+                {
+                    rankVO = cBO.FindRankById(rank_list_id);
+                }
+
+                List<RankItemVO> list = new List<RankItemVO>();
+
+                list = cBO.FindRankItemAllByPageIndex(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
+                int count = cBO.FindRankItemCount(conditionStr);
+
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list, Count = count ,Subsidiary = rankVO };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultObject() { Flag = 0, Message = ex.Message, Result = null };
+            }
+        }
         /// <summary>
         /// 获取企业列表
         /// </summary>
