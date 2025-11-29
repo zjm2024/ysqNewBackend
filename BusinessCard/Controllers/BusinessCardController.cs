@@ -16079,7 +16079,7 @@ namespace BusinessCard.Controllers
             {
                 conditionStr = " status = 2 AND status <> 3 ";//查询结束的问卷 等于2且不等于3
             }
-            conditionStr += " AND " + condition.Filter.Result();
+            conditionStr += " AND " + condition.Filter.Result() + " AND custom_params='yueshenqing'";
 
             Paging pageInfo = condition.PageInfo;
             List<QuestionnaireDataVO> qVO = cBO.GetQuestionnaireList(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
@@ -17331,7 +17331,7 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
 
-                string conditionStr = " Status<>2";
+                string conditionStr = " Status = 2";
 
                 Paging pageInfo = condition.PageInfo;
 
