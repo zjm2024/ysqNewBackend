@@ -4447,13 +4447,25 @@ namespace SPLibrary.BusinessCardManagement.BO
         }
 
         /// <summary>
-        /// 获取订单（数量）
+        /// 获取订单（订单数量）
         /// </summary>
         /// <returns></returns>
         public int FindOrderViewCount(string condition)
         {
             IOrderViewDAO rDAO = BusinessCardManagementDAOFactory.OrderViewDAO(this.CurrentCustomerProfile);
             return rDAO.FindTotalCount(condition);
+        }
+
+
+        /// <summary>
+        /// 获取订单（购买数量）
+        /// </summary>
+        /// <returns></returns>
+        public decimal FindOrderNumberSum(string condition)
+        {
+            IOrderViewDAO rDAO = BusinessCardManagementDAOFactory.OrderViewDAO(this.CurrentCustomerProfile);
+           
+            return rDAO.FindTotalSum("Number", condition);
         }
 
         /// <summary>
@@ -8651,7 +8663,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// 减去库存
         /// </summary>
         /// <returns></returns>
-        public void StoreAmount(int InfoID, int CostID)
+        public void StoreAmount(int InfoID, int CostID,int InfoNum=1)
         {
             InfoVO sVO = FindInfoById(InfoID);
 
@@ -8660,14 +8672,14 @@ namespace SPLibrary.BusinessCardManagement.BO
                 //扣除库存
                 InfoVO InfoVO = new InfoVO();
                 InfoVO.InfoID = sVO.InfoID;
-                InfoVO.StoreAmount = sVO.StoreAmount - 1;
+                InfoVO.StoreAmount = sVO.StoreAmount - InfoNum;
                 if (InfoVO.StoreAmount == 0) InfoVO.StoreAmount = -1;
                 if (CostID > 0)
                 {
                     InfoCostVO InfoCostVO = FindInfoCostById(CostID);
                     if (InfoCostVO.PerPersonLimit > 0)
                     {
-                        InfoCostVO.PerPersonLimit = InfoCostVO.PerPersonLimit - 1;
+                        InfoCostVO.PerPersonLimit = InfoCostVO.PerPersonLimit - InfoNum;
                         if (InfoCostVO.PerPersonLimit == 0) InfoCostVO.PerPersonLimit = -1;
                         UpdateInfoCost(InfoCostVO);
                     }
@@ -8676,7 +8688,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 {
                     if (sVO.PerPersonLimit > 0)
                     {
-                        InfoVO.PerPersonLimit = sVO.PerPersonLimit - 1;
+                        InfoVO.PerPersonLimit = sVO.PerPersonLimit - InfoNum;
                         if (InfoVO.PerPersonLimit == 0) InfoVO.PerPersonLimit = -1;
                     }
                 }
@@ -8689,7 +8701,7 @@ namespace SPLibrary.BusinessCardManagement.BO
                 //扣除库存
                 InfoVO InfoVO = new InfoVO();
                 InfoVO.InfoID = sVO.InfoID;
-                InfoVO.SeckillLimit = sVO.SeckillLimit - 1;
+                InfoVO.SeckillLimit = sVO.SeckillLimit - InfoNum;
                 if (InfoVO.SeckillLimit == 0) InfoVO.SeckillLimit = -1;
                 UpdateInfo(InfoVO);
             }

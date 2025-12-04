@@ -6604,7 +6604,7 @@ namespace BusinessCard.Controllers
         /// <param name="token"></param>
         /// <returns></returns>
         [Route("GetUnifiedOrderResult"), HttpGet]
-        public async Task<ResultObject> GetUnifiedOrderResult(int InfoID, int PersonalID, int isUsed, string FormId, string code, string token, string Phone = "", string Address = "", string Name = "", int CostID = 0, int AppType = 0, int GroupBuyID = 0, int isGroupBuy = 1, string ShareCode = "")
+        public async Task<ResultObject> GetUnifiedOrderResult(int InfoID, int PersonalID, int isUsed, string FormId, string code, string token, string Phone = "", string Address = "", string Name = "", int CostID = 0, int AppType = 0, int GroupBuyID = 0, int isGroupBuy = 1, string ShareCode = "",int InfoNum=1)
         {
             UserProfile uProfile = CacheManager.GetUserProfile(token);
             CustomerProfile cProfile = uProfile as CustomerProfile;
@@ -6722,10 +6722,26 @@ namespace BusinessCard.Controllers
                 }*/
             }
 
+            if (sVO.PerPersonLimit > 0)
+            {
+
+                int sum = 0;
+                var count = cBO.FindOrderNumberSum("CostID=" + CostID + "  and InfoID=" + sVO.InfoID + " and PersonalID=" + pVO.PersonalID + " and Status=1");
+                sum = Convert.ToInt32(count);
+                if (sum >= sVO.PerPersonLimit)
+                {
+                    return new ResultObject() { Flag = 0, Message = "购买失败，本产品规格每人限购" + sVO.PerPersonLimit + "份!", Result = null };
+
+                }
+            }
+            else
             if (sVO.ProductLimit > 0)
             {
                 int sum = 0;
-                sum = cBO.FindOrderByCondition("InfoID=" + sVO.InfoID + " and PersonalID=" + pVO.PersonalID + " and Status=1");
+
+                var count = cBO.FindOrderNumberSum("InfoID=" + sVO.InfoID + " and PersonalID=" + pVO.PersonalID + " and Status=1");
+                sum = Convert.ToInt32(count);
+                //sum = cBO.FindOrderByCondition("InfoID=" + sVO.InfoID + " and PersonalID=" + pVO.PersonalID + " and Status=1");
                 if (sum >= sVO.ProductLimit)
                 {
                     return new ResultObject() { Flag = 0, Message = "购买失败，本产品每人限购" + sVO.ProductLimit + "份!", Result = null };
@@ -6828,6 +6844,7 @@ namespace BusinessCard.Controllers
             oVO.OrderNO = DateTime.Now.ToString("yyyyMMddHHmmssfff") + ran.Next(10000, 99999);
             oVO.AgentPersonalID = PersonalID;
             oVO.InfoID = sVO.InfoID;
+            oVO.Number = InfoNum;
 
             oVO.isUsed = isUsed;
             string body = "购买产品";
@@ -6839,7 +6856,7 @@ namespace BusinessCard.Controllers
                 if (AgentViewVO.Count > 0)
                 {
                     body = "代理保证金购买";
-                    oVO.Cost = cBO.FindAgentlevelCostByPersonalID(pVO.PersonalID, sVO.InfoID, CostID);
+                    oVO.Cost = cBO.FindAgentlevelCostByPersonalID(pVO.PersonalID, sVO.InfoID, CostID)*InfoNum;
 
                     decimal agentB = cBO.FindMyAgentIntegral(sVO.BusinessID, pVO.PersonalID);
 
@@ -6912,7 +6929,7 @@ namespace BusinessCard.Controllers
                         cBO.UpdateOrder(oVO);
 
                         //扣除库存
-                        cBO.StoreAmount(sVO.InfoID, CostID);
+                        cBO.StoreAmount(sVO.InfoID, CostID,InfoNum);
 
                         return new ResultObject() { Flag = 5, Message = "购买成功", Result = null };
                     }
@@ -6923,8 +6940,8 @@ namespace BusinessCard.Controllers
 
                 }
             }
-
-            oVO.Cost = sVO.Cost;
+            //总金额=价格*数量
+            oVO.Cost = sVO.Cost*InfoNum;
 
             //判断是否为二级商户
             int isMerchant = 0;
@@ -7102,7 +7119,7 @@ namespace BusinessCard.Controllers
                     }
 
                     //扣除库存
-                    cBO.StoreAmount(sVO.InfoID, CostID);
+                    cBO.StoreAmount(sVO.InfoID, CostID,InfoNum);
 
                     //发放vip
                     if (oVO.GiveShopVipID > 0)

@@ -46,6 +46,10 @@ namespace SPLibrary.BusinessCardManagement.VO
         public Int32 AgentPersonalID { get { return (Int32)GetValue(typeof(Int32), "AgentPersonalID"); } set { SetValue("AgentPersonalID", value); } }
         [DataMember]
         public Int32 InfoID { get { return (Int32)GetValue(typeof(Int32), "InfoID"); } set { SetValue("InfoID", value); } }
+
+        [DataMember]
+        public Int32 Number { get { return (Int32)GetValue(typeof(Int32), "Number"); } set { SetValue("Number", value); } }
+
         [DataMember]
         public Int32 isUsed { get { return (Int32)GetValue(typeof(Int32), "isUsed"); } set { SetValue("isUsed", value); } }
         [DataMember]
