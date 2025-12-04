@@ -17313,6 +17313,7 @@ namespace BusinessCard.Controllers
                 rankVO.created_at = DateTime.Now;
                 rankVO.personal_id = pVO.PersonalID;
                 rankVO.publisher = pVO.Name;
+                rankVO.status = 2;//默认已发布
                 int rank_list_id = cBO.AddRank(rankVO);
                 if (rank_list_id > 0)
                 {
