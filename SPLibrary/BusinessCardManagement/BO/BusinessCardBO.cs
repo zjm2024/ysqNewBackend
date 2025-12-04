@@ -12450,6 +12450,17 @@ namespace SPLibrary.BusinessCardManagement.BO
         }
 
         /// <summary>
+        /// 获取榜单项详情
+        /// </summary>
+        /// <param name="rank_items_id"></param>
+        /// <returns></returns>
+        public RankItemVO FindRankItemById(int rank_items_id)
+        {
+            IRankItemDAO rDAO = BusinessCardManagementDAOFactory.RankItemDAO(this.CurrentCustomerProfile);
+            return rDAO.FindById(rank_items_id);
+        }
+
+        /// <summary>
         /// 获取榜单的数量
         /// </summary>
         /// <returns></returns>

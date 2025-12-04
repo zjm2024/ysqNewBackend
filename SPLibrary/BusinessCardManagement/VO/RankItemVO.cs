@@ -36,6 +36,8 @@ namespace SPLibrary.BusinessCardManagement.VO
         public Int32 is_bound { get { return (Int32)GetValue(typeof(Int32), "is_bound"); } set { SetValue("is_bound", value); } }
         [DataMember]
         public DateTime created_at { get { return (DateTime)GetValue(typeof(DateTime), "created_at"); } set { SetValue("created_at", value); } }
+        [DataMember]
+        public Int32 status { get { return (Int32)GetValue(typeof(Int32), "status"); } set { SetValue("status", value); } }
 
         #region ICloneable Member
         public override object Clone()
