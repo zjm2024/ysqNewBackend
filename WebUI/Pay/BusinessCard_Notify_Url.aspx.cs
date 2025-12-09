@@ -138,7 +138,7 @@ namespace WebUI.Pay
 
 
                         //扣除库存
-                        cBO.StoreAmount(cVO.InfoID, cVO.CostID);
+                        cBO.StoreAmount(cVO.InfoID, cVO.CostID, cVO.Number);
 
                         if (cVO.AppType == 1)
                             cVO.AppType = 0;
