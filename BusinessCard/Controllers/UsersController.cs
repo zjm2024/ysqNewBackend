@@ -235,6 +235,35 @@ namespace BusinessCard.Controllers
             }
         }
 
+        /// <summary>
+        /// 首页订单列表接口显示最近日期10条的订单
+        /// </summary>
+        /// <param name="token">口令</param>
+        /// <returns></returns>
+        [Route("getTodaydateOrderLists"), HttpPost]
+        public ResultObject GetTodaydateOrderLists(string token)
+        {
+            // 验证用户身份
+            UserProfile uProfile = CacheManager.GetUserProfile(token);
+
+            if (uProfile == null)
+                return new ResultObject() { Flag = -1, Message = "token异常!", Result = null };
+
+            int AppType = 30;
+            try
+            {
+                OrderDAO oAO = new OrderDAO(uProfile);
+                List<OrderVO> list = oAO.FindAllByPageIndex("Status=1 and AppType=" + AppType, "payAt", "desc", 10);
+
+
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = list };
+            }
+            catch (Exception ex)
+            {
+                return new ResultObject() { Flag = -1, Message = "接口异常!", Result = ex };
+            }
+        }
+
 
         public decimal getPercentage(decimal today, decimal Before)
         {
