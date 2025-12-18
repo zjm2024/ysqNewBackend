@@ -2148,7 +2148,9 @@ namespace BusinessCard.Controllers
                 InfoVO.CreatedAt = sVO.CreatedAt;
                 InfoVO.BusinessID = sVO.BusinessID;
                 InfoVO.OfficialProducts = sVO.OfficialProducts;
-                InfoVO.Video = sVO.Video;
+                if (!string.IsNullOrEmpty(sVO.Video)) {
+                    InfoVO.Video = sVO.Video;
+                }
                 InfoVO.Duration = sVO.Duration;
                 if (cBO.UpdateInfo(InfoVO))
                 {
