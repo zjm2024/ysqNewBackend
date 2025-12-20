@@ -2571,6 +2571,40 @@ namespace BusinessCard.Controllers
         }
 
         /// <summary>
+        /// 获取信息列表,匿名
+        /// </summary>
+        /// <param name="condition">查询条件</param>
+        /// <returns></returns>
+        [Route("GetInfoSortList"), HttpPost, Anonymous]
+        public ResultObject GetInfoSortList([FromBody] ConditionModel condition)
+        {
+            try
+            {
+                if (condition == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+                else if (condition.Filter == null || condition.PageInfo == null)
+                {
+                    return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
+                }
+                BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
+
+                string conditionStr = " (" + condition.Filter.Result() + ")";
+
+                List<InfoSortVO> InfoSort = cBO.FindInfoSortList(conditionStr);
+         
+                return new ResultObject() { Flag = 1, Message = "获取成功!", Result = InfoSort, Subsidiary = condition.Filter.Result() };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultObject() { Flag = -1, Message = "获取失败!", Result = ex,  };
+            }
+           
+        }
+
+        /// <summary>
         /// 获取分享页数据，匿名
         /// </summary>
         /// <param name="token">口令</param>
@@ -17351,7 +17385,7 @@ namespace BusinessCard.Controllers
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
 
-                string conditionStr = " Status = 2";
+                string conditionStr = " (" + condition.Filter.Result() + ")";
 
                 Paging pageInfo = condition.PageInfo;
 
