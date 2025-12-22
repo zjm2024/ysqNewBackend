@@ -131,7 +131,7 @@ namespace CoreFramework.DAO
                 InsertFilter filter = new InsertFilter(_tableName, _voType, _pkId);
                 ISQLContainer container = filter.Insert<T>(voList);
                 int recordCount = DbHelper.ExecuteNonQuery(container.CommandText, container.Parameters);
-                if (recordCount < 1)
+                if (recordCount < 0)
                 {
                     throw new Exception();
                 }
@@ -154,7 +154,7 @@ namespace CoreFramework.DAO
                 filter.IsNoUseParameter = true;
                 ISQLContainer container = filter.Insert<T>(voList);
                 int recordCount = DbHelper.ExecuteNonQuery(container.CommandText);
-                if (recordCount < 1)
+                if (recordCount < 0)
                 {
                     throw new Exception();
                 }
@@ -232,7 +232,7 @@ namespace CoreFramework.DAO
             UpdateFilter filter = new UpdateFilter(_tableName, _voType, _pkId);
             ISQLContainer container = filter.Update(vo, condtion, dbParameters);
             int recordCount = DbHelper.ExecuteNonQuery(container.CommandText, container.Parameters);
-            if (recordCount < 1)
+            if (recordCount < 0)
             {
                 throw new Exception();
             }

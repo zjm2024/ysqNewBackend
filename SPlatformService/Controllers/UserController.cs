@@ -85,47 +85,6 @@ namespace SPlatformService.Controllers
 
         }
 
-        /// <summary>
-        /// 身份验证
-        /// </summary>
-        /// <param name="loginName">登录名</param>
-        /// <param name="password">密码</param>
-        /// <returns></returns>
-        [Route("ValidAccount"), HttpGet, Anonymous]
-        public ResultObject GetUsernfo(string loginName, string password)
-        {
-            UserBO uBO = new UserBO(new UserProfile());
-            UserVO uVO = uBO.FindUserByLoginInfo(loginName, password);
-
-            UserLoginHistoryVO ulHistoryVO = new UserLoginHistoryVO();
-            ulHistoryVO.LoginAt = DateTime.Now;
-            ulHistoryVO.Status = true;
-            ulHistoryVO.LoginOS = HttpContext.Current.Request.Browser.Platform;
-            ulHistoryVO.LoginIP = HttpContext.Current.Request.UserHostAddress;
-            ulHistoryVO.LoginBrowser = HttpContext.Current.Request.Browser.Browser;
-
-            if (uVO != null)
-            {
-                UserViewVO uvVO = uBO.FindUserViewById(uVO.UserId);
-                string token = CacheManager.TokenInsert(uvVO.CompanyId, uvVO.DepartmentId, uvVO.UserId);
-                UserLoginModel ulm = new UserLoginModel();
-                ulm.User = uvVO;
-                ulm.Token = token;
-
-                //记录登录信息               
-                ulHistoryVO.UserId = uvVO.UserId;
-                uBO.AddUserLoginHistory(ulHistoryVO);
-
-                return new ResultObject() { Flag = 1, Message = "验证成功!", Result = ulm };
-            }
-            else
-            {
-                ulHistoryVO.Status = false;
-                uBO.AddUserLoginHistory(ulHistoryVO);
-                return new ResultObject() { Flag = 0, Message = "验证失败!", Result = null };
-            }
-
-        }
 
         /// <summary>
         /// 删除后台用户

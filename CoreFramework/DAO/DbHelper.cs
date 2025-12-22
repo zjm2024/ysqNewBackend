@@ -39,25 +39,26 @@ namespace CoreFramework.DAO
 
         public static int ExecuteNonQuery(string commandText, params object[] parameters)
         {
+            int re = -1;
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                DbCommand cmd = db.GetSqlStringCommand(commandText);
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                foreach (object p in parameters)
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
                 {
-                    cmd.Parameters.Add(p);
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    if (parameters != null)
+                    {
+                        foreach (var param in parameters)
+                        {
+                            if (param != null) cmd.Parameters.Add(param);
+                        }
+                    }
+                    re = db.ExecuteNonQuery(cmd);
+                    cmd.Dispose();
                 }
-                int re = db.ExecuteNonQuery(cmd);
-                cmd.Parameters.Clear();
-                cmd.Dispose();
                 return re;
             }
-            //catch (SqlException sqlEx)
-            //{
-
-            //    throw;
-            //}
+ 
             catch (Exception ex)
             {
                 List<string> message = new List<string>();
@@ -81,9 +82,12 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                re = db.ExecuteNonQuery(cmd);
-                cmd.Parameters.Clear();
+                using (cmd) // Command 必须用 using
+                {
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    re = db.ExecuteNonQuery(cmd);
+                    cmd.Parameters.Clear();
+                }
             }
             catch (Exception ex)
             {
@@ -106,17 +110,19 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                DbCommand cmd = db.GetSqlStringCommand(commandText);
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                foreach (object p in parameters)
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
                 {
-                    cmd.Parameters.Add(p);
-                }
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    foreach (object p in parameters)
+                    {
+                        cmd.Parameters.Add(p);
+                    }
 
-                object re = db.ExecuteScalar(cmd);
-                cmd.Parameters.Clear();
-                cmd.Dispose();
-                return re;
+                    object re = db.ExecuteScalar(cmd);
+                    cmd.Parameters.Clear();
+                    cmd.Dispose();
+                    return re;
+                }
             }
             catch (Exception ex)
             {
@@ -141,9 +147,12 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                re = db.ExecuteScalar(cmd);
-                cmd.Parameters.Clear();
+                using (cmd) // Command 必须用 using
+                {
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    re = db.ExecuteScalar(cmd);
+                    cmd.Parameters.Clear();
+                }
             }
             catch (Exception ex)
             {
@@ -166,17 +175,20 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                DbCommand cmd = db.GetSqlStringCommand(commandText);
-                cmd.CommandText = commandText;
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                foreach (object p in parameters)
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
                 {
-                    cmd.Parameters.Add(p);
+
+                    cmd.CommandText = commandText;
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    foreach (object p in parameters)
+                    {
+                        cmd.Parameters.Add(p);
+                    }
+                    IDataReader re = db.ExecuteReader(cmd);
+                    cmd.Parameters.Clear();
+                    cmd.Dispose();
+                    return re;
                 }
-                IDataReader re = db.ExecuteReader(cmd);
-                cmd.Parameters.Clear();
-                cmd.Dispose();
-                return re;
             }
             catch (Exception ex)
             {
@@ -201,9 +213,12 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                re = db.ExecuteReader(cmd);
-                cmd.Parameters.Clear();
+                using (cmd)  // Command 必须用 using
+                {
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    re = db.ExecuteReader(cmd);
+                    cmd.Parameters.Clear();
+                }
             }
             catch (Exception ex)
             {
@@ -227,9 +242,12 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                dt = db.ExecuteDataSet(cmd).Tables[0];
-                cmd.Parameters.Clear();
+                using (cmd)  // Command 必须用 using
+                {
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    dt = db.ExecuteDataSet(cmd).Tables[0];
+                    cmd.Parameters.Clear();
+                }
             }
             catch (Exception ex)
             {
@@ -253,15 +271,17 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                DbCommand cmd = db.GetSqlStringCommand(commandText);
-                foreach (object p in parameters)
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
                 {
-                    cmd.Parameters.Add(p);
+                    foreach (object p in parameters)
+                    {
+                        cmd.Parameters.Add(p);
+                    }
+                    cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
+                    dt = db.ExecuteDataSet(cmd).Tables[0];
+                    cmd.Parameters.Clear();
+                    cmd.Dispose();
                 }
-                cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
-                dt = db.ExecuteDataSet(cmd).Tables[0];
-                cmd.Parameters.Clear();
-                cmd.Dispose();
             }
             catch (Exception ex)
             {
@@ -273,10 +293,7 @@ namespace CoreFramework.DAO
                 }
                 throw new Exception("ErrorSQL:" + commandText + "\n\rParameters:\n\r" + message.ToString(), ex);
             }
-            finally
-            {
-                //cmd.Dispose();
-            }
+
             return dt;
         }
 

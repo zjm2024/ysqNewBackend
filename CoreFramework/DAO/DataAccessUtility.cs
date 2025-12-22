@@ -1,7 +1,8 @@
-using System;
-using System.Transactions;
 using Microsoft.Practices.EnterpriseLibrary.Data;
+using MySql.Data.MySqlClient;
+using System;
 using System.Data.Common;
+using System.Transactions;
 
 namespace CoreFramework.DAO
 {
@@ -58,8 +59,12 @@ namespace CoreFramework.DAO
                     }
                     else if (DBConfig.ProviderType == EProviderType.MySQL)
                     {
-                        DbProviderFactory _dbProvider = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
-                        _db = new GenericDatabase(_DB_INSTANCE, _dbProvider);
+                        //DbProviderFactory _dbProvider = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+                        //_db = new GenericDatabase(_DB_INSTANCE, _dbProvider);
+
+                        // 直接获取 MySQL 工厂（避免 DbProviderFactories 缓存问题）
+                        DbProviderFactory mysqlFactory = MySqlClientFactory.Instance;
+                        _db = new GenericDatabase(_DB_INSTANCE, mysqlFactory);
                     }
 
                 }

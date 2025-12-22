@@ -338,6 +338,18 @@ namespace SPLibrary.UserManagement.BO
             return tDAO.FindByParams("1=1");
         }
 
+        public List<TokenVO> FindTokeByUserId(string userId)
+        {
+            ITokenDAO tDAO = UserManagementDAOFactory.CreateTokenDAO(CurrentUserProfile);
+            return tDAO.FindByParams("UserId=" + userId);
+        }
+
+        public List<TokenVO> FindTokeByToken(string token, int userId)
+        {
+            ITokenDAO tDAO = UserManagementDAOFactory.CreateTokenDAO(CurrentUserProfile);
+            return tDAO.FindByParams("Token = '" + token + "' and UserId =" + userId);
+        }
+
         public int InsertToken(TokenVO tVO)
         {
             //判断是否存在，如果存在则更新，如果不存在则新增
@@ -361,6 +373,12 @@ namespace SPLibrary.UserManagement.BO
         {
             ITokenDAO tDAO = UserManagementDAOFactory.CreateTokenDAO(CurrentUserProfile);
             tDAO.UpdateByParams(tVO, "Token = '" + tVO.Token + "'");
+        }
+
+        public void DeleteTokenbyToken(string token, int userId)
+        {
+            ITokenDAO tDAO = UserManagementDAOFactory.CreateTokenDAO(CurrentUserProfile);
+            tDAO.DeleteByParams("Token = '" + token + "' and UserId= " + userId);
         }
 
         public bool AddUserLoginHistory(UserLoginHistoryVO ulHistoryVO)

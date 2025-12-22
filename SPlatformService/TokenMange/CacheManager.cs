@@ -1,14 +1,15 @@
 ﻿using CoreFramework.VO;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading;
-using System.Web;
+using SPLibrary.CoreFramework.Logging.BO;
 using SPLibrary.CoreFramework.WebConfigInfo;
 using SPLibrary.UserManagement.BO;
 using SPLibrary.UserManagement.DAO;
 using SPLibrary.UserManagement.VO;
-using SPLibrary.CoreFramework.Logging.BO;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Threading;
+using System.Web;
 
 namespace SPlatformService.TokenMange
 {
@@ -29,9 +30,10 @@ namespace SPlatformService.TokenMange
         /// timeout 过期时间
         /// <remarks>
         /// </remarks>
-        private static void CacheInit(bool isReset=false)
+        private static void CacheInit(string userId, bool isReset=false)
         {
-            if (HttpRuntime.Cache["PASSPORT.TOKEN"] == null|| isReset)
+            string cacheKey = $"PASSPORT.TOKEN.{userId}";
+            if (HttpRuntime.Cache[cacheKey] == null|| isReset)
             {
                 DataTable dt = new DataTable();
 
@@ -66,22 +68,25 @@ namespace SPlatformService.TokenMange
                 //dr["Timeout"] = DateTime.Now.AddDays(7);
                 //dt.Rows.Add(dr);
                 UserBO uBO = new UserBO(new UserProfile());
-                List<TokenVO> dtList = uBO.FindTokeAll();
+                List<TokenVO> dtList = uBO.FindTokeByUserId(userId);
                 foreach (TokenVO tVO in dtList)
                 {
-                    DataRow dr = dt.NewRow();
-                    dr["Token"] = tVO.Token;
-                    dr["CompanyId"] = tVO.CompanyId;
-                    dr["DepartmentId"] = tVO.DepartmentId;
-                    dr["UserId"] = tVO.UserId;
-                    dr["IsUser"] = tVO.IsUser;
-                    dr["Timeout"] = tVO.Timeout;
-                    dt.Rows.Add(dr);
+                    if (tVO.Token.IndexOf(".") != -1)
+                    {
+                        DataRow dr = dt.NewRow();
+                        dr["Token"] = tVO.Token;
+                        dr["CompanyId"] = tVO.CompanyId;
+                        dr["DepartmentId"] = tVO.DepartmentId;
+                        dr["UserId"] = tVO.UserId;
+                        dr["IsUser"] = tVO.IsUser;
+                        dr["Timeout"] = tVO.Timeout;
+                        dt.Rows.Add(dr);
+                    }
                 }
                    
 
                 //Cache的过期时间为 令牌过期时间*2
-                HttpRuntime.Cache.Insert("PASSPORT.TOKEN", dt, null, DateTime.MaxValue, TimeSpan.FromDays(7 * 2));
+                HttpRuntime.Cache.Insert(cacheKey, dt, null, DateTime.MaxValue, TimeSpan.FromDays(7 * 2));
             }
         }
 
@@ -92,14 +97,21 @@ namespace SPlatformService.TokenMange
         /// <returns></returns>
         public static int GetUserId(string token)
         {
-            CacheInit();
+            int userId;
+            string cacheKey;
+            TokenSplit(token, out userId, out cacheKey);
 
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            CacheInit(userId.ToString());
+    
+
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
+            var dtCopy = dt.Copy();
+
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                dr = dtCopy.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -121,14 +133,20 @@ namespace SPlatformService.TokenMange
         /// <returns></returns>
         public static int GetCompanyId(string token)
         {
-            CacheInit();
+            int companyId;
+            string cacheKey;
+            TokenSplit(token, out companyId, out cacheKey);
 
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            CacheInit(companyId.ToString());
+
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
+            var dtCopy = dt.Copy();
+
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                dr = dtCopy.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -150,14 +168,20 @@ namespace SPlatformService.TokenMange
         /// <returns></returns>
         public static UserProfile GetUserProfile(string token)
         {
-            CacheInit();
+            int userId;
+            string cacheKey;
+            TokenSplit(token, out userId, out cacheKey);
 
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            CacheInit(userId.ToString());
+
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
+            var dtCopy = dt.Copy();
+
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                dr = dtCopy.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -209,14 +233,20 @@ namespace SPlatformService.TokenMange
         /// <returns></returns>
         public static bool TokenIsExist(string token)
         {
-            CacheInit();
+            int userId;
+            string cacheKey;
+            TokenSplit(token, out userId, out cacheKey);
 
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            CacheInit(userId.ToString());
+
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
+            var dtCopy = dt.Copy();
+
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                dr = dtCopy.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -249,9 +279,13 @@ namespace SPlatformService.TokenMange
         /// <returns></returns>
         public static bool RemoveToken(string token)
         {
-            CacheInit();
+            int userId;
+            string cacheKey;
+            TokenSplit(token, out userId, out cacheKey);
 
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            CacheInit(userId.ToString());
+
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
@@ -266,7 +300,16 @@ namespace SPlatformService.TokenMange
 
             if (dr.Length > 0)
             {
-                dt.Rows.Remove(dr[0]);
+                UserBO uBO = new UserBO(new UserProfile());
+                try
+                {
+                    uBO.DeleteTokenbyToken(token, userId);
+                    dt.Rows.Remove(dr[0]);
+                }
+                catch
+                {
+
+                }
             }
             return true;
         }
@@ -278,14 +321,19 @@ namespace SPlatformService.TokenMange
         /// <param name="time">过期时间</param>
         public static void TokenTimeUpdate(string token)
         {
-            CacheInit();
+            int userId;
+            string cacheKey;
+            TokenSplit(token, out userId, out cacheKey);
+            CacheInit(userId.ToString());
 
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
+            var dtCopy = dt.Copy();
+
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                dr = dtCopy.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -299,6 +347,7 @@ namespace SPlatformService.TokenMange
 
                 TokenVO tVO = new TokenVO();
                 tVO.Token = token;
+                tVO.UserId = userId;
                 tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
                 if (!Boolean.Parse(dr[0]["IsUser"].ToString()))
                 {
@@ -324,9 +373,10 @@ namespace SPlatformService.TokenMange
         /// <returns></returns>
         public static string TokenInsert(int companyId,int departmentId, int userId)
         {
-            CacheInit();
+            string cacheKey = $"PASSPORT.TOKEN.{userId.ToString()}";
+            CacheInit(userId.ToString());
             UserBO uBo = new UserBO(new UserProfile());
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
 
             //// token不存在则添加
             bool isExists = false;
@@ -341,28 +391,42 @@ namespace SPlatformService.TokenMange
                     //存在，什么都不做，更新时间，并直接返回token
                     TokenVO tVO = new TokenVO();
                     tVO.Token = row["Token"].ToString();
+                    tVO.CompanyId = companyId;
+                    tVO.DepartmentId = departmentId;
+                    tVO.UserId = userId;
                     tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
 
-                    uBo.UpdateTokenTime(tVO);
+                    List<TokenVO> tokenlist = uBo.FindTokeByToken(row["Token"].ToString(), userId);
 
-                    HttpRuntime.Cache["PASSPORT.TOKEN"] = dt;
+                    if (tokenlist.Count > 0)
+                        uBo.UpdateTokenTime(tVO);
+                    else
+                        uBo.InsertToken(tVO);
+
+
                     row["Timeout"] = tVO.Timeout;
+                    HttpRuntime.Cache[cacheKey] = dt;
+
                     return tVO.Token;
+
                 }
             }
             if (!isExists)
             {
-                
+
                 DataRow dr = dt.NewRow();
-                string token = Guid.NewGuid().ToString();
-                dr["Token"] = token;
+                string guid = Guid.NewGuid().ToString();
+                string base64Userid = Convert.ToBase64String(Encoding.UTF8.GetBytes(userId.ToString()));
+                string token = $"{guid}.{base64Userid}";
+
+                dr["Token"] = token;   //token 带userId传递
                 dr["CompanyId"] = companyId;
                 dr["DepartmentId"] = departmentId;
                 dr["UserId"] = userId;
                 dr["IsUser"] = true;
                 dr["Timeout"] = DateTime.Now.AddSeconds(TokenTimeout);
                 dt.Rows.Add(dr);
-                HttpRuntime.Cache["PASSPORT.TOKEN"] = dt;
+
 
                 //add to DB 
                 TokenVO tVO = new TokenVO();
@@ -372,9 +436,10 @@ namespace SPlatformService.TokenMange
                 tVO.UserId = userId;
                 tVO.IsUser = true;
                 tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
-                
-                uBo.InsertToken(tVO);
 
+                uBo.InsertToken(tVO);
+                //保存成功后才更新缓存表
+                HttpRuntime.Cache[cacheKey] = dt;
                 return token;
             }
             else
@@ -383,11 +448,12 @@ namespace SPlatformService.TokenMange
 
         public static string TokenInsert(int customerId)
         {
-            CacheInit();
-            DataTable dt = (DataTable)HttpRuntime.Cache["PASSPORT.TOKEN"];
+            CacheInit(customerId.ToString());
+            string cacheKey = $"PASSPORT.TOKEN.{customerId.ToString()}";
+            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
             UserBO uBo = new UserBO(new UserProfile());
             bool isExists = false;
-            /*
+
             foreach (DataRow row in dt.Rows)
             {
                 if (Convert.ToInt32(row["CompanyId"]) == 0
@@ -399,22 +465,33 @@ namespace SPlatformService.TokenMange
                     //存在，什么都不做，更新时间，并直接返回token
                     TokenVO tVO = new TokenVO();
                     tVO.Token = row["Token"].ToString();
+                    tVO.UserId = customerId;
+                    tVO.CompanyId = 0;
+                    tVO.DepartmentId = 0;
                     tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
-                        
-                    uBo.UpdateTokenTime(tVO);
 
-                    HttpRuntime.Cache["PASSPORT.TOKEN"] = dt;
-                    row["Timeout"] = tVO.Timeout;                    
+                    List<TokenVO> tokenlist = uBo.FindTokeByToken(row["Token"].ToString(), customerId);
+
+                    if (tokenlist.Count > 0)
+                        uBo.UpdateTokenTime(tVO);
+                    else
+                        uBo.InsertToken(tVO);
+
+                    row["Timeout"] = tVO.Timeout;
+                    HttpRuntime.Cache[cacheKey] = dt;
+
                     return tVO.Token;
                 }
             }
-            */
+
             if (!isExists)
             {
                 try
                 {
                     DataRow dr = dt.NewRow();
-                    string token = Guid.NewGuid().ToString();
+                    string guid = Guid.NewGuid().ToString();
+                    string base64Userid = Convert.ToBase64String(Encoding.UTF8.GetBytes(customerId.ToString()));
+                    string token = $"{guid}.{base64Userid}";
                     dr["Token"] = token;
                     dr["CompanyId"] = 0;
                     dr["DepartmentId"] = 0;
@@ -422,7 +499,7 @@ namespace SPlatformService.TokenMange
                     dr["IsUser"] = false;
                     dr["Timeout"] = DateTime.Now.AddSeconds(TokenTimeout);
                     dt.Rows.Add(dr);
-                    HttpRuntime.Cache["PASSPORT.TOKEN"] = dt;
+
 
                     //add to DB 
                     TokenVO tVO = new TokenVO();
@@ -435,24 +512,46 @@ namespace SPlatformService.TokenMange
 
                     uBo.InsertToken(tVO);
 
+                    //保存成功后才更新缓存表
+                    HttpRuntime.Cache[cacheKey] = dt;
+
                     return token;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     if (ex.Message.ToString().Contains("内部索引已损坏"))
                     {
-                        CacheInit(true);
+                        CacheInit(customerId.ToString(), true);
                     }
                     LogBO _log = new LogBO(typeof(CacheManager));
                     string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
                     _log.Error(strErrorMsg);
                     return "";
                 }
-                
+
             }
             else
                 return "";
         }
 
+        public static void TokenSplit(string token, out int userId, out string cacheKey)
+        {
+            string[] parts = token.Split('.');
+            if (parts.Length > 1)
+            {
+                string guid = parts[0];
+                string base64Userid = parts[1];
+                byte[] decodedBytes = Convert.FromBase64String(base64Userid);
+                string userid = Encoding.UTF8.GetString(decodedBytes);
+                userId = Convert.ToInt32(userid);
+                cacheKey = $"PASSPORT.TOKEN.{userId}";
+            }
+            else
+            {
+                string guid = parts[0];
+                userId = 0;
+                cacheKey = $"PASSPORT.TOKEN.{userId}";
+            }
+        }
     }
 }
