@@ -67,23 +67,26 @@ namespace SPlatformService.TokenMange
                 ////dr["userType"] = "User";
                 //dr["Timeout"] = DateTime.Now.AddDays(7);
                 //dt.Rows.Add(dr);
-                UserBO uBO = new UserBO(new UserProfile());
-                List<TokenVO> dtList = uBO.FindTokeByUserId(userId);
-                foreach (TokenVO tVO in dtList)
+                if (userId != "0")
                 {
-                    if (tVO.Token.IndexOf(".") != -1)
+                    UserBO uBO = new UserBO(new UserProfile());
+                    List<TokenVO> dtList = uBO.FindTokeByUserId(userId);
+                    foreach (TokenVO tVO in dtList)
                     {
-                        DataRow dr = dt.NewRow();
-                        dr["Token"] = tVO.Token;
-                        dr["CompanyId"] = tVO.CompanyId;
-                        dr["DepartmentId"] = tVO.DepartmentId;
-                        dr["UserId"] = tVO.UserId;
-                        dr["IsUser"] = tVO.IsUser;
-                        dr["Timeout"] = tVO.Timeout;
-                        dt.Rows.Add(dr);
+                        if (tVO.Token.IndexOf(".") != -1)
+                        {
+                            DataRow dr = dt.NewRow();
+                            dr["Token"] = tVO.Token;
+                            dr["CompanyId"] = tVO.CompanyId;
+                            dr["DepartmentId"] = tVO.DepartmentId;
+                            dr["UserId"] = tVO.UserId;
+                            dr["IsUser"] = tVO.IsUser;
+                            dr["Timeout"] = tVO.Timeout;
+                            dt.Rows.Add(dr);
+                        }
                     }
+
                 }
-                   
 
                 //Cache的过期时间为 令牌过期时间*2
                 HttpRuntime.Cache.Insert(cacheKey, dt, null, DateTime.MaxValue, TimeSpan.FromDays(7 * 2));
@@ -236,6 +239,9 @@ namespace SPlatformService.TokenMange
             int userId;
             string cacheKey;
             TokenSplit(token, out userId, out cacheKey);
+
+            if (userId == 0)
+                return false;
 
             CacheInit(userId.ToString());
 
