@@ -1,0 +1,203 @@
+﻿input:-ms-input-placeholder {
+    color: #D6D0CA !important; /* Internet Explorer 10+ */
+}
+
+/*.nav-tabs.background-blue {
+    background-color:transparent !important;
+    border: 1px solid transparent !important;
+    margin-left: auto;
+    margin-right: auto;
+    width:300px;
+}*/
+
+/*.nav-tabs > li {
+    margin: 0px 12px;
+}*/
+
+.nav-tabs.tab-color-blue > li > a{
+    background-color: #d9e7e3 !important;
+    color: #000 !important;
+    border-color: transparent !important;
+    font-weight:bold;
+}
+
+.nav-tabs.tab-color-blue > li.active > a{
+    background-color: #FFF !important;
+    color: #F90 !important;
+    border-color: transparent !important;
+    border-top-color: #1d4568 !important;
+}
+
+/*.tab-content{
+    border:0px !important;
+    border-top:1px solid #C5D0DC !important;
+}*/
+
+.bottom-line{
+    border-bottom:1px solid #C5D0DC !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.tab-title {
+    /*font-weight: bold;*/
+    border-bottom: 1px solid #F90 !important;
+    text-align: center !important;
+    margin-bottom: 0px !important;
+    padding-right: 0px !important;
+    font-size: 14px;
+    width: 60px;
+    /*border-color: transparent transparent #F90 !important;*/
+}
+
+.form-group {
+    margin-top: 5px;
+}
+
+/*.highlight::before {
+    content: "*";
+    display: block;
+    position: absolute;
+    top: -7px;
+    width: 8px;
+    height: 8px;
+    border-style: solid;
+    border-color: #DDE4ED;
+    -moz-border-top-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    border-image: none;
+    border-width: 2px 0px 0px 2px;
+    background-color: #DDE4ED;
+    box-sizing: content-box;
+    transform: rotate(45deg);
+    right: 9px;
+}*/
+.need::before {
+    content: "*";
+    position: relative;
+    color: red;
+    left: -5px;
+}
+
+.form-actions{
+    background-color: #FFF !important;
+    border-top: none;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.savebtn{
+    font-family: "微软雅黑";
+    background-color:#1272B8;
+    color: rgb(255, 255, 255);
+    padding: 10px 30px 30px 30px;
+    font-size: 14px;
+    font-weight:bold;
+}
+.savebenny{
+    font-family: "微软雅黑";
+    background-color:#1272B8;
+    color: rgb(255, 255, 255);
+    padding: 10px 20px 30px;
+    font-size: 14px;
+    font-weight:bold;
+    width:80px;
+    height:30px;
+}
+
+.cancelbtn{
+    font-family: "微软雅黑";
+    background-color:#CCCCCC;
+    color: rgb(255, 255, 255);
+    padding: 10px 30px 30px 30px;
+    font-size: 14px;
+    font-weight:bold;
+}
+.lg_centel {
+    display:block;
+    margin:0 auto !important;
+}
+/*页码样式*/
+.htp_page {
+    margin-bottom: 20px;
+    margin-top: 50px;
+    text-align: center;
+    width: 100%;
+}
+.htp_page ul {
+    display: inline-block;
+    height: 32px;
+}
+.htp_page ul li {
+    border: 1px solid #d4d4d4;
+    display: block;
+    float: left;
+    line-height: 30px;
+    margin-left: 10px;
+    width: 30px;
+}
+.htp_page ul li:hover {
+    background: #f5f5f5 none repeat scroll 0 0;
+}
+.htp_page ul li a {
+    color: #000;
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+.htp_page ul .active a {
+    text-decoration: underline;
+}
+.htp_page ul .htp_down, .htp_page ul .htp_up {
+    text-align: center;
+    width: 80px;
+}
+.htp_page ul a{
+    color: #000 !important;
+    text-decoration: none !important;
+}
+.htp_page ul a:hover {
+    color: #ff6600 !important;
+    text-decoration: underline !important;
+}
+.htp_page ul .selePageInd a {
+    color: #ffffff !important;
+}
+.htp_page ul .selePageInd a:hover {
+    color: #ffffff !important;
+}
+.htp_page ul a.color {
+    color: #ff6600 !important;
+}
+.selePageInd {
+    background: #ff6801 none repeat scroll 0 0 !important;
+    color: #fff !important;
+}
+.customBox input[type="text"]{
+    height:25px !important;
+}
+.customBox{
+    padding:0px !important;
+    width:10.8% !important;
+}
+.cus-col-sm-1{
+    width:13% !important;
+}
+.text-align {
+    text-align:right;
+}
+.zxbInstructions {
+    padding:10px;
+    border:solid 1px #CCCCCC;
+    background:#f5f5f5;
+    margin-bottom:10px;
+    line-height: 23px;
+    color: #5d5d5d;
+}
+.lgbtn {
+    height:31px;
+    padding: 0px 10px 0px 10px;
+}

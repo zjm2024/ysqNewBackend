@@ -1,0 +1,15 @@
+﻿{
+    "appid":"H53681E66",
+    "iOS":{
+    	"version":"1.0.0",
+    	"title":"众销乐（1.0.0）版本更新",
+    	"note":"修复了部分Bug；\n优化界面操作用户体验效果；\n",
+    	"url":"itms-apps://itunes.apple.com/cn/app/yourname"
+    },
+    "Android":{
+    	"version":"1.0.4",
+    	"title":"众销乐（1.0.4）版本更新",
+    	"note":"修复了找回密码的bug；",
+    	"url":"http://www.zhongxiaole.net/Download/zhongxiaoleAPP.apk"
+    }
+}
