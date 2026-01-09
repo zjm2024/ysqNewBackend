@@ -1,8 +1,0 @@
-[2024-08-31 09:35:14] [ERROR] [SPLibrary.CustomerManagement.BO.CardBO]
-  -- Message:不支持 URI 格式。
-  Stack :   在 System.IO.Path.LegacyNormalizePath(String path, Boolean fullCheck, Int32 maxPathLength, Boolean expandShortPaths)
-   在 System.IO.Path.GetFullPathInternal(String path)
-   在 System.IO.Directory.InternalCreateDirectoryHelper(String path, Boolean checkHost)
-   在 ImportEXCEL.EXCELHelper.ImportExcel(DataTable table, String localPath, String s_FileName) 位置 C:\Users\Administrator\Desktop\乐聊\Code\SPLibrary\WebConfigInfo\EXCELHelper.cs:行号 75
-   在 SPLibrary.CustomerManagement.BO.CardBO.DataToExcel(DataTable m_DataTable, String s_folder, String s_FileName) 位置 C:\Users\Administrator\Desktop\乐聊\Code\SPLibrary\CustomerManagement\BO\CardBO.cs:行号 7679 
- Source :mscorlib

@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cUrl.aspx.cs" Inherits="WebUI.cUrl" %>

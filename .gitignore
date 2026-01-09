@@ -1,192 +1,92 @@
-# 编译输出目录
-bin/
-obj/
-
-# 发布目录
-publish/
-Publish/
-
-# Visual Studio 缓存和配置文件
-.vs/
+# ==========================
+# Visual Studio 编辑器相关
+# ==========================
+# 解决方案缓存文件
 *.suo
 *.user
-*.ntvs*
-*.njsproj
+*.userosscache
 *.sln.docstates
 
-# 日志和临时文件
+# 项目缓存文件
+*.csproj.user
+*.vbproj.user
+*.vcxproj.user
+*.vcproj.user
+*.dbproj.user
+*.fsproj.user
+*.lsproj.user
+*.xproj.user
+
+# 调试相关文件
+*.pdb
+*.vshost.exe
+*.vshost.exe.manifest
+*.vshost.exe.config
+
+# Visual Studio 配置目录
+.vs/
+.vscode/ # 若使用 VS Code 辅助开发也需忽略
+
+# ==========================
+# .NET 编译/构建产物
+# ==========================
+# 输出目录（Debug/Release）
+bin/
+obj/
+Release/
+Debug/
+x64/
+x86/
+
+# 编译日志
 *.log
 *.tmp
 *.bak
 
-# 测试相关
-TestResults/
-coverage/
+# 发布产物
+publish/
+dist/
+out/
 
-# 其他工具生成文件
-node_modules/
-bower_components/
-/.vs/SPlatformSLN/FileContentIndex/463ebcc1-71b8-4b07-a1f5-c372216396c4.vsidx
-/.vs/SPlatformSLN/FileContentIndex/463ebcc1-71b8-4b07-a1f5-c372216396c4.vsidx
-/.vs/SPlatformSLN/v17/HierarchyCache.v1.txt
-/packages/Portable.BouncyCastle.1.9.0
-/packages/System.Configuration.ConfigurationManager.4.4.1
-/packages/System.Diagnostics.DiagnosticSource.7.0.2
-/BusinessCard/obj/Release/BusinessCard.csproj.AssemblyReference.cache
-/BusinessCard/obj/Release/BusinessCard.csproj.CoreCompileInputs.cache
-/.vs/SPlatformSLN/CopilotIndices/17.14.698.11175/CodeChunks.db
-/.vs/SPlatformSLN/CopilotIndices/17.14.698.11175/SemanticSymbols.db
+# ==========================
+# NuGet 依赖相关
+# ==========================
+# NuGet 本地缓存（已通过 packages.config 或 .csproj 引用，无需提交）
 packages/
-/BusinessCard/Properties/PublishProfiles/FolderProfile2.pubxml
-/SPlatformService/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
-/SPlatformService/obj/Release/SPlatformService.csproj.AssemblyReference.cache
-/SPlatformService/obj/Release/SPlatformService.csproj.CoreCompileInputs.cache
-/SPlatformService/obj/Release/SPlatformService.csproj.FileListAbsolute.txt
-/SPlatformService/obj/Release/SPlatformService.dll
-/SPlatformService/obj/Release/SPlatformService.pdb
-/.vs/SPlatformSLN/v17/.suo
-/WebUI/obj/Release/DesignTimeResolveAssemblyReferencesInput.cache
-/WebUI/obj/Release/WebUI.csproj.AssemblyReference.cache
-/WebUI/obj/Release/WebUI.csproj.CoreCompileInputs.cache
-/WebUI/obj/Release/WebUI.csproj.FileListAbsolute.txt
-/WebUI/obj/Release/WebUI.dll
-/WebUI/obj/Release/WebUI.pdb
-/WebUI/bin/SPLibrary.dll
-/SPlatformService/logs/SITE_Error.log
-/SPlatformService/logs/SITE_Error.log.2025-10-10
-/WebUI/.vs/WebUI.csproj.dtbcache.json
-/SPlatformService/Web.config
-/SPlatformService/.vs/SPlatformService.csproj.dtbcache.json
-/BusinessCard/obj/Release/TransformWebConfig/transformed/Web.config
-/BusinessCard/obj/Release/Package/PackageTmp/Web.config
-/BusinessCard/Web.config
-/WebUI/Properties/PublishProfiles/FolderProfile.pubxml
-/BusinessCard/Properties/PublishProfiles/FolderProfile1.pubxml.user
-/CoreFramework/obj/Debug/CoreFramework.csproj.AssemblyReference.cache
-/CoreFramework/obj/Debug/CoreFramework.csproj.CoreCompileInputs.cache
-/CoreFramework/obj/Debug/CoreFramework.csproj.FileListAbsolute.txt
-/CoreFramework/obj/Debug/CoreFramework.dll
-/CoreFramework/obj/Debug/CoreFramework.pdb
-/CoreFramework/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-/BusinessCard/obj/Debug/BusinessCard.csproj.AssemblyReference.cache
-/BusinessCard/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-/CoreFramework/VO/WeChatTransferResult.cs
-/BusinessCard/Pay/Lottery_Notify_Url.aspx
-/SPLibrary/bin/Debug/CoreFramework.dll
-/SPLibrary/bin/Debug/CoreFramework.dll.config
-/SPLibrary/bin/Debug/CoreFramework.pdb
-/SPLibrary/bin/Debug/Google.Protobuf.dll
-/SPLibrary/bin/Debug/Google.Protobuf.pdb
-/SPLibrary/bin/Debug/Google.Protobuf.xml
-/SPLibrary/bin/Debug/K4os.Compression.LZ4.dll
-/SPLibrary/bin/Debug/K4os.Compression.LZ4.Streams.dll
-/SPLibrary/bin/Debug/K4os.Compression.LZ4.Streams.xml
-/SPLibrary/bin/Debug/K4os.Compression.LZ4.xml
-/SPLibrary/bin/Debug/K4os.Hash.xxHash.dll
-/SPLibrary/bin/Debug/K4os.Hash.xxHash.xml
-/SPLibrary/bin/Debug/MySql.Data.dll
-/SPLibrary/bin/Debug/MySql.Data.xml
-/SPLibrary/bin/Debug/SPLibrary.dll
-/SPLibrary/bin/Debug/SPLibrary.dll.config
-/SPLibrary/bin/Debug/SPLibrary.pdb
-/SPLibrary/BusinessCardManagement/BO/BusinessCardBO.cs
-/SPLibrary/obj/Debug/SPLibrary.csproj.App.config
-/SPLibrary/obj/Debug/SPLibrary.csproj.AssemblyReference.cache
-/SPLibrary/obj/Debug/SPLibrary.csproj.CoreCompileInputs.cache
-/SPLibrary/obj/Debug/SPLibrary.csproj.FileListAbsolute.txt
-/SPLibrary/obj/Debug/SPLibrary.dll
-/SPLibrary/obj/Debug/SPLibrary.pdb
-/WebUI/obj/Debug/WebUI.csproj.AssemblyReference.cache
-/SPlatformService/obj/Debug/SPlatformService.csproj.AssemblyReference.cache
-/SPlatformService/obj/Debug/SPlatformService.csproj.CoreCompileInputs.cache
-/SPlatformService/obj/Debug/SPlatformService.csproj.FileListAbsolute.txt
-/SPlatformService/obj/Debug/SPlatformService.dll
-/SPlatformService/obj/Debug/SPlatformService.pdb
-/OpenAIAPP/obj/Debug/OpenAIAPP.csproj.AssemblyReference.cache
-/CoreFramework/bin/Debug/BouncyCastle.Crypto.dll
-/CoreFramework/bin/Debug/CoreFramework.dll
-/CoreFramework/bin/Debug/CoreFramework.dll.config
-/CoreFramework/bin/Debug/CoreFramework.pdb
-/CoreFramework/bin/Debug/Google.Protobuf.dll
-/CoreFramework/bin/Debug/Google.Protobuf.pdb
-/CoreFramework/bin/Debug/Google.Protobuf.xml
-/CoreFramework/bin/Debug/K4os.Compression.LZ4.dll
-/CoreFramework/bin/Debug/K4os.Compression.LZ4.Streams.dll
-/CoreFramework/bin/Debug/K4os.Compression.LZ4.Streams.xml
-/CoreFramework/bin/Debug/K4os.Compression.LZ4.xml
-/CoreFramework/bin/Debug/K4os.Hash.xxHash.dll
-/CoreFramework/bin/Debug/K4os.Hash.xxHash.xml
-/CoreFramework/bin/Debug/MySql.Data.dll
-/CoreFramework/bin/Debug/MySql.Data.xml
-/CoreFramework/bin/Debug/System.Memory.dll
-/CoreFramework/bin/Debug/System.Runtime.CompilerServices.Unsafe.dll
-/CoreFramework/bin/Debug/System.Runtime.CompilerServices.Unsafe.xml
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/net452/Microsoft.ApplicationInsights.dll
-/packages/Microsoft.ApplicationInsights.2.17.0/.signature.p7s
-/packages/Microsoft.ApplicationInsights.2.17.0/icon.png
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/net452/Microsoft.ApplicationInsights.pdb
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/net452/Microsoft.ApplicationInsights.xml
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/net46/Microsoft.ApplicationInsights.dll
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/net46/Microsoft.ApplicationInsights.pdb
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/net46/Microsoft.ApplicationInsights.xml
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/netstandard2.0/Microsoft.ApplicationInsights.dll
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/netstandard2.0/Microsoft.ApplicationInsights.pdb
-/packages/Microsoft.ApplicationInsights.2.17.0/lib/netstandard2.0/Microsoft.ApplicationInsights.xml
-/packages/Microsoft.ApplicationInsights.2.17.0/Microsoft.ApplicationInsights.2.17.0.nupkg
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/.signature.p7s
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/build/Microsoft.ApplicationInsights.DependencyCollector.targets
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/content/ApplicationInsights.config.install.xdt
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/content/ApplicationInsights.config.transform
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/content/ApplicationInsights.config.uninstall.xdt
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/lib/net45/Microsoft.AI.DependencyCollector.dll
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/lib/net45/Microsoft.AI.DependencyCollector.xml
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/lib/netstandard1.6/Microsoft.AI.DependencyCollector.dll
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/lib/netstandard1.6/Microsoft.AI.DependencyCollector.xml
-/packages/Microsoft.ApplicationInsights.DependencyCollector.2.9.0/Microsoft.ApplicationInsights.DependencyCollector.2.9.0.nupkg
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/.signature.p7s
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/build/Microsoft.ApplicationInsights.PerfCounterCollector.targets
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/content/ApplicationInsights.config.install.xdt
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/content/ApplicationInsights.config.transform
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/content/ApplicationInsights.config.uninstall.xdt
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/lib/net45/Microsoft.AI.PerfCounterCollector.dll
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/lib/net45/Microsoft.AI.PerfCounterCollector.xml
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/lib/netstandard1.6/Microsoft.AI.PerfCounterCollector.dll
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/lib/netstandard1.6/Microsoft.AI.PerfCounterCollector.xml
-/packages/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0/Microsoft.ApplicationInsights.PerfCounterCollector.2.9.0.nupkg
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/.signature.p7s
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/build/Microsoft.ApplicationInsights.Web.targets
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/content/net45/ApplicationInsights.config.install.xdt
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/content/net45/ApplicationInsights.config.transform
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/content/net45/ApplicationInsights.config.uninstall.xdt
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/content/net45/web.config.install.xdt
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/content/net45/web.config.uninstall.xdt
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/lib/net45/Microsoft.AI.Web.dll
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/lib/net45/Microsoft.AI.Web.xml
-/packages/Microsoft.ApplicationInsights.Web.2.9.0/Microsoft.ApplicationInsights.Web.2.9.0.nupkg
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/.signature.p7s
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/build/Microsoft.ApplicationInsights.WindowsServer.targets
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/content/ApplicationInsights.config.install.xdt
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/content/ApplicationInsights.config.transform
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/content/ApplicationInsights.config.uninstall.xdt
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/lib/net45/Microsoft.AI.WindowsServer.dll
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/lib/net45/Microsoft.AI.WindowsServer.xml
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/lib/netstandard1.6/Microsoft.AI.WindowsServer.dll
-/packages/Microsoft.ApplicationInsights.WindowsServer.2.9.0/Microsoft.ApplicationInsights.WindowsServer.2.9.0.nupkg
-/SPlatformService/logs
-/SPLibrary/obj/Debug/build.force
-/SPlatformService/obj/Debug/build.force
-/BusinessCard/obj/Debug/build.force
-/OpenAIAPP/OpenAIAPP.csproj.user
-/SPlatformService/SPlatformService.csproj.user
-/WebUI/WebUI.csproj.user
-/.vs/SPlatformSLN/config/applicationhost.config
-/WebUI/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-/WebUI/obj/Debug/build.force
-/SPLibrary/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-/OpenAIAPP/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-/SPLibrary/bin/Debug/BouncyCastle.Crypto.dll
-/SPlatformService/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-/OpenAIAPP/obj/Debug/build.force
-/BusinessCard/bin/RestSharp.xml
-/SPLibrary/bin/Debug/RestSharp.xml
-/SPLibrary/bin/Release/RestSharp.xml
+# NuGet 锁定文件（可选，若团队统一版本可提交，这里默认忽略）
+*.nuspec.lock
+# NuGet 缓存目录
+.nuget/
+
+# ==========================
+# 项目临时/敏感文件
+# ==========================
+# 环境变量文件（包含数据库连接、API 密钥等敏感信息）
+*.env
+*.env.local
+appsettings.Development.json
+appsettings.Local.json
+
+# 日志目录
+log/
+logs/
+
+# 临时目录
+temp/
+tmp/
+TestResults/ # 单元测试结果目录
+
+# ==========================
+# 其他通用忽略
+# ==========================
+# 操作系统临时文件
+.DS_Store # Mac 系统
+Thumbs.db # Windows 系统
+desktop.ini # Windows 系统
+
+# 压缩包/安装包
+*.zip
+*.rar
+*.7z
+*.msi
+*.exe # 非项目发布的可执行文件（若项目输出 exe 需谨慎，这里忽略临时 exe）
