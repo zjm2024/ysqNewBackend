@@ -748,6 +748,8 @@ namespace BusinessCard.Controllers
                     List<AccessrecordsViewVO> aVO = new List<AccessrecordsViewVO>();
                     List<AccessrecordsViewByRespondentsVO> ToaVO = new List<AccessrecordsViewByRespondentsVO>();
                     List<AccessrecordsViewVO> ReturnCardVO = new List<AccessrecordsViewVO>();
+                    CJLotteriesVO cVO = new CJLotteriesVO();
+
                     decimal Balance = 0;
                     decimal Balance2 = 0;
 
@@ -770,6 +772,23 @@ namespace BusinessCard.Controllers
 
                         RequireBO rBO = new RequireBO(new CustomerProfile());
                         TenderInviteCount = rBO.FindRequireSumByCondtion("TenderInviteCount", "CustomerId=" + pVO.CustomerId);
+
+
+                        //抽奖信息固定Id查询
+                        var lottery_id = 9;
+
+                        ICJLotteriesDAO iDAO = new CJLotteriesDAO(new UserProfile());
+                        cVO = iDAO.FindById(lottery_id);
+
+                        if (cVO!=null)
+                        {
+                            ICJWinningRecordsDAO icjDAO = new CJWinningRecordsDAO(new UserProfile());
+                            var iCount = icjDAO.FindTotalCount("personal_id=" + pVO.PersonalID + " and lottery_id=" + lottery_id.ToString());
+                            if (iCount > 0)
+                                cVO = null;
+
+                        }
+
 
                         //可提现余额
                         Balance = cBO.getMyRebateCost(customerId, 1);
@@ -794,7 +813,7 @@ namespace BusinessCard.Controllers
                     }
                     BusinessCard_JurisdictionVO B_Jurisdiction = cBO.getBusinessCard_Jurisdiction(pVO.BusinessID);
                     JurisdictionViewVO jVO = cBO.FindJurisdictionView(pVO.PersonalID, pVO.BusinessID);
-                    object res = new { Personal = pVO, BusinessCard = bVO, Jurisdiction = jVO, Banner = banner, B_Jurisdiction = B_Jurisdiction, Theme = ThemeVO, ReadNum = ReadNum, toReadNum = toReadNum, todayReadNum = todayReadNum, AccessList = aVO, ToAccessList = ToaVO, notUsedOrderCount = notUsedOrderCount, UsedOrderCount = UsedOrderCount, ReturnCard = ReturnCardVO, ReturnCardCount = ReturnCardCount, SecondBusinessCount = SecondBusinessCount, UnreadCount = UnreadCount, TenderInviteCount = TenderInviteCount, Balance = Balance, Balance2 = Balance2, isline, lineNo, lineTitle, lineDesc };
+                    object res = new { Personal = pVO, BusinessCard = bVO, Jurisdiction = jVO, Banner = banner, B_Jurisdiction = B_Jurisdiction, Theme = ThemeVO, ReadNum = ReadNum, toReadNum = toReadNum, todayReadNum = todayReadNum, AccessList = aVO, ToAccessList = ToaVO, notUsedOrderCount = notUsedOrderCount, UsedOrderCount = UsedOrderCount, ReturnCard = ReturnCardVO, ReturnCardCount = ReturnCardCount, SecondBusinessCount = SecondBusinessCount, UnreadCount = UnreadCount, TenderInviteCount = TenderInviteCount, Balance = Balance, Balance2 = Balance2, isline, lineNo, lineTitle, lineDesc, CJLotteries= cVO };
                     return new ResultObject() { Flag = 1, Message = "获取成功!", Result = res };
                 }
                 else
@@ -16356,6 +16375,7 @@ namespace BusinessCard.Controllers
                 Paging pageInfo = condition.PageInfo;
                 List<CJLotteriesVO> qVO = cBO.GetCJLotteriesList(conditionStr, (pageInfo.PageIndex - 1) * pageInfo.PageCount + 1, pageInfo.PageIndex * pageInfo.PageCount, pageInfo.SortName, pageInfo.SortType);
                 var count = cBO.FindCJLotteriesCount(conditionStr);
+            
                 if (qVO.Count > 0)
                 {
                     return new ResultObject() { Flag = 1, Message = "获取成功!", Result = qVO, Count = count, Subsidiary = condition, Subsidiary2 = conditionStr };
