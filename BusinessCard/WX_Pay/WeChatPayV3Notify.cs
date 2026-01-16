@@ -240,7 +240,7 @@ namespace BusinessCard.WX_Pay
                 // 1. 提取关键信息
                 orderNo = callbackData["out_bill_no"] != null ? callbackData["out_bill_no"].ToString() : null;
                 string transferBillNo = callbackData["transfer_bill_no"] != null ? callbackData["transfer_bill_no"].ToString() : null;
-                string transferStatus = callbackData["transfer_status"] != null ? callbackData["transfer_status"].ToString() : null;
+                string transferStatus = callbackData["state"] != null ? callbackData["state"].ToString() : null;
 
                 // 验证必要参数
                 if (string.IsNullOrEmpty(orderNo))

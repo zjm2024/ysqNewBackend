@@ -775,7 +775,7 @@ namespace BusinessCard.Controllers
 
 
                         //抽奖信息固定Id查询
-                        var lottery_id = 9;
+                        var lottery_id = 12;
 
                         ICJLotteriesDAO iDAO = new CJLotteriesDAO(new UserProfile());
                         cVO = iDAO.FindById(lottery_id);
@@ -1135,6 +1135,7 @@ namespace BusinessCard.Controllers
                 cVO.WeChat = PersonalVO.WeChat;
                 cVO.Details = PersonalVO.Details;
                 cVO.CardBack = PersonalVO.CardBack;
+                cVO.CompanyName = PersonalVO.CompanyName;
 
                 if ((cVO.latitude == 0 || cVO.longitude == 0) && cVO.Address != "")
                 {
@@ -1162,19 +1163,19 @@ namespace BusinessCard.Controllers
                 if (cBO.UpdatePersonal(cVO))
                 {
                     /*生成分享图片*/
-                    try
-                    {
-                        PersonalVO pVO = new PersonalVO();
-                        pVO.PersonalID = cVO.PersonalID;
-                        pVO.PosterImg = cBO.GetPersonalIMG(pVO.PersonalID);
-                        pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, pVO.BusinessID);
-                        pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
-                        cBO.UpdatePersonal(pVO);
-                    }
-                    catch
-                    {
+                    //try
+                    //{
+                    //    PersonalVO pVO = new PersonalVO();
+                    //    pVO.PersonalID = cVO.PersonalID;
+                    //    pVO.PosterImg = cBO.GetPersonalIMG(pVO.PersonalID);
+                    //    pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, pVO.BusinessID);
+                    //    pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
+                    //    cBO.UpdatePersonal(pVO);
+                    //}
+                    //catch
+                    //{
 
-                    }
+                    //}
                     return new ResultObject() { Flag = 1, Message = "更新成功!", Result = cVO };
                 }
                 else
@@ -16583,7 +16584,7 @@ namespace BusinessCard.Controllers
                     return new ResultObject() { Flag = 0, Message = "红包已领取!", Result = null };
                 }
                 // 5.  调用领取方法 保存中奖记录
-                var transferResult = cBO.WinningRecordPayment(records, pVO.AppType);
+                var transferResult = cBO.WinningRecordPayment(records, lotteries.remark, pVO.AppType);
 
                 // 构建返回给前端的结果
                 var result = new ResultObject

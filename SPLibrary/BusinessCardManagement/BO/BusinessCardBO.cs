@@ -11213,14 +11213,14 @@ namespace SPLibrary.BusinessCardManagement.BO
         /// 开奖领取 - 返回完整微信支付结果
         /// </summary>
         /// <returns>微信支付完整结果</returns>
-        public WeChatTransferResult WinningRecordPayment(CJWinningRecordsVO vo, int AppType)
+        public WeChatTransferResult WinningRecordPayment(CJWinningRecordsVO vo,string remark , int AppType)
         {
             try
             {
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
 
                 // 调用微信支付接口
-                var transferResult = cBO.WechatPayToChange(vo.winning_amount, vo.lottery_id, vo.personal_id, vo.openid, AppType, "问卷调查中奖奖金");
+                var transferResult = cBO.WechatPayToChange(vo.winning_amount, vo.lottery_id, vo.personal_id, vo.openid, AppType, string.IsNullOrEmpty(remark) ? "关注抽奖" : remark);
 
                 LogBO _log = new LogBO(typeof(BusinessCardBO));
                 _log.Info($"领取接口返回: Success={transferResult.Success}, State={transferResult.State}, Message={transferResult.Message}");

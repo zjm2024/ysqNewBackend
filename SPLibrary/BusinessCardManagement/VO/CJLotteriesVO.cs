@@ -55,6 +55,8 @@ namespace SPLibrary.BusinessCardManagement.VO
         public DateTime created_at { get { return (DateTime)GetValue(typeof(DateTime), "created_at"); } set { SetValue("created_at", value); } }
         [DataMember]
         public DateTime updated_at { get { return (DateTime)GetValue(typeof(DateTime), "updated_at"); } set { SetValue("updated_at", value); } }
+        [DataMember]
+        public String remark { get { return (String)GetValue(typeof(String), "remark"); } set { SetValue("remark", value); } }
 
         #region ICloneable Member
         public override object Clone()

@@ -70,6 +70,9 @@ namespace SPLibrary.BusinessCardManagement.VO
 
         [DataMember]
         public Int32 isApproval { get; set; }
+        [DataMember]
+        public String CompanyName { get { return (String)GetValue(typeof(String), "CompanyName"); } set { SetValue("CompanyName", value); } }
+        
 
         #region ICloneable Member
         public override object Clone()
