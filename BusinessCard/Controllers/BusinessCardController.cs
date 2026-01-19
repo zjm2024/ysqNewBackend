@@ -1097,6 +1097,28 @@ namespace BusinessCard.Controllers
                 return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
             }
 
+            //抽奖信息固定Id查询
+            CJLotteriesVO cVO1 = new CJLotteriesVO();
+            var lottery_id = 9;
+
+            ICJLotteriesDAO iDAO = new CJLotteriesDAO(new UserProfile());
+            cVO1 = iDAO.FindById(lottery_id);
+
+            if (cVO1 != null)
+            {
+                ICJWinningRecordsDAO icjDAO = new CJWinningRecordsDAO(new UserProfile());
+                var iCount = icjDAO.FindTotalCount("personal_id=" + PersonalVO.PersonalID + " and lottery_id=" + lottery_id.ToString());
+                if (iCount > 0)
+                    cVO1 = null;
+
+                if (cVO1 != null)
+                {
+                    object res = new { CJLotteries = cVO1 };
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = res };
+                }
+            }
+
+
             UserProfile uProfile = CacheManager.GetUserProfile(token);
             CustomerProfile cProfile = uProfile as CustomerProfile;
             int customerId = cProfile.CustomerId;

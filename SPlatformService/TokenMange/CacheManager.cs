@@ -108,13 +108,12 @@ namespace SPlatformService.TokenMange
     
 
             DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-            var dtCopy = dt.Copy();
 
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dtCopy.Select("token = '" + token + "'");
+                dr = dt.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -143,13 +142,12 @@ namespace SPlatformService.TokenMange
             CacheInit(companyId.ToString());
 
             DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-            var dtCopy = dt.Copy();
 
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dtCopy.Select("token = '" + token + "'");
+                dr = dt.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -178,13 +176,12 @@ namespace SPlatformService.TokenMange
             CacheInit(userId.ToString());
 
             DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-            var dtCopy = dt.Copy();
 
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dtCopy.Select("token = '" + token + "'");
+                dr = dt.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -246,13 +243,12 @@ namespace SPlatformService.TokenMange
             CacheInit(userId.ToString());
 
             DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-            var dtCopy = dt.Copy();
 
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dtCopy.Select("token = '" + token + "'");
+                dr = dt.Select("token = '" + token + "'");
             }
             catch { }
             finally
@@ -333,13 +329,12 @@ namespace SPlatformService.TokenMange
             CacheInit(userId.ToString());
 
             DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-            var dtCopy = dt.Copy();
 
             DataRow[] dr = new DataRow[0];
             Monitor.Enter(dt);
             try
             {
-                dr = dtCopy.Select("token = '" + token + "'");
+                dr = dt.Select("token = '" + token + "'");
             }
             catch { }
             finally
