@@ -3813,13 +3813,14 @@ namespace BusinessCard.Controllers
             }
         }
 
+
         /// <summary>
         /// 获取通讯录
         /// </summary>
         /// <param name="token">口令</param>
         /// <returns></returns>
         [Route("getDirectories"), HttpGet]
-        public ResultObject getDirectories(string token, int isExternal = 0)
+        public ResultObject getDirectories(string token, string name, int isExternal = 0)
         {
             BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
 
@@ -3832,27 +3833,57 @@ namespace BusinessCard.Controllers
                 PersonalVO pVO = cBO.FindPersonalByCustomerId(customerId);
                 if (pVO != null)
                 {
-                    BusinessCardVO bVO = cBO.FindBusinessCardById(pVO.BusinessID);
-                    if (bVO == null)
+                    List<PersonalViewVO> Personal = cBO.FindPersonalByBusinessID(pVO.BusinessID, name, isExternal);
+                    int count = cBO.FindNewPersonalCountByBusinessID(pVO.BusinessID);
+
+                    if (Personal != null && Personal.Count > 0)
                     {
-                        return new ResultObject() { Flag = 0, Message = "获取失败，您未绑定企业!", Result = null };
-                    }
-                    List<PersonalViewVO> Personal = cBO.FindPersonalViewByBusinessID(bVO.BusinessID, isExternal);
-
-                    for (int i = 0; i < Personal.Count; i++)
-                    {
-                        try
+                        // 收集所有PersonalID
+                        List<int> personalIds = new List<int>();
+                        foreach (var p in Personal)
                         {
-                            Personal[i].Jurisdiction = cBO.FindJurisdictionView(Personal[i].PersonalID, bVO.BusinessID);
+                            personalIds.Add(p.PersonalID);
                         }
-                        catch
-                        {
 
+                        // 批量查询权限数据
+                        string personalIdStr = string.Join(",", personalIds);
+                        var allJurisdictions = cBO.FindAllJurisdictionByPersonalID(personalIdStr, pVO.BusinessID.ToString());
+
+                        // 按用户ID分组权限
+                        Dictionary<int, List<JurisdictionVO>> jurisdictionDict = new Dictionary<int, List<JurisdictionVO>>();
+                        if (allJurisdictions != null && allJurisdictions.Count > 0)
+                        {
+                            // 使用传统的分组方式
+                            foreach (var jurisdiction in allJurisdictions)
+                            {
+                                int pid = jurisdiction.PersonalID;
+                                if (!jurisdictionDict.ContainsKey(pid))
+                                {
+                                    jurisdictionDict[pid] = new List<JurisdictionVO>();
+                                }
+                                jurisdictionDict[pid].Add(jurisdiction);
+                            }
+                        }
+
+                        // 批量转换权限视图
+                        var jurisdictionViewDict = cBO.FindJurisdictionViewBatch(jurisdictionDict);
+
+                        // 分配权限到每个用户
+                        for (int i = 0; i < Personal.Count; i++)
+                        {
+                            int pid = Personal[i].PersonalID;
+                            if (jurisdictionViewDict.ContainsKey(pid))
+                            {
+                                Personal[i].Jurisdiction = jurisdictionViewDict[pid];
+                            }
+                            else
+                            {
+                                Personal[i].Jurisdiction = new JurisdictionViewVO();
+                            }
                         }
                     }
 
-
-                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = Personal };
+                    return new ResultObject() { Flag = 1, Message = "获取成功!", Result = Personal, Count = count };
                 }
                 else
                 {
@@ -3861,9 +3892,9 @@ namespace BusinessCard.Controllers
             }
             catch (Exception ex)
             {
-                return new ResultObject() { Flag = 0, Message = "获取失败!", Result = ex };
+                // 异常处理
+                return new ResultObject() { Flag = 0, Message = "获取失败!", Result = null };
             }
-
         }
 
         /// <summary>

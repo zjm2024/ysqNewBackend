@@ -1,4 +1,5 @@
-﻿using BroadSky.WeChatAppDecrypt;
+﻿using Baidu.Aip.Kg;
+using BroadSky.WeChatAppDecrypt;
 using CoreFramework.DAO;
 using CoreFramework.VO;
 using ImportEXCEL;
@@ -20,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -629,6 +631,17 @@ namespace SPLibrary.BusinessCardManagement.BO
         }
 
         /// <summary>
+        /// 获取个人信息数量
+        /// </summary>
+        /// <param name="BusinessID"></param>
+        /// <returns></returns>
+        public int FindNewPersonalCountByBusinessID(int BusinessID)
+        {
+            IPersonalDAO rDAO = BusinessCardManagementDAOFactory.PersonalDAO(this.CurrentCustomerProfile);
+            return rDAO.FindTotalCount("BusinessID = " + BusinessID) ;
+        }
+
+        /// <summary>
         /// 获取公司成员个人信息列表(视图)
         /// </summary>
         /// <param name="BusinessID"></param>
@@ -664,6 +677,26 @@ namespace SPLibrary.BusinessCardManagement.BO
 
                 cVO.Add(pVO);
             }
+            cVO.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            return cVO;
+        }
+
+        /// <summary>
+        /// 获取公司成员个人信息列表(视图)
+        /// </summary>
+        /// <param name="BusinessID"></param>
+        /// <returns></returns>
+        public List<PersonalViewVO> FindPersonalByBusinessID(int BusinessID,string name, int isExternal = 2)
+        {
+            IPersonalViewDAO rDAO = BusinessCardManagementDAOFactory.PersonalViewDAO(this.CurrentCustomerProfile);
+            string sql = "BusinessID = " + BusinessID + " limit 0,50";
+            if (!string.IsNullOrEmpty(name)) {
+                sql = "BusinessID = " + BusinessID + " AND Name like '%"+ name +"%' limit 0,50";
+            }
+            
+       
+            List<PersonalViewVO> cVO = rDAO.FindByParams(sql);
             cVO.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             return cVO;
@@ -2756,6 +2789,34 @@ namespace SPLibrary.BusinessCardManagement.BO
             IJurisdictionDAO rDAO = BusinessCardManagementDAOFactory.JurisdictionDAO(this.CurrentCustomerProfile);
             return rDAO.FindTotalCount("PersonalID = " + PersonalID + " and BusinessID=" + BusinessID + " and Type='" + Type + "'") > 0;
         }
+        /// <summary>
+        /// 获取当前人的所有权限
+        /// </summary>
+        /// <param name="PersonalID"></param>
+        /// <param name="BusinessID"></param>
+        /// <param name="Type"></param>
+        /// <returns></returns>
+        public List<JurisdictionVO> FindJurisdictionByPersonalID(int PersonalID, int BusinessID)
+        {
+            IJurisdictionDAO rDAO = BusinessCardManagementDAOFactory.JurisdictionDAO(this.CurrentCustomerProfile);
+            return rDAO.FindByParams("PersonalID = " + PersonalID + " and BusinessID=" + BusinessID );
+        }
+
+
+
+
+        /// <summary>
+        /// 获取当前公司的所有权限
+        /// </summary>
+        /// <param name="PersonalID"></param>
+        /// <param name="BusinessID"></param>
+        /// <param name="Type"></param>
+        /// <returns></returns>
+        public List<JurisdictionVO> FindAllJurisdictionByBusinessID(int BusinessID)
+        {
+            IJurisdictionDAO rDAO = BusinessCardManagementDAOFactory.JurisdictionDAO(this.CurrentCustomerProfile);
+            return rDAO.FindByParams("BusinessID=" + BusinessID);
+        }
 
         /// <summary>
         /// 获取公司的管理员
@@ -2791,54 +2852,137 @@ namespace SPLibrary.BusinessCardManagement.BO
                 return 0;
             }
         }
+
         /// <summary>
-        /// 获取个人所有权限
+        /// 获取个人所有权限视图（修正版）
         /// </summary>
+        /// <param name="PersonalID"></param>
         /// <param name="BusinessID"></param>
         /// <returns></returns>
         public JurisdictionViewVO FindJurisdictionView(int PersonalID, int BusinessID)
         {
             JurisdictionViewVO jVO = new JurisdictionViewVO();
-            if (BusinessID == 73)
-            {
-                jVO.Admin = true;
-                jVO.Web = true;
-                jVO.Product = true;
-                jVO.Clients = true;
-                jVO.Performance = true;
-                jVO.Personnel = true;
-                jVO.Order = true;
-                jVO.CloudCall = true;
-                jVO.AddAgent = true;
-                return jVO;
-            }
-            PersonalVO pVO = FindPersonalById(PersonalID);
+            List<JurisdictionVO> list = FindJurisdictionByPersonalID(PersonalID, BusinessID);
 
-            if (pVO.isExternal)
+            if (list != null)
             {
-                jVO.Admin = false;
-                jVO.Web = false;
-                jVO.Product = false;
-                jVO.Clients = false;
-                jVO.Performance = false;
-                jVO.Personnel = false;
-                jVO.CloudCall = false;
-                jVO.Order = true;
-                jVO.AddAgent = false;
-                return jVO;
+                // 修正：Order权限应该使用Order类型，而不是Admin
+                foreach (var item in list)
+                {
+                    if (item.Type == "Admin") jVO.Admin = true;
+                    else if (item.Type == "Web") jVO.Web = true;
+                    else if (item.Type == "Product") jVO.Product = true;
+                    else if (item.Type == "Clients") jVO.Clients = true;
+                    else if (item.Type == "Performance") jVO.Performance = true;
+                    else if (item.Type == "Personnel") jVO.Personnel = true;
+                    else if (item.Type == "Order") jVO.Order = true; // 修正这里
+                    else if (item.Type == "CloudCall") jVO.CloudCall = true;
+                    else if (item.Type == "AddAgent") jVO.AddAgent = true;
+                }
             }
 
-            jVO.Admin = FindJurisdiction(PersonalID, BusinessID, "Admin");
-            jVO.Web = FindJurisdiction(PersonalID, BusinessID, "Web");
-            jVO.Product = FindJurisdiction(PersonalID, BusinessID, "Product");
-            jVO.Clients = FindJurisdiction(PersonalID, BusinessID, "Clients");
-            jVO.Performance = FindJurisdiction(PersonalID, BusinessID, "Performance");
-            jVO.Personnel = FindJurisdiction(PersonalID, BusinessID, "Personnel");
-            jVO.Order = FindJurisdiction(PersonalID, BusinessID, "Order");
-            jVO.CloudCall = FindJurisdiction(PersonalID, BusinessID, "CloudCall");
-            jVO.AddAgent = FindJurisdiction(PersonalID, BusinessID, "AddAgent");
             return jVO;
         }
+
+        /// <summary>
+        /// 批量获取多个用户的权限视图（基于批量权限列表）
+        /// </summary>
+        /// <param name="jurisdictionBatchResult">批量权限列表（Key=PersonalID）</param>
+        /// <returns>Key=PersonalID，Value=权限视图VO</returns>
+        public Dictionary<int, JurisdictionViewVO> FindJurisdictionViewBatch(
+            Dictionary<int, List<JurisdictionVO>> jurisdictionBatchResult)
+        {
+            var resultDict = new Dictionary<int, JurisdictionViewVO>();
+            if (jurisdictionBatchResult == null || jurisdictionBatchResult.Count == 0)
+                return resultDict;
+
+            foreach (var kvp in jurisdictionBatchResult)
+            {
+                int personalID = kvp.Key;
+                List<JurisdictionVO> list = kvp.Value;
+
+                if (list == null)
+                {
+                    list = new List<JurisdictionVO>();
+                }
+
+                JurisdictionViewVO jVO = new JurisdictionViewVO();
+
+                // 使用传统的遍历方式，避免高级语法
+                foreach (var item in list)
+                {
+                    if (string.IsNullOrEmpty(item.Type)) continue;
+
+                    string type = item.Type.Trim();
+                    if (type.Equals("Admin", StringComparison.OrdinalIgnoreCase)) jVO.Admin = true;
+                    else if (type.Equals("Web", StringComparison.OrdinalIgnoreCase)) jVO.Web = true;
+                    else if (type.Equals("Product", StringComparison.OrdinalIgnoreCase)) jVO.Product = true;
+                    else if (type.Equals("Clients", StringComparison.OrdinalIgnoreCase)) jVO.Clients = true;
+                    else if (type.Equals("Performance", StringComparison.OrdinalIgnoreCase)) jVO.Performance = true;
+                    else if (type.Equals("Personnel", StringComparison.OrdinalIgnoreCase)) jVO.Personnel = true;
+                    else if (type.Equals("Order", StringComparison.OrdinalIgnoreCase)) jVO.Order = true; // 修正这里
+                    else if (type.Equals("CloudCall", StringComparison.OrdinalIgnoreCase)) jVO.CloudCall = true;
+                    else if (type.Equals("AddAgent", StringComparison.OrdinalIgnoreCase)) jVO.AddAgent = true;
+                }
+
+                resultDict[personalID] = jVO;
+            }
+
+            return resultDict;
+        }
+
+        /// <summary>
+        /// 获取指定用户/业务的所有权限（批量版）
+        /// </summary>
+        /// <param name="personalIDs">用户ID列表（多个用逗号分隔，如"1,2,3"）</param>
+        /// <param name="businessID">业务ID</param>
+        /// <returns>权限列表</returns>
+        public List<JurisdictionVO> FindAllJurisdictionByPersonalID(string personalIDs, string businessID)
+        {
+            if (string.IsNullOrEmpty(personalIDs) || string.IsNullOrEmpty(businessID))
+            {
+                return new List<JurisdictionVO>();
+            }
+
+            IJurisdictionDAO rDAO = BusinessCardManagementDAOFactory.JurisdictionDAO(this.CurrentCustomerProfile);
+
+            // 基本参数校验
+            string[] personalIdArray = personalIDs.Split(',');
+            bool isValid = true;
+            foreach (string id in personalIdArray)
+            {
+                int temp;
+                if (!int.TryParse(id, out temp))
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (!isValid)
+            {
+                return new List<JurisdictionVO>();
+            }
+
+            string sql = string.Format("PersonalID IN ({0}) AND BusinessID = {1}", personalIDs, businessID);
+
+            try
+            {
+                var result = rDAO.FindByParams(sql);
+                if (result == null)
+                {
+                    return new List<JurisdictionVO>();
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                //// 简单的日志输出
+                //System.Diagnostics.Debug.WriteLine("查询权限失败：" + ex.Message);
+                return new List<JurisdictionVO>();
+            }
+        }
+
 
         /// <summary>
         /// 添加销售目标
