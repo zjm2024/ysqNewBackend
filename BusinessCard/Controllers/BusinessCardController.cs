@@ -1184,7 +1184,7 @@ namespace BusinessCard.Controllers
                     if (PersonalVO.Name.Trim() != "" && PersonalVO.Phone.Trim() != "" && PersonalVO.Position.Trim() != "")
                     {
                          cVO1 = new CJLotteriesVO();
-                        var lottery_id = 9;
+                        var lottery_id = 13;
 
                         ICJLotteriesDAO iDAO = new CJLotteriesDAO(new UserProfile());
                         cVO1 = iDAO.FindById(lottery_id);
