@@ -104,27 +104,24 @@ namespace SPlatformService.TokenMange
             string cacheKey;
             TokenSplit(token, out userId, out cacheKey);
 
-            CacheInit(userId.ToString());
-    
 
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-
-            DataRow[] dr = new DataRow[0];
-            Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                UserBO uBO = new UserBO(new UserProfile());
+                List<TokenVO> dtList = uBO.FindTokeByToken(token, userId);
+                if (dtList != null)
+                {
+                    if (dtList.Count > 0)
+                        return Convert.ToInt32(dtList[0]["UserId"]);
+
+                }
             }
-            catch { }
-            finally
+            catch (Exception ex)
             {
-                Monitor.Exit(dt);
+                LogError($"GetUserId查找令牌行失败: {token}", ex);
+                return 0;
             }
 
-            if (dr.Length > 0)
-            {
-                return Convert.ToInt32(dr[0]["UserId"]);
-            }
             return 0;
         }
 
@@ -139,26 +136,23 @@ namespace SPlatformService.TokenMange
             string cacheKey;
             TokenSplit(token, out companyId, out cacheKey);
 
-            CacheInit(companyId.ToString());
-
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-
-            DataRow[] dr = new DataRow[0];
-            Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                UserBO uBO = new UserBO(new UserProfile());
+                List<TokenVO> dtList = uBO.FindTokeByToken(token, companyId);
+                if (dtList != null)
+                {
+                    if (dtList.Count > 0)
+                        return Convert.ToInt32(dtList[0]["CompanyId"]);
+
+                }
             }
-            catch { }
-            finally
+            catch (Exception ex)
             {
-                Monitor.Exit(dt);
+                LogError($"GetCompanyId查找令牌行失败: {token}", ex);
+                return 0;
             }
 
-            if (dr.Length > 0)
-            {
-                return Convert.ToInt32(dr[0]["CompanyId"]);
-            }
             return 0;
         }
         
@@ -173,56 +167,50 @@ namespace SPlatformService.TokenMange
             string cacheKey;
             TokenSplit(token, out userId, out cacheKey);
 
-            CacheInit(userId.ToString());
-
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-
-            DataRow[] dr = new DataRow[0];
-            Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
-            }
-            catch { }
-            finally
-            {
-                Monitor.Exit(dt);
-            }
+                UserBO uBO = new UserBO(new UserProfile());
+                List<TokenVO> dtList = uBO.FindTokeByToken(token, userId);
 
-            
-            if (dr.Length > 0)
-            {
-                //不从DB获取，如果需要LoginName和Phone，另外再修改登录方法
-                //UserProfile userProfile = new UserProfile();
-                //int userId = Convert.ToInt32(dr[0]["UserId"]);
-                //IUserViewDAO uDAO = new UserViewDAO(new UserProfile());
-                //UserViewVO uVO = uDAO.FindById(userId);
-
-                //userProfile.UserId = uVO.UserId;
-                //userProfile.LoginName = uVO.LoginName;
-                //userProfile.UserName = uVO.UserName;
-                //userProfile.DeaprtmentId = uVO.DepartmentId;
-                //userProfile.CompanyId = uVO.CompanyId;
-                //userProfile.Phone = uVO.Phone;
-                if (Convert.ToBoolean(dr[0]["IsUser"]))
+                if (dtList != null)
                 {
-                    //平台用户
-                    UserProfile userProfile = new UserProfile();
-                    userProfile.UserId = Convert.ToInt32(dr[0]["UserId"]);
-                    userProfile.DeaprtmentId = Convert.ToInt32(dr[0]["DepartmentId"]);
-                    userProfile.CompanyId = Convert.ToInt32(dr[0]["CompanyId"]);
+                    if (dtList.Count > 0)
+                    {
 
-                    return userProfile;
-                }
-                else
-                {
-                    //会员
-                    CustomerProfile customerProfile = new CustomerProfile();
-                    customerProfile.CustomerId = Convert.ToInt32(dr[0]["UserId"]);
+                        if (Convert.ToBoolean(dtList[0]["IsUser"]))
+                        {
+                            //平台用户
+                            UserProfile userProfile = new UserProfile();
+                            userProfile.UserId = Convert.ToInt32(dtList[0]["UserId"]);
+                            userProfile.DeaprtmentId = Convert.ToInt32(dtList[0]["DepartmentId"]);
+                            userProfile.CompanyId = Convert.ToInt32(dtList[0]["CompanyId"]);
 
-                    return customerProfile;
+                            return userProfile;
+                        }
+                        else
+                        {
+                            //会员
+                            CustomerProfile customerProfile = new CustomerProfile();
+                            customerProfile.CustomerId = Convert.ToInt32(dtList[0]["UserId"]);
+
+                            return customerProfile;
+                        }
+
+
+
+
+                    }
+
                 }
+
+
             }
+            catch (Exception ex)
+            {
+                LogError($"GetUserProfile查找令牌行失败: {token}", ex);
+                return null;
+            }
+
             return null;
         }        
 
@@ -240,37 +228,41 @@ namespace SPlatformService.TokenMange
             if (userId == 0)
                 return false;
 
-            CacheInit(userId.ToString());
-
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-
-            DataRow[] dr = new DataRow[0];
-            Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
+                UserBO uBO = new UserBO(new UserProfile());
+                List<TokenVO> dtList = uBO.FindTokeByToken(token, userId);
+
+                if (dtList != null)
+                {
+                    if (dtList.Count > 0)
+                    {
+
+                        var timeout = DateTime.Parse(dtList[0]["Timeout"].ToString());
+                        var isUser = !Boolean.Parse(dtList[0]["IsUser"].ToString());
+                        if (timeout > DateTime.Now)
+                        {
+                            //如果已经存在，更新timout
+                            TokenTimeUpdate(token, isUser);
+                            return true;
+                        }
+                        else
+                        {
+                            RemoveToken(token);
+                            return false;
+                        }
+
+                    }
+                }
+
+
             }
-            catch { }
-            finally
+            catch (Exception ex)
             {
-                Monitor.Exit(dt);
+                LogError($"TokenIsExist查找令牌行失败: {token}", ex);
+                return false;
             }
 
-            if (dr.Length > 0)
-            {
-                var timeout = DateTime.Parse(dr[0]["Timeout"].ToString());
-                if (timeout > DateTime.Now)
-                {
-                    //如果已经存在，更新timout
-                    TokenTimeUpdate(token);
-                    return true;
-                }
-                else
-                {
-                    RemoveToken(token);
-                    return false;
-                }
-            }
             return false;
         }
 
@@ -285,33 +277,15 @@ namespace SPlatformService.TokenMange
             string cacheKey;
             TokenSplit(token, out userId, out cacheKey);
 
-            CacheInit(userId.ToString());
-
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-            DataRow[] dr = new DataRow[0];
-            Monitor.Enter(dt);
             try
             {
-                dr = dt.Select("token = '" + token + "'");
-            }
-            catch { }
-            finally
-            {
-                Monitor.Exit(dt);
-            }
-
-            if (dr.Length > 0)
-            {
                 UserBO uBO = new UserBO(new UserProfile());
-                try
-                {
-                    uBO.DeleteTokenbyToken(token, userId);
-                    dt.Rows.Remove(dr[0]);
-                }
-                catch
-                {
-
-                }
+                uBO.DeleteTokenbyToken(token, userId);
+            }
+            catch (Exception ex)
+            {
+                LogError($"RemoveToken移除令牌行失败: {token}", ex);
+                return false;
             }
             return true;
         }
@@ -321,47 +295,27 @@ namespace SPlatformService.TokenMange
         /// </summary>
         /// <param name="Token">令牌</param>
         /// <param name="time">过期时间</param>
-        public static void TokenTimeUpdate(string token)
+        public static void TokenTimeUpdate(string token ,bool isUser)
         {
             int userId;
             string cacheKey;
             TokenSplit(token, out userId, out cacheKey);
-            CacheInit(userId.ToString());
-
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-
-            DataRow[] dr = new DataRow[0];
-            Monitor.Enter(dt);
-            try
+            TokenVO tVO = new TokenVO();
+            tVO.Token = token;
+            tVO.UserId = userId;
+            tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
+            if (isUser)  //不是平台用户
             {
-                dr = dt.Select("token = '" + token + "'");
-            }
-            catch { }
-            finally
-            {
-                Monitor.Exit(dt);
-            }
-
-            if (dr.Length > 0)
-            {
-                dr[0]["Timeout"] = DateTime.Now.AddSeconds(TokenTimeout);
-
-                TokenVO tVO = new TokenVO();
-                tVO.Token = token;
-                tVO.UserId = userId;
-                tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
-                if (!Boolean.Parse(dr[0]["IsUser"].ToString()))
+                UserBO uBO = new UserBO(new UserProfile());
+                try
                 {
-                    UserBO uBO = new UserBO(new UserProfile());
-                    try
-                    {
-                        uBO.UpdateTokenTime(tVO);
-                    }
-                    catch
-                    {
-
-                    }
+                    uBO.UpdateTokenTime(tVO);
                 }
+                catch (Exception ex)
+                {
+                    LogError($"TokenTimeUpdate更新令牌行失败: {token}", ex);
+                }
+
             }
         }
 
@@ -374,165 +328,115 @@ namespace SPlatformService.TokenMange
         /// <returns></returns>
         public static string TokenInsert(int companyId,int departmentId, int userId)
         {
-            string cacheKey = $"PASSPORT.TOKEN.{userId.ToString()}";
-            CacheInit(userId.ToString());
-            UserBO uBo = new UserBO(new UserProfile());
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-
-            //// token不存在则添加
-            bool isExists = false;
-            foreach (DataRow row in dt.Rows)
+            try
             {
-                if (Convert.ToInt32(row["CompanyId"]) == companyId
-                    && Convert.ToInt32(row["DepartmentId"]) == departmentId
-                    && Convert.ToInt32(row["UserId"]) == userId
-                    )
+                UserBO uBo = new UserBO(new UserProfile());
+                List<TokenVO> dtList = uBo.FindTokeByParams("CompanyId=" + companyId + " and DepartmentId=" + departmentId + " and UserId=" + userId);
+
+                if (dtList != null)
                 {
-                    isExists = true;
-                    //存在，什么都不做，更新时间，并直接返回token
-                    TokenVO tVO = new TokenVO();
-                    tVO.Token = row["Token"].ToString();
-                    tVO.CompanyId = companyId;
-                    tVO.DepartmentId = departmentId;
-                    tVO.UserId = userId;
-                    tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
+                    if (dtList.Count > 0)
+                    {
 
-                    List<TokenVO> tokenlist = uBo.FindTokeByToken(row["Token"].ToString(), userId);
+                        //存在，什么都不做，更新时间，并直接返回token
+                        TokenVO tVO = new TokenVO();
+                        tVO.Token = dtList[0]["Token"].ToString();
+                        tVO.CompanyId = companyId;
+                        tVO.DepartmentId = departmentId;
+                        tVO.UserId = userId;
+                        tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
 
-                    if (tokenlist.Count > 0)
                         uBo.UpdateTokenTime(tVO);
+
+
+                        return tVO.Token;
+
+                    }
                     else
+                    {
+                        string guid = Guid.NewGuid().ToString();
+                        string base64Userid = Convert.ToBase64String(Encoding.UTF8.GetBytes(userId.ToString()));
+                        string token = $"{guid}.{base64Userid}";
+
+                        //add to DB 
+                        TokenVO tVO = new TokenVO();
+                        tVO.Token = token;
+                        tVO.CompanyId = companyId;
+                        tVO.DepartmentId = departmentId;
+                        tVO.UserId = userId;
+                        tVO.IsUser = true;
+                        tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
+
                         uBo.InsertToken(tVO);
+                        //保存成功后才返回token
+                        return token;
 
-
-                    row["Timeout"] = tVO.Timeout;
-                    HttpRuntime.Cache[cacheKey] = dt;
-
-                    return tVO.Token;
-
+                    }
                 }
             }
-            if (!isExists)
+            catch (Exception ex)
             {
-
-                DataRow dr = dt.NewRow();
-                string guid = Guid.NewGuid().ToString();
-                string base64Userid = Convert.ToBase64String(Encoding.UTF8.GetBytes(userId.ToString()));
-                string token = $"{guid}.{base64Userid}";
-
-                dr["Token"] = token;   //token 带userId传递
-                dr["CompanyId"] = companyId;
-                dr["DepartmentId"] = departmentId;
-                dr["UserId"] = userId;
-                dr["IsUser"] = true;
-                dr["Timeout"] = DateTime.Now.AddSeconds(TokenTimeout);
-                dt.Rows.Add(dr);
-
-
-                //add to DB 
-                TokenVO tVO = new TokenVO();
-                tVO.Token = token;
-                tVO.CompanyId = companyId;
-                tVO.DepartmentId = departmentId;
-                tVO.UserId = userId;
-                tVO.IsUser = true;
-                tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
-
-                uBo.InsertToken(tVO);
-                //保存成功后才更新缓存表
-                HttpRuntime.Cache[cacheKey] = dt;
-                return token;
-            }
-            else
+                LogError($"TokenInsert插入令牌行失败: {userId}", ex);
                 return "";
+            }
+
+            return "";
         }
 
         public static string TokenInsert(int customerId)
         {
-            CacheInit(customerId.ToString());
-            string cacheKey = $"PASSPORT.TOKEN.{customerId.ToString()}";
-            DataTable dt = (DataTable)HttpRuntime.Cache[cacheKey];
-            UserBO uBo = new UserBO(new UserProfile());
-            bool isExists = false;
-
-            foreach (DataRow row in dt.Rows)
+            try
             {
-                if (Convert.ToInt32(row["CompanyId"]) == 0
-                    && Convert.ToInt32(row["DepartmentId"]) == 0
-                    && Convert.ToInt32(row["UserId"]) == customerId
-                    )
+                UserBO uBo = new UserBO(new UserProfile());
+                List<TokenVO> dtList = uBo.FindTokeByParams("CompanyId=0 and DepartmentId=0 and UserId=" + customerId);
+
+                if (dtList != null)
                 {
-                    isExists = true;
-                    //存在，什么都不做，更新时间，并直接返回token
-                    TokenVO tVO = new TokenVO();
-                    tVO.Token = row["Token"].ToString();
-                    tVO.UserId = customerId;
-                    tVO.CompanyId = 0;
-                    tVO.DepartmentId = 0;
-                    tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
-
-                    List<TokenVO> tokenlist = uBo.FindTokeByToken(row["Token"].ToString(), customerId);
-
-                    if (tokenlist.Count > 0)
-                        uBo.UpdateTokenTime(tVO);
-                    else
-                        uBo.InsertToken(tVO);
-
-                    row["Timeout"] = tVO.Timeout;
-                    HttpRuntime.Cache[cacheKey] = dt;
-
-                    return tVO.Token;
-                }
-            }
-
-            if (!isExists)
-            {
-                try
-                {
-                    DataRow dr = dt.NewRow();
-                    string guid = Guid.NewGuid().ToString();
-                    string base64Userid = Convert.ToBase64String(Encoding.UTF8.GetBytes(customerId.ToString()));
-                    string token = $"{guid}.{base64Userid}";
-                    dr["Token"] = token;
-                    dr["CompanyId"] = 0;
-                    dr["DepartmentId"] = 0;
-                    dr["UserId"] = customerId;
-                    dr["IsUser"] = false;
-                    dr["Timeout"] = DateTime.Now.AddSeconds(TokenTimeout);
-                    dt.Rows.Add(dr);
-
-
-                    //add to DB 
-                    TokenVO tVO = new TokenVO();
-                    tVO.Token = token;
-                    tVO.CompanyId = 0;
-                    tVO.DepartmentId = 0;
-                    tVO.UserId = customerId;
-                    tVO.IsUser = false;
-                    tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
-
-                    uBo.InsertToken(tVO);
-
-                    //保存成功后才更新缓存表
-                    HttpRuntime.Cache[cacheKey] = dt;
-
-                    return token;
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message.ToString().Contains("内部索引已损坏"))
+                    if (dtList.Count > 0)
                     {
-                        CacheInit(customerId.ToString(), true);
+                        //存在，什么都不做，更新时间，并直接返回token
+                        TokenVO tVO = new TokenVO();
+                        tVO.Token = dtList[0]["Token"].ToString();
+                        tVO.UserId = customerId;
+                        tVO.CompanyId = 0;
+                        tVO.DepartmentId = 0;
+                        tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
+
+                        uBo.UpdateTokenTime(tVO);
+
+                        return tVO.Token;
+
                     }
-                    LogBO _log = new LogBO(typeof(CacheManager));
-                    string strErrorMsg = "Message:" + ex.Message.ToString() + "\r\n  Stack :" + ex.StackTrace + " \r\n Source :" + ex.Source;
-                    _log.Error(strErrorMsg);
-                    return "";
+                    else
+                    {
+                        string guid = Guid.NewGuid().ToString();
+                        string base64Userid = Convert.ToBase64String(Encoding.UTF8.GetBytes(customerId.ToString()));
+                        string token = $"{guid}.{base64Userid}";
+
+                        //add to DB 
+                        TokenVO tVO = new TokenVO();
+                        tVO.Token = token;
+                        tVO.CompanyId = 0;
+                        tVO.DepartmentId = 0;
+                        tVO.UserId = customerId;
+                        tVO.IsUser = false;
+                        tVO.Timeout = DateTime.Now.AddSeconds(TokenTimeout);
+
+                        uBo.InsertToken(tVO);
+                        return token;
+                    }
                 }
 
             }
-            else
+
+            catch (Exception ex)
+            {
+                LogError($"TokenInsert插入令牌行失败: {customerId}", ex);
                 return "";
+            }
+
+
+            return "";
         }
 
         public static void TokenSplit(string token, out int userId, out string cacheKey)
@@ -554,5 +458,31 @@ namespace SPlatformService.TokenMange
                 cacheKey = $"PASSPORT.TOKEN.{userId}";
             }
         }
+
+
+        /// <summary>
+        /// 记录错误日志
+        /// </summary>
+        private static void LogError(string message, Exception ex = null)
+        {
+            try
+            {
+                LogBO log = new LogBO(typeof(CacheManager));
+                string errorMsg = $"{message}\r\n";
+
+                if (ex != null)
+                {
+                    errorMsg += $"Message: {ex.Message}\r\nStack: {ex.StackTrace}\r\nSource: {ex.Source}";
+                }
+
+                log.Error(errorMsg);
+            }
+            catch
+            {
+                // 日志记录失败，不抛出异常
+            }
+        }
+
+
     }
 }

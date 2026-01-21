@@ -344,6 +344,12 @@ namespace SPLibrary.UserManagement.BO
             return tDAO.FindByParams("UserId=" + userId);
         }
 
+        public List<TokenVO> FindTokeByParams(string condition, params object[] parameters)
+        {
+            ITokenDAO tDAO = UserManagementDAOFactory.CreateTokenDAO(CurrentUserProfile);
+            return tDAO.FindByParams(condition, parameters);
+        }
+
         public List<TokenVO> FindTokeByToken(string token, int userId)
         {
             ITokenDAO tDAO = UserManagementDAOFactory.CreateTokenDAO(CurrentUserProfile);
