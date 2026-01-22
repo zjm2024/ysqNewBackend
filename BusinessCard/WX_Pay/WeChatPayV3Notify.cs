@@ -235,8 +235,11 @@ namespace BusinessCard.WX_Pay
 
             try
             {
-                //_log.Info("开始处理业务逻辑");
-
+                _log.Info("开始处理业务逻辑");
+                string callbackDataStr = callbackData == null
+            ? "callbackData为null"  // 空值友好提示
+            : callbackData.ToString(Formatting.Indented); // 格式化输出（带缩进）
+                _log.Info("callbackData内容：" + callbackDataStr);
                 // 1. 提取关键信息
                 orderNo = callbackData["out_bill_no"] != null ? callbackData["out_bill_no"].ToString() : null;
                 string transferBillNo = callbackData["transfer_bill_no"] != null ? callbackData["transfer_bill_no"].ToString() : null;

@@ -11165,6 +11165,25 @@ namespace SPLibrary.BusinessCardManagement.BO
         }
 
         /// <summary>
+        /// 抽奖详情
+        /// </summary>
+        /// <param name="condtion"></param>
+        /// <returns></returns>
+        public CJLotteriesVO FindCJLotteriesById(string condtion)
+        {
+            ICJLotteriesDAO rDAO = BusinessCardManagementDAOFactory.CJLotteriesDAO(this.CurrentCustomerProfile);
+            List<CJLotteriesVO> VO = rDAO.FindByParams(condtion);
+            if (VO.Count > 0)
+            {
+                return VO[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 抽奖活动分页
         /// </summary>
         /// <param name="conditionStr"></param>

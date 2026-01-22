@@ -778,8 +778,7 @@ namespace BusinessCard.Controllers
                         var lottery_id = 12;
 
                         ICJLotteriesDAO iDAO = new CJLotteriesDAO(new UserProfile());
-                        cVO = iDAO.FindById(lottery_id);
-
+                        cVO = cBO.FindCJLotteriesById("Status=1 AND lottery_id = " + lottery_id);
                         if (cVO!=null)
                         {
                             ICJWinningRecordsDAO icjDAO = new CJWinningRecordsDAO(new UserProfile());
@@ -1187,8 +1186,7 @@ namespace BusinessCard.Controllers
                         var lottery_id = 13;
 
                         ICJLotteriesDAO iDAO = new CJLotteriesDAO(new UserProfile());
-                        cVO1 = iDAO.FindById(lottery_id);
-
+                        cVO1 = cBO.FindCJLotteriesById("Status=1 AND lottery_id = " + lottery_id);
                         if (cVO1 != null)
                         {
                             ICJWinningRecordsDAO icjDAO = new CJWinningRecordsDAO(new UserProfile());
@@ -16414,7 +16412,6 @@ namespace BusinessCard.Controllers
             try
             {
                 LogBO _log = new LogBO(typeof(BusinessCardController));
-                _log.Info("获取抽奖活动列表");
                 if (condition == null)
                 {
                     return new ResultObject() { Flag = 0, Message = "参数为空!", Result = null };
