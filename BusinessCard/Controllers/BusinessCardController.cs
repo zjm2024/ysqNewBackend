@@ -2668,15 +2668,15 @@ namespace BusinessCard.Controllers
                     pVO.ReadNum = cBO.FindNumberOfVisitors("Personal", pVO.PersonalID);
                     pVO.todayReadNum = cBO.FindNumberOfVisitors("Personal", pVO.PersonalID, 1, 0);
 
-                    if (pVO.QRimg == "")
-                    {
-                        pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
-                    }
+                    //if (pVO.QRimg == "")
+                    //{
+                    //    pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
+                    //}
 
-                    if (pVO.PosterImg3 == "" || BusinessID > 0)
-                    {
-                        pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, BusinessID);
-                    }
+                    //if (pVO.PosterImg3 == "" || BusinessID > 0)
+                    //{
+                    //    pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, BusinessID);
+                    //}
 
                     WebVO WebVO = new WebVO();
                     List<InfoViewVO> product = new List<InfoViewVO>();
@@ -2684,19 +2684,19 @@ namespace BusinessCard.Controllers
 
                     if (BusinessID == 0 || BusinessID == pVO.BusinessID)
                         BusinessID = pVO.BusinessID;
-                    else
-                    {
-                        //判断是否是指定公司成员
-                        List<SecondBusinessVO> sListVO = cBO.FindSecondBusinessByPersonalID(pVO.PersonalID, BusinessID);
-                        if (sListVO.Count <= 0)
-                        {
-                            BusinessID = pVO.BusinessID;
-                        }
-                        else
-                        {
-                            pVO.Position = sListVO[0].Position;
-                        }
-                    }
+                    //else
+                    //{
+                    //    //判断是否是指定公司成员
+                    //    List<SecondBusinessVO> sListVO = cBO.FindSecondBusinessByPersonalID(pVO.PersonalID, BusinessID);
+                    //    if (sListVO.Count <= 0)
+                    //    {
+                    //        BusinessID = pVO.BusinessID;
+                    //    }
+                    //    else
+                    //    {
+                    //        pVO.Position = sListVO[0].Position;
+                    //    }
+                    //}
 
                     ThemeVO ThemeVO = new ThemeVO();
                     ThemeVO.setThemeVO();

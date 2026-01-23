@@ -238,24 +238,46 @@ namespace SPlatformService.TokenMange
                     if (dtList.Count > 0)
                     {
 
-                        var timeout = DateTime.Parse(dtList[0]["Timeout"].ToString());
-                        var isUser = !Boolean.Parse(dtList[0]["IsUser"].ToString());
-                        
-                       if  (timeout> DateTime.Now && DateTime.Now>= timeout.AddDays(-2))  //最大超时2天之内才更新
-                        //if (timeout > DateTime.Now)
+
+                        DateTime timeout;
+                        bool isUser;
+
+                        try
                         {
-                            //如果已经存在，更新timout
+                            timeout = Convert.ToDateTime(dtList[0]["Timeout"].ToString());
+                        }
+                        catch (Exception)
+                        {
+                            return false;
+                        }
+
+                        try
+                        {
+                            isUser = Convert.ToBoolean(dtList[0]["IsUser"].ToString());
+                        }
+                        catch (Exception)
+                        {
+                            isUser = false;
+                        }
+                        isUser = !isUser; 
+
+                        DateTime now = DateTime.Now; 
+
+                        // 条件1：timeout在未来，且在未来2天内 → 更新Token
+                        if (timeout > now && now >= timeout.AddDays(-2))
+                        {
                             TokenTimeUpdate(token, isUser);
                             return true;
                         }
-
-                        else if (timeout< DateTime.Now)
+                        // 条件2：timeout已过期（包含等于当前时间）→ 移除Token
+                        else if (timeout <= now)
                         {
                             RemoveToken(token);
                             return false;
                         }
+                        // 条件3：timeout在未来但超出2天范围 → 直接返回true
                         else
-                        { 
+                        {
                             return true;
                         }
 
