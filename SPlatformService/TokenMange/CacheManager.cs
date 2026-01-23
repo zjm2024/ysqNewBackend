@@ -241,7 +241,7 @@ namespace SPlatformService.TokenMange
                         var timeout = DateTime.Parse(dtList[0]["Timeout"].ToString());
                         var isUser = !Boolean.Parse(dtList[0]["IsUser"].ToString());
                         
-                       if  (DateTime.Now>= timeout.AddDays(-2))  //最大超时2天之内才更新
+                       if  (timeout> DateTime.Now && DateTime.Now>= timeout.AddDays(-2))  //最大超时2天之内才更新
                         //if (timeout > DateTime.Now)
                         {
                             //如果已经存在，更新timout
