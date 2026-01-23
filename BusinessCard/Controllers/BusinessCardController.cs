@@ -729,20 +729,20 @@ namespace BusinessCard.Controllers
                         }
                     }
 
-                    if (pVO.QRimg == "")
-                    {
-                        pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
-                    }
+                    //if (pVO.QRimg == "")
+                    //{
+                    //    pVO.QRimg = cBO.GetQRImgByHeadimg(pVO.PersonalID, AppType);
+                    //}
 
-                    if (pVO.PosterImg3 == "")
-                    {
-                        pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, pVO.BusinessID);
-                    }
+                    //if (pVO.PosterImg3 == "")
+                    //{
+                    //    pVO.PosterImg3 = cBO.GetPosterCardIMG(pVO.PersonalID, pVO.BusinessID);
+                    //}
 
-                    if (pVO.PosterImg == "")
-                    {
-                        pVO.PosterImg = cBO.GetPersonalIMG(pVO.PersonalID);
-                    }
+                    //if (pVO.PosterImg == "")
+                    //{
+                    //    pVO.PosterImg = cBO.GetPersonalIMG(pVO.PersonalID);
+                    //}
 
                     int ReadNum = 0, toReadNum = 0, todayReadNum = 0, notUsedOrderCount = 0, UsedOrderCount = 0, SecondBusinessCount = 0, ReturnCardCount = 0, UnreadCount = 0, TenderInviteCount = 0;
                     List<AccessrecordsViewVO> aVO = new List<AccessrecordsViewVO>();
@@ -788,13 +788,13 @@ namespace BusinessCard.Controllers
 
                         }
 
-                
+
 
                         //可提现余额
-                        Balance = cBO.getMyRebateCost(customerId, 1);
+                        Balance = 0; //cBO.getMyRebateCost(customerId, 1);
 
                         //累计奖金
-                        Balance2 = cBO.getMyRebateCost(customerId, 0);
+                        Balance2 = 0;//cBO.getMyRebateCost(customerId, 0);
                     }
                     catch
                     {
