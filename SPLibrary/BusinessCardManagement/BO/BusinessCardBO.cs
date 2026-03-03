@@ -1883,7 +1883,7 @@ namespace SPLibrary.BusinessCardManagement.BO
         public List<InfoSortVO> FindInfoSortList(string Type, int BusinessID)
         {
             IInfoSortDAO rDAO = BusinessCardManagementDAOFactory.InfoSortDAO(this.CurrentCustomerProfile);
-            List<InfoSortVO> cVO = rDAO.FindByParams("Type='" + Type + "' and BusinessID = " + BusinessID);
+            List<InfoSortVO> cVO = rDAO.FindByParams("Type='" + Type + "' and BusinessID = " + BusinessID + " Order By orderno DESC");
             return cVO;
         }
 

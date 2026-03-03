@@ -70,7 +70,7 @@ namespace BusinessCard.Controllers
             try
             {
                 BusinessCardBO cBO = new BusinessCardBO(new CustomerProfile());
-                cBO.printQuestionnaire("加密的数据：" + questionnaireFromVO.Content);
+                //cBO.printQuestionnaire("加密的数据：" + questionnaireFromVO.Content);
                 string aesKey = "defdaac404ac4ab59dd4729114e1d19e"; // 32字符的AES密钥（UTF-8编码后为32字节）
                 byte[] encryptedData = Convert.FromBase64String(questionnaireFromVO.Content);
 
