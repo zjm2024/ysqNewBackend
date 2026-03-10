@@ -13957,7 +13957,7 @@ namespace BusinessCard.Controllers
             //List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewByPartyID(PartyID, false);
             string sql = "PartyID = " + PartyID + " and PartySignUpID > 0 and SignUpStatus<>2 and AppType=" + CustomerVO2.AppType;
             if (PageIndex == 0) PageIndex = 1;
-            List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (PageIndex - 1) * PageCount, (PageIndex + 1) * PageCount, "CreatedAt", "DESC");
+            List<BCPartySignUpViewVO> cVO = cBO.FindSignUpViewIndexByPartyID(sql, (PageIndex - 1) * PageCount,  PageCount, "SignUpStatus ASC ", ",CreatedAt DESC ");
             int count = cBO.FindBCPartSignInNumTotalCount(sql);
             if (cVO != null)
             {
