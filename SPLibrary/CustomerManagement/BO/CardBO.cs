@@ -42,10 +42,10 @@ namespace SPLibrary.CustomerManagement.BO
         public string secret = "";
 
         public string appidH5 = "wx9a65d7becbbb017a";
-        public int AppType = 1;
+        public int AppType = 30;
         public int Type = 1;
         private CustomerProfile CurrentCustomerProfile = new CustomerProfile();
-        public CardBO(CustomerProfile customerProfile, int apptype = 1)
+        public CardBO(CustomerProfile customerProfile, int apptype = 30)
         {
             this.CurrentCustomerProfile = customerProfile;
             AppVO AppVO = AppBO.GetApp(apptype);
