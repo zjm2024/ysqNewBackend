@@ -7,10 +7,10 @@ using Microsoft.Practices.EnterpriseLibrary.Data;
 using CoreFramework.VO;
 using System.Transactions;
 using MySql.Data.MySqlClient;
+using System.Linq;
 
 namespace CoreFramework.DAO
 {
-
     public static class DbHelper
     {
         public delegate void DBAction(params object[] data);
@@ -22,12 +22,10 @@ namespace CoreFramework.DAO
 
         public static string GetParameterString(object parameterName)
         {
-
             return GetParameterString(parameterName, "=");
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="parameterName"></param>
         /// <param name="operation">like = ,and so on</param>
@@ -37,13 +35,56 @@ namespace CoreFramework.DAO
             return string.Format(" {0} {1} @{0} ", parameterName, operation);
         }
 
+        #region 私有工具方法：统一格式化参数日志
+        /// <summary>
+        /// 格式化 object[] 参数数组为可读字符串
+        /// </summary>
+        private static string FormatParamArrayLog(object[] parameters)
+        {
+            if (parameters == null || parameters.Length == 0)
+                return "无参数";
+
+            List<string> items = new List<string>();
+            foreach (object p in parameters)
+            {
+                DbParameter tmp = p as DbParameter;
+                if (tmp == null)
+                {
+                    items.Add($"[非DbParameter对象] 值：{p ?? "null"}");
+                    continue;
+                }
+                // 三元加括号修复优先级问题
+                string valStr = tmp.Value == null ? "null" : tmp.Value.ToString();
+                items.Add($"{tmp.ParameterName}:{valStr}");
+            }
+            return string.Join("\r\n", items);
+        }
+
+        /// <summary>
+        /// 格式化 DbParameterCollection 为可读字符串
+        /// </summary>
+        private static string FormatParamCollectionLog(DbParameterCollection paramCollection)
+        {
+            if (paramCollection == null || paramCollection.Count == 0)
+                return "无参数";
+
+            List<string> items = new List<string>();
+            foreach (DbParameter tmp in paramCollection)
+            {
+                string valStr = tmp.Value == null ? "null" : tmp.Value.ToString();
+                items.Add($"{tmp.ParameterName}:{valStr}");
+            }
+            return string.Join("\r\n", items);
+        }
+        #endregion
+
         public static int ExecuteNonQuery(string commandText, params object[] parameters)
         {
             int re = -1;
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText))
                 {
                     cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
                     if (parameters != null)
@@ -58,16 +99,11 @@ namespace CoreFramework.DAO
                 }
                 return re;
             }
- 
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (object p in parameters)
-                {
-                    DbParameter tmp = p as DbParameter;
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + commandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamArrayLog(parameters);
+                string errMsg = $"ErrorSQL:{commandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
         }
 
@@ -82,7 +118,7 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (cmd) // Command 必须用 using
+                using (cmd)
                 {
                     cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
                     re = db.ExecuteNonQuery(cmd);
@@ -91,12 +127,9 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (DbParameter tmp in cmd.Parameters)
-                {
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + cmd.CommandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamCollectionLog(cmd.Parameters);
+                string errMsg = $"ErrorSQL:{cmd.CommandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
             finally
             {
@@ -110,7 +143,7 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText))
                 {
                     cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
                     foreach (object p in parameters)
@@ -126,13 +159,9 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (object p in parameters)
-                {
-                    DbParameter tmp = p as DbParameter;
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + commandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamArrayLog(parameters);
+                string errMsg = $"ErrorSQL:{commandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
         }
 
@@ -147,7 +176,7 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (cmd) // Command 必须用 using
+                using (cmd)
                 {
                     cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
                     re = db.ExecuteScalar(cmd);
@@ -156,12 +185,9 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (DbParameter tmp in cmd.Parameters)
-                {
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + cmd.CommandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamCollectionLog(cmd.Parameters);
+                string errMsg = $"ErrorSQL:{cmd.CommandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
             finally
             {
@@ -175,9 +201,8 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText))
                 {
-
                     cmd.CommandText = commandText;
                     cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
                     foreach (object p in parameters)
@@ -192,13 +217,9 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (object p in parameters)
-                {
-                    DbParameter tmp = p as DbParameter;
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + commandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamArrayLog(parameters);
+                string errMsg = $"ErrorSQL:{commandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
         }
 
@@ -213,7 +234,7 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (cmd)  // Command 必须用 using
+                using (cmd)
                 {
                     cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
                     re = db.ExecuteReader(cmd);
@@ -222,12 +243,9 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (DbParameter tmp in cmd.Parameters)
-                {
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + cmd.CommandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamCollectionLog(cmd.Parameters);
+                string errMsg = $"ErrorSQL:{cmd.CommandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
             finally
             {
@@ -242,7 +260,7 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (cmd)  // Command 必须用 using
+                using (cmd)
                 {
                     cmd.CommandTimeout = DBConfig.DBConnectionTimeOut;
                     dt = db.ExecuteDataSet(cmd).Tables[0];
@@ -251,12 +269,9 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (DbParameter tmp in cmd.Parameters)
-                {
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + cmd.CommandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamCollectionLog(cmd.Parameters);
+                string errMsg = $"ErrorSQL:{cmd.CommandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
             finally
             {
@@ -271,7 +286,7 @@ namespace CoreFramework.DAO
             try
             {
                 Database db = DataAccessUtility.CreateDBInstance();
-                using (DbCommand cmd = db.GetSqlStringCommand(commandText)) // Command 必须用 using
+                using (DbCommand cmd = db.GetSqlStringCommand(commandText))
                 {
                     foreach (object p in parameters)
                     {
@@ -285,13 +300,9 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                List<string> message = new List<string>();
-                foreach (object p in parameters)
-                {
-                    DbParameter tmp = p as DbParameter;
-                    message.Add(tmp.ParameterName + ":" + tmp.Value == null ? "null" : tmp.Value + "\n\r");
-                }
-                throw new Exception("ErrorSQL:" + commandText + "\n\rParameters:\n\r" + message.ToString(), ex);
+                string paramLog = FormatParamArrayLog(parameters);
+                string errMsg = $"ErrorSQL:{commandText}\r\nParameters:\r\n{paramLog}";
+                throw new Exception(errMsg, ex);
             }
 
             return dt;
@@ -324,7 +335,7 @@ namespace CoreFramework.DAO
                     p.IsNullable = true;
                     p.ParameterName = key.ToString();
                     p.Value = value;
-                    if (p.Value.GetType() == DBNull.Value.GetType())
+                    if (p.Value != null && p.Value.GetType() == DBNull.Value.GetType())
                     {
                         p.DbType = DbType.Object;
                     }
@@ -334,7 +345,7 @@ namespace CoreFramework.DAO
                     pMySQL.IsNullable = true;
                     pMySQL.ParameterName = key.ToString();
                     pMySQL.Value = value;
-                    if (pMySQL.Value.GetType() == DBNull.Value.GetType())
+                    if (pMySQL.Value != null && pMySQL.Value.GetType() == DBNull.Value.GetType())
                     {
                         pMySQL.DbType = DbType.Object;
                     }
@@ -347,10 +358,8 @@ namespace CoreFramework.DAO
             return CreateParameter(key, "%" + value + "%");
         }
 
-
         private static void GetChild(DataRow dr, DataTable dt, string parentColumnName, string ColumnName, bool isDistinctByColumnNmae)
         {
-
             DataRow[] drs = dr.GetChildRows("child");
             string filter = string.Empty;
             foreach (DataRow tmp in drs)
@@ -402,14 +411,6 @@ namespace CoreFramework.DAO
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sql">sql,view 不包括条件</param>
-        /// <param name="condition"> 查询条件 </param>
-        /// <param name="parentColumnName">例如  parentfolderid</param>
-        /// <param name="childColumnName">folderid</param>
-        /// <returns></returns>
         public static DataTable GetChildByConditon(string sql, string condition, string parentColumnName, string ColumnName)
         {
             return GetChildByConditon(sql, condition, parentColumnName, ColumnName, false, false);
@@ -448,20 +449,12 @@ namespace CoreFramework.DAO
             }
             catch (Exception ex)
             {
-                throw new Exception("ErrorSQL:" + sql + "\n\rCondition:" + condition + "\n\rColumn Name:" + ColumnName, ex);
-            }
-            finally
-            {
+                throw new Exception($"ErrorSQL:{sql}\r\nCondition:{condition}\r\nColumn Name:{ColumnName}", ex);
             }
         }
 
         #region transaction method
 
-        /// <summary>
-        /// Provide a method to excute the Transaction Handle
-        /// </summary>
-        /// <param name="method">which database method you need to excute in a transaction</param>
-        /// <returns>1:transaction successfully commit; -1:transaction rollback </returns>
         public static int ExecuteTransaction(DBAction method, params object[] data)
         {
             int intResult = -1;
@@ -472,8 +465,6 @@ namespace CoreFramework.DAO
             {
                 using (TransactionScope ts = new TransactionScope(TransactionScopeOption.RequiresNew, option))
                 {
-                    //- Ensure there are one database object among the transaction excute
-                    //Database db = _database;
                     method(data);
                     ts.Complete();
                     intResult = 1;
@@ -482,13 +473,11 @@ namespace CoreFramework.DAO
             catch (Exception ex)
             {
                 intResult = -1;
-                throw new Exception("DbHelper.ExecuteTransaction(DBAction method, params object[] data)\nException:" + ex.Message);
+                throw new Exception("DbHelper.ExecuteTransaction(DBAction method, params object[] data)\nException:" + ex.Message, ex);
             }
 
             return intResult;
         }
-
         #endregion
     }
-
 }
