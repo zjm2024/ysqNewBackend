@@ -1549,6 +1549,7 @@
     </Compile>
     <Compile Include="BO\SingletonProvider.cs" />
     <Compile Include="BO\Utilities.cs" />
+    <Compile Include="BusinessCardManagement\BO\AdPopupBO.cs" />
     <Compile Include="BusinessCardManagement\BO\CrmBO.cs" />
     <Compile Include="BusinessCardManagement\BO\BusinessCardBO.cs" />
     <Compile Include="BusinessCardManagement\BusinessCardManagementDAOFactory.cs" />
@@ -1559,7 +1560,11 @@
     <Compile Include="BusinessCardManagement\DAO\ActivityDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\ActivitySignTicketDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\ActivityTicketDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\AdPopupConfigDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\AdPopupLogDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\BCPartyViewDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\IAdPopupConfigDAO.cs" />
+    <Compile Include="BusinessCardManagement\DAO\IAdPopupLogDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\IBCPartyViewDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\IRankDAO.cs" />
     <Compile Include="BusinessCardManagement\DAO\IRankItemDAO.cs" />
@@ -1713,6 +1718,8 @@
     <Compile Include="BusinessCardManagement\VO\ActivitySignTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityTicketVO.cs" />
     <Compile Include="BusinessCardManagement\VO\ActivityVO.cs" />
+    <Compile Include="BusinessCardManagement\VO\AdPopupConfigVO.cs" />
+    <Compile Include="BusinessCardManagement\VO\AdPopupLogVO.cs" />
     <Compile Include="BusinessCardManagement\VO\BCPartyViewVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RankItemListVO.cs" />
     <Compile Include="BusinessCardManagement\VO\RankItemVO.cs" />

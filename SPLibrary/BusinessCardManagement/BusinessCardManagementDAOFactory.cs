@@ -350,6 +350,14 @@ namespace SPLibrary.BusinessCardManagement.DAO
         {
             return new BCPartyViewDAO(userProfile);
         }
-        
+        public static IAdPopupConfigDAO AdPopupConfigDAO(UserProfile userProfile)
+        {
+            return new AdPopupConfigDAO(userProfile);
+        }
+        public static IAdPopupLogDAO AdPopupLogDAO(UserProfile userProfile)
+        {
+            return new AdPopupLogDAO(userProfile);
+        }
+
     }
 }

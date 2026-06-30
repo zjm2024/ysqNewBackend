@@ -9935,9 +9935,9 @@ namespace SPLibrary.BusinessCardManagement.BO
                 string DataJson = string.Empty;
                 string wxaurl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + result.SuccessResult.access_token;
 
-                //string page = "package/package_party/Party/PartyShow/PartyShow";
+                string page = "package/package_party/Party/PartyShow/PartyShow";
 
-                string page = "pages/index/index";
+                //string page = "pages/index/index";
                 //BCPartyVO pVO = FindPartyById(PartyID);
 
                 DataJson = "{";
@@ -10278,8 +10278,8 @@ namespace SPLibrary.BusinessCardManagement.BO
             //{
             //    page = "package/package_party/SignUpShowByUesr/SignUpShowByUesr";
             //}
-            //string page = "package/package_party/Party/SignUpShowByUesr/SignUpShowByUesr";
-            string page = "pages/index/index";
+            string page = "package/package_party/Party/SignUpShowByUesr/SignUpShowByUesr";
+            //string page = "pages/index/index";
             DataJson = "{";
             DataJson += "\"scene\":\"" + PartyID + "\",";
             DataJson += string.Format("\"width\":{0},", 640);
